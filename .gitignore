@@ -40,3 +40,6 @@ Makefile
 conanbuildinfo.*
 conaninfo.txt
 conan.lock
+
+# Deprecated
+deprecated/

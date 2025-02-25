@@ -19,6 +19,9 @@ add_library(nalu_event_collector_lib STATIC ${SOURCES})
 # Create the executable
 add_executable(main main.cpp)
 
+# Link the executable with the static library
+target_link_libraries(main PRIVATE nalu_event_collector_lib)
+
 # Specify where to install the header files and library
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include/nalu_event_collector)
 
