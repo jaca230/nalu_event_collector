@@ -2,52 +2,45 @@
 #define NALU_EVENT_BUFFER_H
 
 #include <vector>
-#include <functional>  // For user-defined callback
+#include <functional>
+#include <memory>
+#include <mutex>  // For thread safety
 #include "nalu_event.h"
-#include <memory>  // For smart pointers
+#include "nalu_time_difference_calculator.h"
 
 class NaluEventBuffer {
 public:
-    // Constructor with max_events directly
-    NaluEventBuffer(size_t max_events = 100);
-
-    // Destructor automatically handles cleanup
+    NaluEventBuffer(size_t max_events, NaluTimeDifferenceCalculator& time_diff_calculator, size_t max_lookback, size_t max_event_size, uint16_t event_header, uint16_t event_trailer);
     ~NaluEventBuffer();
 
-    // Adds a new event to the buffer (use unique_ptr now)
     void add_event(std::unique_ptr<NaluEvent> event);
-
-    // Returns a reference to the stored events
     std::vector<std::unique_ptr<NaluEvent>>& get_events();
-
-    // Returns a reference to the latest event
     NaluEvent& get_latest_event();
-
-    // Returns a reference to the event by index
     NaluEvent& get_event_by_index(size_t index);
 
-    // Set a callback for buffer overflow
     void set_on_overflow_callback(std::function<void()> callback);
-
-    // Set a new max number of events in the buffer
     void set_max_events(size_t max_events);
 
-    // Get all events after a certain timestamp
-    std::vector<NaluEvent*> get_events_after_timestamp(const std::chrono::steady_clock::time_point& timestamp) const;
+    std::vector<NaluEvent*> get_events_after_timestamp(const std::chrono::steady_clock::time_point& timestamp, ssize_t seed_index = -1) const;
+    size_t remove_events_before_timestamp(const std::chrono::steady_clock::time_point& timestamp, ssize_t seed_index = -1);
 
-    // Remove events before a certain timestamp
-    size_t remove_events_before_timestamp(const std::chrono::steady_clock::time_point& timestamp);
+    std::vector<NaluEvent*> get_events_after_index_inclusive(size_t index) const;
+    size_t remove_events_before_index_exclusive(size_t index);
 
-    // Get all events after a certain index
-    std::vector<NaluEvent*> get_events_after_index(size_t index) const;
-
-    // Remove events before a certain index
-    size_t remove_events_before_index(size_t index);
+    void add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone, size_t& event_index);
 
 private:
-    std::vector<std::unique_ptr<NaluEvent>> events;  // Using unique_ptr for NaluEvent
-    size_t max_events;  // Max number of events allowed
-    std::function<void()> overflow_callback;  // Callback for overflow
+    mutable std::mutex buffer_mutex;  // Mutex to protect event buffer
+    std::vector<std::unique_ptr<NaluEvent>> events;
+    size_t max_events;
+    std::function<void()> overflow_callback;
+
+    // Member variables for configuration
+    NaluTimeDifferenceCalculator& time_diff_calculator;
+    size_t max_lookback;
+    size_t max_event_size;
+    uint16_t event_header;
+    uint16_t event_trailer;
 };
 
 #endif // NALU_EVENT_BUFFER_H

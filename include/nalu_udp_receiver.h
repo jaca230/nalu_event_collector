@@ -11,10 +11,13 @@
 #include <functional>
 #include <chrono>
 #include "nalu_udp_data_buffer.h"
+#include "nalu_event_collector_params.h"
+
 
 class NaluUdpReceiver {
 public:
-    NaluUdpReceiver(const std::string& address, uint16_t port, size_t buffer_size = 1024*1024, size_t max_packet_size = 1040, int timeout_sec = 10);
+    NaluUdpReceiver(const std::string& address, uint16_t port, size_t buffer_size = 1024*1024*100, size_t max_packet_size = 1040, int timeout_sec = 10);
+    NaluUdpReceiver(const NaluUdpReceiverParams& params);
     ~NaluUdpReceiver();
 
     void start();

@@ -1,108 +1,168 @@
 #include "nalu_event_buffer.h"
-#include <stdexcept>  // For std::out_of_range
-#include <algorithm>  // For std::remove_if
-#include <chrono>     // For timestamp
+#include <stdexcept>
+#include <algorithm>
+#include <chrono>
+#include <iostream>
 
 // Constructor
-NaluEventBuffer::NaluEventBuffer(size_t max_events)
-    : max_events(max_events) {}
+NaluEventBuffer::NaluEventBuffer(size_t max_events, NaluTimeDifferenceCalculator& time_diff_calculator, size_t max_lookback, size_t max_event_size, uint16_t event_header, uint16_t event_trailer)
+    : max_events(max_events),
+      time_diff_calculator(time_diff_calculator),  // Pass the reference
+      max_lookback(max_lookback),
+      max_event_size(max_event_size),
+      event_header(event_header),
+      event_trailer(event_trailer) {}
 
-// Destructor automatically handles cleanup for unique_ptr
-NaluEventBuffer::~NaluEventBuffer() {
-    // No need for manual deletion; unique_ptr handles memory management
-}
+// Destructor
+NaluEventBuffer::~NaluEventBuffer() {}
 
-// Add event using unique_ptr
+// Add event (thread-safe)
 void NaluEventBuffer::add_event(std::unique_ptr<NaluEvent> event) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     if (events.size() >= max_events) {
         if (overflow_callback) {
             overflow_callback();
         }
         throw std::overflow_error("Buffer is full. Cannot add more events.");
     }
-    events.push_back(std::move(event));  // Store unique_ptr
+    events.push_back(std::move(event));
 }
 
-// Return a reference to the events
+// Get events (thread-safe)
 std::vector<std::unique_ptr<NaluEvent>>& NaluEventBuffer::get_events() {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     return events;
 }
 
-// Get the latest event (by reference)
+// Get latest event (thread-safe)
 NaluEvent& NaluEventBuffer::get_latest_event() {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     if (events.empty()) {
         throw std::out_of_range("No events in the buffer.");
     }
-    return *events.back(); // Return reference
+    return *events.back();
 }
 
-// Get an event by index (by reference)
+// Get event by index (thread-safe)
 NaluEvent& NaluEventBuffer::get_event_by_index(size_t index) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     if (index >= events.size()) {
         throw std::out_of_range("Index is out of range.");
     }
-    return *events[index]; // Return reference
+    return *events[index];
 }
 
-// Set overflow callback
+// Set overflow callback (thread-safe)
 void NaluEventBuffer::set_on_overflow_callback(std::function<void()> callback) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     overflow_callback = std::move(callback);
 }
 
-// Set max events and trim if necessary
+// Set max events and trim (thread-safe)
 void NaluEventBuffer::set_max_events(size_t new_max_events) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     max_events = new_max_events;
     if (events.size() > max_events) {
         events.erase(events.begin(), events.begin() + (events.size() - max_events));
     }
 }
 
-// Remove events before a given timestamp
-size_t NaluEventBuffer::remove_events_before_timestamp(const std::chrono::steady_clock::time_point& timestamp) {
-    auto it = std::remove_if(events.begin(), events.end(),
-                             [&](const std::unique_ptr<NaluEvent>& event) {
-                                 return event->get_creation_timestamp() <= timestamp;
-                             });
+// Remove events before a timestamp (thread-safe)
+size_t NaluEventBuffer::remove_events_before_timestamp(const std::chrono::steady_clock::time_point& timestamp, ssize_t seed_index) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
 
-    size_t num_removed = std::distance(it, events.end());
-    events.erase(it, events.end());
+    if (seed_index < 0 || static_cast<size_t>(seed_index) >= events.size()) {
+        seed_index = 0;
+    }
+
+    auto it = std::lower_bound(events.begin() + seed_index, events.end(), timestamp,
+                               [](const std::unique_ptr<NaluEvent>& event, const std::chrono::steady_clock::time_point& ts) {
+                                   return event->get_creation_timestamp() < ts;
+                               });
+
+    size_t num_removed = std::distance(events.begin(), it);
+    events.erase(events.begin(), it);
 
     return num_removed;
 }
 
-// Remove events before a given index
-size_t NaluEventBuffer::remove_events_before_index(size_t index) {
-    if (index >= events.size()) {
+// Remove events before an index (thread-safe)
+size_t NaluEventBuffer::remove_events_before_index_exclusive(size_t index) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
+    if (index > events.size()) {
         throw std::out_of_range("Index is out of range.");
     }
 
     size_t num_removed = index;
-    events.erase(events.begin(), events.begin() + index);
+    events.erase(events.begin(), events.begin() + num_removed);
     return num_removed;
 }
 
-// Get all events after a certain timestamp
-std::vector<NaluEvent*> NaluEventBuffer::get_events_after_timestamp(
-    const std::chrono::steady_clock::time_point& timestamp) const {
-
+// Get events after timestamp (thread-safe)
+std::vector<NaluEvent*> NaluEventBuffer::get_events_after_timestamp(const std::chrono::steady_clock::time_point& timestamp, ssize_t seed_index) const {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     std::vector<NaluEvent*> result;
-    for (const auto& event : events) {
-        if (event->get_creation_timestamp() > timestamp) {
-            result.push_back(event.get());  // Store raw pointer
-        }
+
+    if (seed_index < 0 || static_cast<size_t>(seed_index) >= events.size()) {
+        seed_index = 0;
     }
+
+    auto it = std::lower_bound(events.begin() + seed_index, events.end(), timestamp,
+                               [](const std::unique_ptr<NaluEvent>& event, const std::chrono::steady_clock::time_point& ts) {
+                                   return event->get_creation_timestamp() < ts;
+                               });
+
+    for (; it != events.end(); ++it) {
+        result.push_back(it->get());
+    }
+
     return result;
 }
 
-// Get all events after a certain index
-std::vector<NaluEvent*> NaluEventBuffer::get_events_after_index(size_t index) const {
+std::vector<NaluEvent*> NaluEventBuffer::get_events_after_index_inclusive(size_t index) const {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
     std::vector<NaluEvent*> result;
 
-    if (index < events.size()) {
-        for (size_t i = index + 1; i < events.size(); ++i) {
-            result.push_back(events[i].get());  // Store raw pointer
-        }
+    if (index >= events.size()) {
+        return {};  // Return empty if no events after the given index
+    }
+
+    // Return a chunk of events starting from index+1
+    for (size_t i = index; i < events.size(); ++i) {
+        result.push_back(events[i].get());  // Get the raw pointer from unique_ptr
     }
 
     return result;
+}
+
+// Add packet to event buffer (thread-safe)
+void NaluEventBuffer::add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone, size_t& event_index) {
+    std::lock_guard<std::mutex> lock(buffer_mutex);
+
+    uint32_t trigger_time = packet.trigger_time;
+    NaluEvent* matched_event = nullptr;
+
+    size_t events_size = events.size();
+    if (events_size > 0) {
+        size_t lookback_limit = in_safety_buffer_zone ? std::min(max_lookback, events_size) : 1;
+
+        for (size_t i = 0; i < lookback_limit; ++i) {
+            if (time_diff_calculator.is_within_threshold(trigger_time, events[events_size - 1 - i]->reference_time)) {
+                matched_event = events[events_size - 1 - i].get();
+                break;
+            }
+        }
+    }
+
+    if (!matched_event) {
+        //Create new event, add it to the end of events
+        auto new_event = std::make_unique<NaluEvent>(
+            event_header, 0, event_index++, trigger_time, 0, 0, event_trailer, max_event_size
+        );
+        new_event->add_packet(packet);
+        events.push_back(std::move(new_event));
+        in_safety_buffer_zone = true;
+    } else {
+        matched_event->add_packet(packet);
+    }
 }

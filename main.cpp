@@ -1,89 +1,90 @@
-#include "nalu_udp_receiver.h"
-#include "nalu_packet_parser.h"
-#include "nalu_event_builder.h"
 #include <iostream>
-#include <csignal>
 #include <chrono>
 #include <thread>
-#include <iomanip>  // For std::setw and std::setfill
+#include "nalu_event_collector.h"
 
-std::atomic<bool> running(true);
+// Editable parameters for configuration
 
-void signalHandler(int signum) {
-    std::cout << "\nShutting down, please wait...\n";
-    running = false;
-}
+// UDP parameters
+std::string udp_address = "192.168.1.1";  // UDP address
+uint16_t udp_port = 12345;  // UDP port
+size_t buffer_size = 1024 * 1024 * 100;  // Buffer size in bytes
+size_t max_packet_size = 1040;  // Max packet size
+int timeout_sec = 10;  // Timeout in seconds
+
+// Event Builder Parameters
+std::vector<int> channels = 
+  { 0, 1, 2, 3, 4, 5, 6, 7,
+    8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23,
+    24, 25, 26, 27, 28, 29, 30, 31 };  // Channels to collect
+int windows = 4;  // Number of windows
+int time_threshold = 5000;  // Time threshold in milliseconds
+size_t max_events_in_buffer = 1000000;  // Max events in buffer
+uint32_t max_trigger_time = 16777216;  // Max trigger time
+size_t max_lookback = 2;  // Max lookback
+uint16_t event_header = 0xBBBB;  // Event header
+uint16_t event_trailer = 0xEEEE;  // Event trailer
+
+// Parsing Parameters
+size_t packet_size = 74;  // Packet size
+std::vector<uint8_t> start_marker = {0x0E};  // Start marker
+std::vector<uint8_t> stop_marker = {0xFA, 0x5A};  // Stop marker
+uint8_t chan_mask = 0x3F;  // Channel mask
+uint8_t chan_shift = 0;  // Channel shift
+uint8_t abs_wind_mask = 0x3F;  // Absolute window mask
+uint8_t evt_wind_mask = 0x3F;  // Event window mask
+uint8_t evt_wind_shift = 6;  // Event window shift
+uint16_t timing_mask = 0xFFF;  // Timing mask
+uint8_t timing_shift = 12;  // Timing shift
+bool check_packet_integrity = false;  // Packet integrity check
+uint16_t constructed_packet_header = 0xAAAA;  // Constructed packet header
+uint16_t constructed_packet_footer = 0xFFFF;  // Constructed packet footer
+
+double sleep_time_seconds = 0.5;  // For example, 0.5 seconds
+std::chrono::microseconds sleep_time_us(static_cast<long long>(sleep_time_seconds * 1000000));
+
+// Now you can use sleep_time_us
+
 
 int main() {
-    std::signal(SIGINT, signalHandler);
-    std::vector<int> channels = {0, 1};
-    int windows = 31;
-    int time_threshold = 5000;
+    // Set up parameters for the collector
+    NaluEventBuilderParams event_builder_params(channels, windows, time_threshold, max_events_in_buffer, max_trigger_time, max_lookback, event_header, event_trailer);
+    NaluUdpReceiverParams udp_receiver_params(udp_address, udp_port, buffer_size, max_packet_size, timeout_sec);
+    NaluPacketParserParams packet_parser_params(packet_size, start_marker, stop_marker, chan_mask, chan_shift, 
+                                                abs_wind_mask, evt_wind_mask, evt_wind_shift, timing_mask, 
+                                                timing_shift, check_packet_integrity, constructed_packet_header, constructed_packet_footer);
 
-    NaluPacketParser parser;
-    NaluEventBuilder event_builder(channels, windows, time_threshold);
-    NaluEventBuffer& event_buffer = event_builder.get_event_buffer();
-    event_buffer.set_max_events(1000);
-    
-    // UDP receiver setup
-    NaluUdpReceiver receiver("192.168.1.1", 12345);
-    NaluUdpDataBuffer& udp_buffer = receiver.getDataBuffer();  // Use a reference here
+    // Create and initialize NaluEventCollectorParams with all parameters, including the new sleep_time_us
+    NaluEventCollectorParams collector_params(event_builder_params, udp_receiver_params, packet_parser_params, sleep_time_us);
 
-    receiver.getDataBuffer().setOverflowCallback([]() {
-        std::cerr << "Buffer overflow occurred!\n";
-    });
+    // Create the collector
+    NaluEventCollector collector(collector_params);
 
-    receiver.start();
+    // Start the collector
+    collector.start();
 
-    std::chrono::steady_clock::time_point last_timestamp = std::chrono::steady_clock::now();
+    // Periodically grab and print data
+    for (int i = 0; i < 10; ++i) {  // Run for 10 cycles (can be changed)
+        std::this_thread::sleep_for(std::chrono::seconds(1));  // Sleep for 1 second between cycles
 
-    while (running) {
-        auto start_time = std::chrono::steady_clock::now();
+        // Get events and timing data
+        std::vector<NaluEvent*> events = collector.get_events();
+        NaluCollectorTimingData timing_data = collector.get_timing_data();
 
-        std::vector<uint8_t> data = udp_buffer.getAllBytes();
-        size_t data_size = data.size();
+        // Print performance stats
+        collector.printPerformanceStats();
 
-        if (!data.empty()) {
-            auto parse_start = std::chrono::steady_clock::now();
-            std::vector<NaluPacket> packets = parser.process_stream(data);
-            auto parse_end = std::chrono::steady_clock::now();
+        // Print summary about events received
+        std::cout << "Summary of Events Received:\n";
+        std::cout << "Total events received: " << events.size() << "\n";
+        std::cout << "-------------------------------------------\n";
 
-            if (!packets.empty()) {
-                auto event_start = std::chrono::steady_clock::now();
-                event_builder.collect_events(packets);
-                auto event_end = std::chrono::steady_clock::now();
-
-                std::vector<NaluEvent*> new_events = event_buffer.get_events_after_timestamp(last_timestamp);
-                std::chrono::steady_clock::time_point latest_complete_timestamp = last_timestamp;
-
-                for (auto* event : new_events) {  // Use raw pointer
-                    if (event->is_event_complete(windows, channels)) {
-                        latest_complete_timestamp = event->get_creation_timestamp();
-                    }
-                }
-
-                if (latest_complete_timestamp != last_timestamp) {
-                    last_timestamp = latest_complete_timestamp;
-                    event_buffer.remove_events_before_timestamp(last_timestamp);
-                }
-
-                auto total_end = std::chrono::steady_clock::now();
-
-                double total_time = std::chrono::duration<double>(total_end - start_time).count();
-                double parse_time = std::chrono::duration<double>(parse_end - parse_start).count();
-                double event_time = std::chrono::duration<double>(event_end - event_start).count();
-                double data_rate = (data_size / (1024.0 * 1024.0)) / total_time;  // MB/s
-
-                std::cout << "Data Rate: " << std::fixed << std::setprecision(2) << data_rate << " MB/s, "
-                          << "Parse Time: " << parse_time * 1000 << " ms, "
-                          << "Event Time: " << event_time * 1000 << " ms, "
-                          << "Total Processing Time: " << total_time * 1000 << " ms\n";
-            }
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        collector.clear_events();
     }
 
-    receiver.stop();
+    // Stop the collector when done
+    collector.stop();
+
     return 0;
 }

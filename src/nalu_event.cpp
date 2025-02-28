@@ -26,6 +26,10 @@ size_t NaluEvent::get_size() const {
     return total_size;
 }
 
+uint8_t NaluEvent::get_error_code() const {
+    return info & 0x0F;  // Mask the last 4 bits
+}
+
 // Serialize this object to a buffer
 void NaluEvent::serialize_to_buffer(char* buffer) const {
     if (!buffer) return;

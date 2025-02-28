@@ -19,6 +19,9 @@ NaluUdpReceiver::NaluUdpReceiver(const std::string& address, uint16_t port, size
       running_(false),
       timeout_sec_(timeout_sec) {}  // Initialize timeout with default or provided value
 
+NaluUdpReceiver::NaluUdpReceiver(const NaluUdpReceiverParams& params)
+: NaluUdpReceiver(params.address, params.port, params.buffer_size, params.max_packet_size, params.timeout_sec) {}
+
 NaluUdpReceiver::~NaluUdpReceiver() {
     stop();
 }
