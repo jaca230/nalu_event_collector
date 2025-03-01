@@ -70,7 +70,7 @@ std::vector<int> channels = {0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
                              22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
 int windows = 4;                                          // Number of windows
-int time_threshold = 5000;                                // Time threshold in milliseconds
+int time_threshold = 5000;                                // Time threshold in clock cycles
 size_t max_events_in_buffer = 1000000;                    // Max events in buffer
 uint32_t max_trigger_time = 16777216;                     // Max trigger time
 size_t max_lookback = 2;                                  // Max lookback
