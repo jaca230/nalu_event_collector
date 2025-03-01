@@ -24,7 +24,7 @@ uint8_t NaluPacket::get_error_code() const {
 }
 
 // Method to get the size of the packet in bytes
-size_t NaluPacket::get_size() const {
+uint16_t NaluPacket::get_size() const {
     return sizeof(header) + sizeof(channel) + sizeof(trigger_time) +
            sizeof(logical_position) + sizeof(physical_position) +
            sizeof(raw_samples) + sizeof(footer) + sizeof(info) +

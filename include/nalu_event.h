@@ -10,20 +10,21 @@
 class NaluEvent {
 public:
     uint16_t header;           // 2 bytes
-    uint8_t info;              // 1 byte
+    uint16_t info;             // 2 byte
     uint32_t index;            // 4 bytes
     uint32_t reference_time;   // 4 bytes
-    uint8_t packet_size;       // 1 byte
+    uint16_t packet_size;      // 2 byte
     uint16_t num_packets;      // 2 bytes
     std::unique_ptr<NaluPacket[]> packets;  // Pointer to dynamic array of NaluPacket (size depends on num_packets)
     uint16_t footer;           // 2 bytes
+                               // SUM: 20 bytes + (80 bytes * num_packets)
 
     // Default constructor
     NaluEvent();
 
     // Constructor to initialize the class with specific values
-    NaluEvent(uint16_t hdr, uint8_t extra_info, uint32_t idx, uint32_t ref_time, 
-              uint8_t size, uint16_t num, uint16_t ftr, uint16_t max_num_packets);
+    NaluEvent(uint16_t hdr, uint16_t extra_info, uint32_t idx, uint32_t ref_time, 
+              uint16_t size, uint16_t num, uint16_t ftr, uint16_t max_num_packets);
 
     // Destructor automatically handled by unique_ptr
 

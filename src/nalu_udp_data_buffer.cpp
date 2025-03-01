@@ -1,4 +1,5 @@
 #include "nalu_udp_data_buffer.h"
+#include "nalu_event_collector_logger.h"
 #include <iostream>
 #include <cstring>
 
@@ -12,6 +13,10 @@ void NaluUdpDataBuffer::append(const uint8_t* data, size_t size) {
         if (overflow_callback_) {
             overflow_callback_();
         }
+        NaluEventCollectorLogger::error("Buffer overflow: attempting to append " + 
+            std::to_string(size) + " bytes to a buffer of capacity " + 
+            std::to_string(capacity_) + " with " + 
+            std::to_string(buffer_.size()) + " bytes already stored.");
         throw std::overflow_error("Buffer overflow");
     }
 

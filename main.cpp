@@ -1,11 +1,10 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <vector>
+#include <getopt.h>  // For argument parsing
 #include "nalu_event_collector.h"
 
-// Editable parameters for configuration
-
-// UDP parameters
 std::string udp_address = "192.168.1.1";  // UDP address
 uint16_t udp_port = 12345;  // UDP port
 size_t buffer_size = 1024 * 1024 * 100;  // Buffer size in bytes
@@ -37,17 +36,41 @@ uint8_t evt_wind_mask = 0x3F;  // Event window mask
 uint8_t evt_wind_shift = 6;  // Event window shift
 uint16_t timing_mask = 0xFFF;  // Timing mask
 uint8_t timing_shift = 12;  // Timing shift
-bool check_packet_integrity = false;  // Packet integrity check
+bool check_packet_integrity = true;  // Packet integrity check
 uint16_t constructed_packet_header = 0xAAAA;  // Constructed packet header
 uint16_t constructed_packet_footer = 0xFFFF;  // Constructed packet footer
 
 double sleep_time_seconds = 0.5;  // For example, 0.5 seconds
 std::chrono::microseconds sleep_time_us(static_cast<long long>(sleep_time_seconds * 1000000));
 
-// Now you can use sleep_time_us
+// Function to print help message
+void printHelp() {
+    std::cout << "Usage: nalu_event_collector [options]\n";
+    std::cout << "Options:\n";
+    std::cout << "  --background   Run collector in background mode\n";
+    std::cout << "  --help         Show this help message\n";
+}
 
+int main(int argc, char** argv) {
+    // Default values
+    bool run_in_background = false;
 
-int main() {
+    // Command-line argument parsing
+    int option;
+    while ((option = getopt(argc, argv, "")) != -1) {
+        switch (option) {
+            case 'b':  // --background flag
+                run_in_background = true;
+                break;
+            case 'h':  // --help flag
+                printHelp();
+                return 0;
+            default:
+                printHelp();
+                return 1;
+        }
+    }
+
     // Set up parameters for the collector
     NaluEventBuilderParams event_builder_params(channels, windows, time_threshold, max_events_in_buffer, max_trigger_time, max_lookback, event_header, event_trailer);
     NaluUdpReceiverParams udp_receiver_params(udp_address, udp_port, buffer_size, max_packet_size, timeout_sec);
@@ -61,30 +84,78 @@ int main() {
     // Create the collector
     NaluEventCollector collector(collector_params);
 
-    // Start the collector
-    collector.start();
+    if (run_in_background) {
+        // Start the collector in the background
+        collector.start();
+        
+        // Run for a fixed amount of time or until user decides to stop
+        std::this_thread::sleep_for(std::chrono::seconds(10));  // Run for 10 seconds (can be adjusted)
+        
+        // Stop the collector when done
+        collector.stop();
+    } else {
+        // Manual collection loop
+        collector.get_receiver().start();
+        for (int i = 0; i < 100; ++i) {  // Run for 100 cycles (can be changed)
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Sleep for 10 milliseconds between cycles
+    
+            // Manually call collect
+            collector.collect();
+    
+            // Get events and timing data
+            std::vector<NaluEvent*> events = collector.get_events();
+            NaluCollectorTimingData timing_data = collector.get_timing_data();
+    
+            // Print performance stats
+            collector.printPerformanceStats();
+    
+            // Print summary about events received
+            std::cout << "Summary of Events Received:\n";
+            std::cout << "Total events received: " << events.size() << "\n";
+            std::cout << "-------------------------------------------\n";
+    
+            // Serialize and print the first event's buffer (if any events exist)
+            /*
+            if (!events.empty()) {
+                // Get the first event
+                NaluEvent* event = events[0];
+                
+                // Print out the event details before the serialized buffer
+                std::cout << "Event Information:\n";
+                std::cout << "Header: 0x" << std::hex << event->header << std::dec << "\n";
+                std::cout << "Index: " << event->index << "\n";
+                std::cout << "Reference Time: " << event->reference_time << "\n";
+                std::cout << "Packet Size: " << static_cast<int>(event->packet_size) << "\n";
+                std::cout << "Number of Packets: " << event->num_packets << "\n";
+                std::cout << "Footer: 0x" << std::hex << event->footer << std::dec << "\n";
+                std::cout << "Creation Timestamp: " << event->get_creation_timestamp().time_since_epoch().count() << " ns\n";
+                std::cout << "-------------------------------------------\n";
 
-    // Periodically grab and print data
-    for (int i = 0; i < 10; ++i) {  // Run for 10 cycles (can be changed)
-        std::this_thread::sleep_for(std::chrono::seconds(1));  // Sleep for 1 second between cycles
+                // Calculate the size of the serialized event
+                size_t buffer_size = event->get_size();
+                char* buffer = new char[buffer_size];
 
-        // Get events and timing data
-        std::vector<NaluEvent*> events = collector.get_events();
-        NaluCollectorTimingData timing_data = collector.get_timing_data();
+                // Serialize the event into the buffer
+                event->serialize_to_buffer(buffer);
 
-        // Print performance stats
-        collector.printPerformanceStats();
+                // Print the serialized buffer in hex format
+                std::cout << "Serialized Event Buffer (Hex):\n";
+                for (size_t i = 0; i < buffer_size; ++i) {
+                    printf("%02X ", static_cast<unsigned char>(buffer[i]));
+                    if ((i + 1) % 16 == 0) std::cout << std::endl;
+                }
+                std::cout << std::endl;
 
-        // Print summary about events received
-        std::cout << "Summary of Events Received:\n";
-        std::cout << "Total events received: " << events.size() << "\n";
-        std::cout << "-------------------------------------------\n";
+                // Clean up the buffer
+                delete[] buffer;
+            */
 
-        collector.clear_events();
+    
+            // Clear events for the next cycle
+            collector.clear_events();
+        }
     }
-
-    // Stop the collector when done
-    collector.stop();
+    
 
     return 0;
 }

@@ -27,7 +27,7 @@ public:
     std::vector<NaluEvent*> get_events_after_index_inclusive(size_t index) const;
     size_t remove_events_before_index_exclusive(size_t index);
 
-    void add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone, size_t& event_index);
+    void add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone, uint32_t& event_index);
 
 private:
     mutable std::mutex buffer_mutex;  // Mutex to protect event buffer

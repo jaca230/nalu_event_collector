@@ -1,4 +1,5 @@
 #include "nalu_packet_parser.h"
+#include "nalu_event_collector_logger.h"
 #include <cstring>
 #include <iostream>
 
@@ -91,7 +92,6 @@ std::vector<NaluPacket> NaluPacketParser::process_stream(const std::vector<uint8
 }
 
 
-
 // Optimized packet processing without copying unnecessary data
 void NaluPacketParser::process_packet(std::vector<NaluPacket>& packets, 
                                       const uint8_t* byte_stream, 
@@ -118,7 +118,7 @@ void NaluPacketParser::process_packet(std::vector<NaluPacket>& packets,
     p.physical_position = byte_stream[j + 1] & abs_wind_mask;
     j += 2;
 
-    std::memcpy(p.raw_samples, byte_stream + j, 64); // No data copy here, directly use pointers
+    std::memcpy(p.raw_samples, byte_stream + j, 64);
 
     p.footer = constructed_packet_footer;
     packets.push_back(p);
@@ -157,7 +157,7 @@ void NaluPacketParser::process_byte_stream_segment_with_checks(std::vector<NaluP
             error_code |= 0b10; // 0b10 indicates start marker error
             process_packet(packets, byte_stream, i, error_code);
             i += packet_size;
-            std::cerr << "WARNING: Start marker not found at expected position.\n";
+            NaluEventCollectorLogger::warning("Start marker not found at expected position.");
         }
     } else {
         error_code |= 0b01; // 0b01 indicates stop marker error
@@ -192,9 +192,9 @@ void NaluPacketParser::process_leftovers(std::vector<NaluPacket>& data_list,
                                           const size_t start_marker_len,
                                           const size_t stop_marker_len) {
     if (leftovers_size >= packet_size) {
-        std::cout << "WARNING: Leftovers size (" << leftovers_size 
-                  << ") is greater than or equal to the packet size (" << packet_size 
-                  << "). \n";
+        NaluEventCollectorLogger::warning("Leftovers size (" + std::to_string(leftovers_size) 
+                                          + ") is greater than or equal to the packet size (" + std::to_string(packet_size) 
+                                          + ").");
     } else {
         // Calculate how many bytes from byte_stream are needed to complete the packet
         size_t remaining_bytes = packet_size - leftovers_size;
@@ -210,7 +210,7 @@ void NaluPacketParser::process_leftovers(std::vector<NaluPacket>& data_list,
 
         // Check for start_marker at the beginning of the combined data
         if (!check_marker(combined_ptr, 0, start_marker.data(), start_marker_len)) {
-            std::cout << "WARNING: Combined data does not start with the start marker.\n";
+            NaluEventCollectorLogger::warning("Combined data does not start with the start marker.");
         }
 
         // Check if the byte stream has the stop marker in the correct position
@@ -219,18 +219,10 @@ void NaluPacketParser::process_leftovers(std::vector<NaluPacket>& data_list,
             if (check_marker(combined_ptr, end_marker_position, stop_marker.data(), stop_marker_len)) {
                 process_packet(data_list, combined_ptr, 0, 0);  // Process the full packet
             } else {
-                std::cout << "WARNING: Byte stream does not have stop marker at expected position.\n";
+                NaluEventCollectorLogger::warning("Byte stream does not have stop marker at expected position.");
             }
         } else {
-            std::cout << "WARNING: Byte stream is too short to check stop marker at expected position.\n";
+            NaluEventCollectorLogger::warning("Byte stream is too short to check stop marker at expected position.");
         }
     }
 }
-
-
-
-
-
-
-
-

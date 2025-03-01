@@ -23,13 +23,19 @@ public:
 
     void start();
     void stop();
-    void processLoop();
+    void collect();
     void printPerformanceStats();
     std::vector<NaluEvent*> get_events();
     NaluCollectorTimingData get_timing_data();
+    std::pair<NaluCollectorTimingData, std::vector<NaluEvent*>> get_data();
     void clear_events();
 
+    NaluUdpReceiver& get_receiver() { return receiver; }
+    NaluPacketParser& get_parser() { return parser; }
+    NaluEventBuilder& get_event_builder() { return event_builder; }
 private:
+    void collectionLoop();
+
     NaluUdpReceiver receiver;
     NaluPacketParser parser;
     NaluEventBuilder event_builder;

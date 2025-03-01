@@ -41,7 +41,7 @@ private:
     size_t post_event_safety_buffer_counter = 0;  // Current counter
     bool in_safety_buffer_zone = false;  // Safety buffer zone flag
 
-    size_t event_index = 0; //Event index tracker
+    uint32_t event_index = 0; //Event index tracker
 
     // Event buffer to manage the events internally
     NaluEventBuffer event_buffer;

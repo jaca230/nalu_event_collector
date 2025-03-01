@@ -16,6 +16,7 @@ public:
     uint8_t raw_samples[64];          // 64-byte fixed-size array for raw samples
     uint16_t parser_index;            // 2-byte index tracking order of parsed packets
     uint16_t footer;                  // 2-byte footer
+                                      // SUM: 80 bytes
 
     // Default constructor
     NaluPacket();
@@ -28,7 +29,7 @@ public:
     uint8_t get_error_code() const;
 
     // Method to get the size of the packet in bytes
-    size_t get_size() const;
+    uint16_t get_size() const;
 
 private:
     // No private members needed for this class; all members are publicly accessible

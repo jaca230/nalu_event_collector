@@ -1,13 +1,14 @@
 #include "nalu_event_buffer.h"
+#include "nalu_event_collector_logger.h"
 #include <stdexcept>
 #include <algorithm>
-#include <chrono>
-#include <iostream>
 
 // Constructor
-NaluEventBuffer::NaluEventBuffer(size_t max_events, NaluTimeDifferenceCalculator& time_diff_calculator, size_t max_lookback, size_t max_event_size, uint16_t event_header, uint16_t event_trailer)
+NaluEventBuffer::NaluEventBuffer(size_t max_events, NaluTimeDifferenceCalculator& time_diff_calculator, 
+                                 size_t max_lookback, size_t max_event_size, 
+                                 uint16_t event_header, uint16_t event_trailer)
     : max_events(max_events),
-      time_diff_calculator(time_diff_calculator),  // Pass the reference
+      time_diff_calculator(time_diff_calculator),
       max_lookback(max_lookback),
       max_event_size(max_event_size),
       event_header(event_header),
@@ -19,12 +20,15 @@ NaluEventBuffer::~NaluEventBuffer() {}
 // Add event (thread-safe)
 void NaluEventBuffer::add_event(std::unique_ptr<NaluEvent> event) {
     std::lock_guard<std::mutex> lock(buffer_mutex);
+    
     if (events.size() >= max_events) {
         if (overflow_callback) {
             overflow_callback();
         }
+        NaluEventCollectorLogger::error("Buffer overflow! Max events reached: " + std::to_string(max_events) + ". Throwing exception.");
         throw std::overflow_error("Buffer is full. Cannot add more events.");
     }
+
     events.push_back(std::move(event));
 }
 
@@ -38,6 +42,7 @@ std::vector<std::unique_ptr<NaluEvent>>& NaluEventBuffer::get_events() {
 NaluEvent& NaluEventBuffer::get_latest_event() {
     std::lock_guard<std::mutex> lock(buffer_mutex);
     if (events.empty()) {
+        NaluEventCollectorLogger::error("Attempted to access latest event, but buffer is empty.");
         throw std::out_of_range("No events in the buffer.");
     }
     return *events.back();
@@ -47,6 +52,7 @@ NaluEvent& NaluEventBuffer::get_latest_event() {
 NaluEvent& NaluEventBuffer::get_event_by_index(size_t index) {
     std::lock_guard<std::mutex> lock(buffer_mutex);
     if (index >= events.size()) {
+        NaluEventCollectorLogger::error("Attempted to access event at index " + std::to_string(index) + ", but buffer size is " + std::to_string(events.size()) + ".");
         throw std::out_of_range("Index is out of range.");
     }
     return *events[index];
@@ -63,6 +69,7 @@ void NaluEventBuffer::set_max_events(size_t new_max_events) {
     std::lock_guard<std::mutex> lock(buffer_mutex);
     max_events = new_max_events;
     if (events.size() > max_events) {
+        NaluEventCollectorLogger::warning("Reducing max_events caused trimming of " + std::to_string(events.size() - max_events) + " old events.");
         events.erase(events.begin(), events.begin() + (events.size() - max_events));
     }
 }
@@ -90,11 +97,13 @@ size_t NaluEventBuffer::remove_events_before_timestamp(const std::chrono::steady
 size_t NaluEventBuffer::remove_events_before_index_exclusive(size_t index) {
     std::lock_guard<std::mutex> lock(buffer_mutex);
     if (index > events.size()) {
+        NaluEventCollectorLogger::error("Attempted to remove events before index " + std::to_string(index) + ", but buffer size is " + std::to_string(events.size()) + ".");
         throw std::out_of_range("Index is out of range.");
     }
 
     size_t num_removed = index;
     events.erase(events.begin(), events.begin() + num_removed);
+    
     return num_removed;
 }
 
@@ -119,6 +128,7 @@ std::vector<NaluEvent*> NaluEventBuffer::get_events_after_timestamp(const std::c
     return result;
 }
 
+// Get events after index (thread-safe)
 std::vector<NaluEvent*> NaluEventBuffer::get_events_after_index_inclusive(size_t index) const {
     std::lock_guard<std::mutex> lock(buffer_mutex);
     std::vector<NaluEvent*> result;
@@ -127,16 +137,15 @@ std::vector<NaluEvent*> NaluEventBuffer::get_events_after_index_inclusive(size_t
         return {};  // Return empty if no events after the given index
     }
 
-    // Return a chunk of events starting from index+1
     for (size_t i = index; i < events.size(); ++i) {
-        result.push_back(events[i].get());  // Get the raw pointer from unique_ptr
+        result.push_back(events[i].get());
     }
 
     return result;
 }
 
 // Add packet to event buffer (thread-safe)
-void NaluEventBuffer::add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone, size_t& event_index) {
+void NaluEventBuffer::add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone, uint32_t& event_index) {
     std::lock_guard<std::mutex> lock(buffer_mutex);
 
     uint32_t trigger_time = packet.trigger_time;
@@ -155,9 +164,8 @@ void NaluEventBuffer::add_packet(const NaluPacket& packet, bool& in_safety_buffe
     }
 
     if (!matched_event) {
-        //Create new event, add it to the end of events
         auto new_event = std::make_unique<NaluEvent>(
-            event_header, 0, event_index++, trigger_time, 0, 0, event_trailer, max_event_size
+            event_header, 0, event_index++, trigger_time, packet.get_size(), 0, event_trailer, max_event_size
         );
         new_event->add_packet(packet);
         events.push_back(std::move(new_event));
