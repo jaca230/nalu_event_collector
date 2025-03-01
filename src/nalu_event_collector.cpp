@@ -77,7 +77,7 @@ void NaluEventCollector::collect() {
 
             // Update the NaluCollectorTimingData for this cycle
             timing_data.collection_cycle_index = cycle_count;
-            timing_data.collection_cycle_timestamp = start_time;
+            timing_data.collection_cycle_timestamp_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(start_time.time_since_epoch()).count();
             timing_data.udp_time = udp_time;
             timing_data.parse_time = parse_time;
             timing_data.event_time = event_time;
@@ -112,6 +112,15 @@ void NaluEventCollector::collectionLoop() {
 }
 
 std::vector<NaluEvent*> NaluEventCollector::get_events() {
+    return get_data().second;
+}
+
+NaluCollectorTimingData NaluEventCollector::get_timing_data() {
+    return get_data().first;
+}
+
+std::pair<NaluCollectorTimingData, std::vector<NaluEvent*>> NaluEventCollector::get_data() {
+    //Get timing data and event data in same mutex
     std::lock_guard<std::mutex> lock(data_mutex_);
     
     // Fetch events after the last processed index
@@ -133,18 +142,7 @@ std::vector<NaluEvent*> NaluEventCollector::get_events() {
     // Update last_event_index by counting the complete events
     last_event_index += complete_events.size();
 
-    return complete_events;
-}
-
-NaluCollectorTimingData NaluEventCollector::get_timing_data() {
-    std::lock_guard<std::mutex> lock(data_mutex_);
-    return timing_data;
-}
-
-std::pair<NaluCollectorTimingData, std::vector<NaluEvent*>> NaluEventCollector::get_data() {
-    std::lock_guard<std::mutex> lock(data_mutex_);
-    std::vector<NaluEvent*> events = get_events();
-    return {timing_data, events};
+    return {timing_data, complete_events};
 }
 
 void NaluEventCollector::clear_events() {

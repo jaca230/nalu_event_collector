@@ -96,15 +96,18 @@ int main(int argc, char** argv) {
     } else {
         // Manual collection loop
         collector.get_receiver().start();
-        for (int i = 0; i < 100; ++i) {  // Run for 100 cycles (can be changed)
+        for (int i = 0; i < 10; ++i) {  // Run for 100 cycles (can be changed)
             std::this_thread::sleep_for(std::chrono::milliseconds(10));  // Sleep for 10 milliseconds between cycles
     
             // Manually call collect
             collector.collect();
     
             // Get events and timing data
-            std::vector<NaluEvent*> events = collector.get_events();
-            NaluCollectorTimingData timing_data = collector.get_timing_data();
+            std::pair<NaluCollectorTimingData, std::vector<NaluEvent*>> data = collector.get_data();
+            std::vector<NaluEvent*> events = data.second;
+            NaluCollectorTimingData timing_data = data.first;
+           //std::vector<NaluEvent*> events = collector.get_events();
+            
     
             // Print performance stats
             collector.printPerformanceStats();
@@ -114,7 +117,32 @@ int main(int argc, char** argv) {
             std::cout << "Total events received: " << events.size() << "\n";
             std::cout << "-------------------------------------------\n";
     
+
+            /*
             // Serialize and print the first event's buffer (if any events exist)
+
+            // Create a buffer to hold the serialized data
+            size_t timing_buffer_size = timing_data.get_size();
+            char* timing_buffer = new char[timing_buffer_size];
+
+            // Serialize the timing data into the buffer
+            timing_data.serialize_to_buffer(timing_buffer);
+
+            // Print out the serialized buffer as a hex dump
+            std::cout << "\n\033[1;32mSerialized Timing Data (Hex Dump):\033[0m\n";
+            for (size_t i = 0; i < timing_buffer_size; ++i) {
+                std::cout << std::hex << std::uppercase << (0xFF & static_cast<unsigned int>(timing_buffer[i])) << " ";
+                if ((i + 1) % 16 == 0) {
+                    std::cout << std::endl;  // Print new line after every 16 bytes for readability
+                }
+            }
+            std::cout << std::dec << std::endl;  // Reset to decimal after printing hex values
+
+            // Clean up the buffer
+            delete[] timing_buffer;
+            */
+
+
             /*
             if (!events.empty()) {
                 // Get the first event
@@ -148,6 +176,7 @@ int main(int argc, char** argv) {
 
                 // Clean up the buffer
                 delete[] buffer;
+            }
             */
 
     
