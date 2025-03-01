@@ -1,0 +1,196 @@
+\hypertarget{classNaluUdpDataBuffer}{}\doxysection{Nalu\+Udp\+Data\+Buffer Class Reference}
+\label{classNaluUdpDataBuffer}\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+
+
+A thread-\/safe buffer for storing raw UDP packet data.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+udp\+\_\+data\+\_\+buffer.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluUdpDataBuffer_a29895ad597c8cf42fd26a107cde775e3}{Nalu\+Udp\+Data\+Buffer}} (size\+\_\+t \mbox{\hyperlink{classNaluUdpDataBuffer_ac38afbb2d4f90f6c43307b0f45306964}{size}})
+\begin{DoxyCompactList}\small\item\em Constructor\+: Initialize the buffer with a fixed size. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluUdpDataBuffer_a4bb8a14d2a3f672038558a391587700b}{append}} (const uint8\+\_\+t $\ast$data, size\+\_\+t \mbox{\hyperlink{classNaluUdpDataBuffer_ac38afbb2d4f90f6c43307b0f45306964}{size}})
+\begin{DoxyCompactList}\small\item\em Append raw bytes to the buffer. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classNaluUdpDataBuffer_a07f029ba6cee04820a705d0e9ce96ad2}{pop}} (uint8\+\_\+t \&byte)
+\begin{DoxyCompactList}\small\item\em Pop a single byte from the buffer. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classNaluUdpDataBuffer_ac38afbb2d4f90f6c43307b0f45306964}{size}} () const
+\begin{DoxyCompactList}\small\item\em Get the size of the buffer (number of bytes currently stored). \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classNaluUdpDataBuffer_a2e76349afa0a1d44ce6a79a2af860440}{get\+All\+Bytes}} ()
+\begin{DoxyCompactList}\small\item\em Retrieve all bytes currently in the buffer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluUdpDataBuffer_a9b97bd5f3e889cfe6f0ab7255284bdb3}{wait\+For\+Bytes}} (size\+\_\+t min\+\_\+count)
+\begin{DoxyCompactList}\small\item\em Wait until at least a specified number of bytes are available in the buffer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluUdpDataBuffer_a7672f2b43694cede16a3ec1e16494e3d}{set\+Overflow\+Callback}} (std\+::function$<$ void()$>$ callback)
+\begin{DoxyCompactList}\small\item\em Set a callback function for buffer overflow. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classNaluUdpDataBuffer_a9ee21d69afb1207b7ddbbfa6623efef0}{is\+Empty}} () const
+\begin{DoxyCompactList}\small\item\em Check if the buffer is empty. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classNaluUdpDataBuffer_a4673aa7e44dafd864967cd15fd20a8e5}{is\+Full}} () const
+\begin{DoxyCompactList}\small\item\em Check if the buffer is full. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A thread-\/safe buffer for storing raw UDP packet data. 
+
+This class provides methods to append data to the buffer, pop individual bytes, retrieve all bytes, and wait for the buffer to contain a minimum number of bytes. It also supports overflow notifications and checks if the buffer is empty or full. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a29895ad597c8cf42fd26a107cde775e3}\label{classNaluUdpDataBuffer_a29895ad597c8cf42fd26a107cde775e3}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{NaluUdpDataBuffer()}{NaluUdpDataBuffer()}}
+{\footnotesize\ttfamily Nalu\+Udp\+Data\+Buffer\+::\+Nalu\+Udp\+Data\+Buffer (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Constructor\+: Initialize the buffer with a fixed size. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & The maximum size of the buffer in bytes. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a4bb8a14d2a3f672038558a391587700b}\label{classNaluUdpDataBuffer_a4bb8a14d2a3f672038558a391587700b}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!append@{append}}
+\index{append@{append}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{append()}{append()}}
+{\footnotesize\ttfamily void Nalu\+Udp\+Data\+Buffer\+::append (\begin{DoxyParamCaption}\item[{const uint8\+\_\+t $\ast$}]{data,  }\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})}
+
+
+
+Append raw bytes to the buffer. 
+
+This method inserts the provided data into the buffer. If appending the data would exceed the buffer\textquotesingle{}s capacity, an overflow error is thrown, and an overflow callback (if set) is invoked.
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & Pointer to the data to append. \\
+\hline
+{\em size} & The size of the data in bytes. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::overflow\+\_\+error} & If the buffer overflows. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a2e76349afa0a1d44ce6a79a2af860440}\label{classNaluUdpDataBuffer_a2e76349afa0a1d44ce6a79a2af860440}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!getAllBytes@{getAllBytes}}
+\index{getAllBytes@{getAllBytes}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{getAllBytes()}{getAllBytes()}}
+{\footnotesize\ttfamily std\+::vector$<$ uint8\+\_\+t $>$ Nalu\+Udp\+Data\+Buffer\+::get\+All\+Bytes (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieve all bytes currently in the buffer. 
+
+This method copies all the bytes from the buffer and clears the buffer afterward.
+
+\begin{DoxyReturn}{Returns}
+A vector containing all the bytes in the buffer. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a9ee21d69afb1207b7ddbbfa6623efef0}\label{classNaluUdpDataBuffer_a9ee21d69afb1207b7ddbbfa6623efef0}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!isEmpty@{isEmpty}}
+\index{isEmpty@{isEmpty}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{isEmpty()}{isEmpty()}}
+{\footnotesize\ttfamily bool Nalu\+Udp\+Data\+Buffer\+::is\+Empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Check if the buffer is empty. 
+
+\begin{DoxyReturn}{Returns}
+True if the buffer is empty, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a4673aa7e44dafd864967cd15fd20a8e5}\label{classNaluUdpDataBuffer_a4673aa7e44dafd864967cd15fd20a8e5}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!isFull@{isFull}}
+\index{isFull@{isFull}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{isFull()}{isFull()}}
+{\footnotesize\ttfamily bool Nalu\+Udp\+Data\+Buffer\+::is\+Full (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Check if the buffer is full. 
+
+\begin{DoxyReturn}{Returns}
+True if the buffer is full, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a07f029ba6cee04820a705d0e9ce96ad2}\label{classNaluUdpDataBuffer_a07f029ba6cee04820a705d0e9ce96ad2}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!pop@{pop}}
+\index{pop@{pop}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{pop()}{pop()}}
+{\footnotesize\ttfamily bool Nalu\+Udp\+Data\+Buffer\+::pop (\begin{DoxyParamCaption}\item[{uint8\+\_\+t \&}]{byte }\end{DoxyParamCaption})}
+
+
+
+Pop a single byte from the buffer. 
+
+This method removes and returns a single byte from the front of the buffer. It returns false if the buffer is empty.
+
+
+\begin{DoxyParams}{Parameters}
+{\em byte} & Reference to a byte variable to store the popped byte. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if a byte is successfully popped, false if the buffer is empty. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a7672f2b43694cede16a3ec1e16494e3d}\label{classNaluUdpDataBuffer_a7672f2b43694cede16a3ec1e16494e3d}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!setOverflowCallback@{setOverflowCallback}}
+\index{setOverflowCallback@{setOverflowCallback}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{setOverflowCallback()}{setOverflowCallback()}}
+{\footnotesize\ttfamily void Nalu\+Udp\+Data\+Buffer\+::set\+Overflow\+Callback (\begin{DoxyParamCaption}\item[{std\+::function$<$ void()$>$}]{callback }\end{DoxyParamCaption})}
+
+
+
+Set a callback function for buffer overflow. 
+
+This method sets a callback function that will be called if the buffer overflows (i.\+e., when attempting to append more data than the buffer can hold).
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & The callback function to invoke on overflow. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_ac38afbb2d4f90f6c43307b0f45306964}\label{classNaluUdpDataBuffer_ac38afbb2d4f90f6c43307b0f45306964}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!size@{size}}
+\index{size@{size}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{size()}{size()}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Udp\+Data\+Buffer\+::size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Get the size of the buffer (number of bytes currently stored). 
+
+\begin{DoxyReturn}{Returns}
+The number of bytes currently in the buffer. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluUdpDataBuffer_a9b97bd5f3e889cfe6f0ab7255284bdb3}\label{classNaluUdpDataBuffer_a9b97bd5f3e889cfe6f0ab7255284bdb3}} 
+\index{NaluUdpDataBuffer@{NaluUdpDataBuffer}!waitForBytes@{waitForBytes}}
+\index{waitForBytes@{waitForBytes}!NaluUdpDataBuffer@{NaluUdpDataBuffer}}
+\doxysubsubsection{\texorpdfstring{waitForBytes()}{waitForBytes()}}
+{\footnotesize\ttfamily void Nalu\+Udp\+Data\+Buffer\+::wait\+For\+Bytes (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{min\+\_\+count }\end{DoxyParamCaption})}
+
+
+
+Wait until at least a specified number of bytes are available in the buffer. 
+
+This method blocks the calling thread until the buffer contains at least \textquotesingle{}min\+\_\+count\textquotesingle{} bytes.
+
+
+\begin{DoxyParams}{Parameters}
+{\em min\+\_\+count} & The minimum number of bytes to wait for. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__udp__data__buffer_8h}{nalu\+\_\+udp\+\_\+data\+\_\+buffer.\+h}}\item 
+src/\mbox{\hyperlink{nalu__udp__data__buffer_8cpp}{nalu\+\_\+udp\+\_\+data\+\_\+buffer.\+cpp}}\end{DoxyCompactItemize}

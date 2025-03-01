@@ -1,0 +1,218 @@
+\hypertarget{classNaluPacket}{}\doxysection{Nalu\+Packet Class Reference}
+\label{classNaluPacket}\index{NaluPacket@{NaluPacket}}
+
+
+This class represents a single Nalu packet, including fields such as header, info byte, channel, trigger time, logical/physical positions, raw samples, and footer. The packet\textquotesingle{}s structure is fixed at 80 bytes in total.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+packet.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluPacket_aa7a39dfd4db7b69534b99dcb00ddf920}{Nalu\+Packet}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor initializes all member variables to zero. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluPacket_ac5be415799903e1319b833378fe7d190}{Nalu\+Packet}} (uint16\+\_\+t hdr, uint8\+\_\+t ch, uint32\+\_\+t trig\+\_\+time, uint16\+\_\+t log\+\_\+pos, uint16\+\_\+t phys\+\_\+pos, uint8\+\_\+t samples\mbox{[}64\mbox{]}, uint16\+\_\+t ftr, uint8\+\_\+t full\+\_\+info, uint16\+\_\+t index=0)
+\begin{DoxyCompactList}\small\item\em Constructor for initialization with full info byte and other Nalu packet fields. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacket_a53efcba8ff7ac4fc593c8d1326e28736}{get\+\_\+error\+\_\+code}} () const
+\begin{DoxyCompactList}\small\item\em Extracts and returns the error code from the info byte (lower 4 bits). \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_a83cdfac88920294b30a5801a8677e98b}{get\+\_\+size}} () const
+\begin{DoxyCompactList}\small\item\em Calculates and returns the size of the Nalu packet in bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_a8c45d3807903b196959ae94980806b1d}{header}}
+\begin{DoxyCompactList}\small\item\em 2-\/byte header for the Nalu packet. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacket_af8ac6bf9f217f94e29d2a3c4c167c537}{info}}
+\begin{DoxyCompactList}\small\item\em 1-\/byte info field containing reserved bits and an error code. The lower 4 bits store the error code. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacket_a021b32b904ebb6554013c4864d3c988b}{channel}}
+\begin{DoxyCompactList}\small\item\em 1-\/byte channel identifier for the Nalu packet. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classNaluPacket_a9fa50a2e29e9134f592d88f22bbcdef6}{trigger\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em 4-\/byte trigger time representing the timestamp of the packet. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_ae3943e161dce6440d32f226be99abde2}{logical\+\_\+position}}
+\begin{DoxyCompactList}\small\item\em 2-\/byte logical position of the Nalu packet. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_ae82b63012728f27527ece872e793e190}{physical\+\_\+position}}
+\begin{DoxyCompactList}\small\item\em 2-\/byte physical position of the Nalu packet. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacket_aa9b665ccfdbaf99aba1dee5fc11adbdb}{raw\+\_\+samples}} \mbox{[}64\mbox{]}
+\begin{DoxyCompactList}\small\item\em 64-\/byte array storing raw samples in the Nalu packet. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_a860a09eb19d6586cc94cd5ab425b226b}{parser\+\_\+index}}
+\begin{DoxyCompactList}\small\item\em 2-\/byte index used to track the order of parsed packets. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_a8358faf5c91d5f939f79ffd4a299e12c}{footer}}
+\begin{DoxyCompactList}\small\item\em 2-\/byte footer marking the end of the Nalu packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class represents a single Nalu packet, including fields such as header, info byte, channel, trigger time, logical/physical positions, raw samples, and footer. The packet\textquotesingle{}s structure is fixed at 80 bytes in total. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluPacket_aa7a39dfd4db7b69534b99dcb00ddf920}\label{classNaluPacket_aa7a39dfd4db7b69534b99dcb00ddf920}} 
+\index{NaluPacket@{NaluPacket}!NaluPacket@{NaluPacket}}
+\index{NaluPacket@{NaluPacket}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{NaluPacket()}{NaluPacket()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Nalu\+Packet\+::\+Nalu\+Packet (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor initializes all member variables to zero. 
+
+\mbox{\Hypertarget{classNaluPacket_ac5be415799903e1319b833378fe7d190}\label{classNaluPacket_ac5be415799903e1319b833378fe7d190}} 
+\index{NaluPacket@{NaluPacket}!NaluPacket@{NaluPacket}}
+\index{NaluPacket@{NaluPacket}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{NaluPacket()}{NaluPacket()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Nalu\+Packet\+::\+Nalu\+Packet (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{hdr,  }\item[{uint8\+\_\+t}]{ch,  }\item[{uint32\+\_\+t}]{trig\+\_\+time,  }\item[{uint16\+\_\+t}]{log\+\_\+pos,  }\item[{uint16\+\_\+t}]{phys\+\_\+pos,  }\item[{uint8\+\_\+t}]{samples\mbox{[}64\mbox{]},  }\item[{uint16\+\_\+t}]{ftr,  }\item[{uint8\+\_\+t}]{full\+\_\+info,  }\item[{uint16\+\_\+t}]{index = {\ttfamily 0} }\end{DoxyParamCaption})}
+
+
+
+Constructor for initialization with full info byte and other Nalu packet fields. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hdr} & The header value (2 bytes). \\
+\hline
+{\em ch} & The channel value (1 byte). \\
+\hline
+{\em trig\+\_\+time} & The trigger time value (4 bytes). \\
+\hline
+{\em log\+\_\+pos} & The logical position (2 bytes). \\
+\hline
+{\em phys\+\_\+pos} & The physical position (2 bytes). \\
+\hline
+{\em samples} & The raw samples (64 bytes). \\
+\hline
+{\em ftr} & The footer value (2 bytes). \\
+\hline
+{\em full\+\_\+info} & The full info byte (1 byte). \\
+\hline
+{\em index} & The parser index value (2 bytes, default value is 0). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluPacket_a53efcba8ff7ac4fc593c8d1326e28736}\label{classNaluPacket_a53efcba8ff7ac4fc593c8d1326e28736}} 
+\index{NaluPacket@{NaluPacket}!get\_error\_code@{get\_error\_code}}
+\index{get\_error\_code@{get\_error\_code}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{get\_error\_code()}{get\_error\_code()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+::get\+\_\+error\+\_\+code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Extracts and returns the error code from the info byte (lower 4 bits). 
+
+\begin{DoxyReturn}{Returns}
+The error code (4 bits) from the info byte. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluPacket_a83cdfac88920294b30a5801a8677e98b}\label{classNaluPacket_a83cdfac88920294b30a5801a8677e98b}} 
+\index{NaluPacket@{NaluPacket}!get\_size@{get\_size}}
+\index{get\_size@{get\_size}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+::get\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Calculates and returns the size of the Nalu packet in bytes. 
+
+\begin{DoxyReturn}{Returns}
+The total size of the packet (should always be 80 bytes). 
+\end{DoxyReturn}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classNaluPacket_a021b32b904ebb6554013c4864d3c988b}\label{classNaluPacket_a021b32b904ebb6554013c4864d3c988b}} 
+\index{NaluPacket@{NaluPacket}!channel@{channel}}
+\index{channel@{channel}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{channel}{channel}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+::channel}
+
+
+
+1-\/byte channel identifier for the Nalu packet. 
+
+\mbox{\Hypertarget{classNaluPacket_a8358faf5c91d5f939f79ffd4a299e12c}\label{classNaluPacket_a8358faf5c91d5f939f79ffd4a299e12c}} 
+\index{NaluPacket@{NaluPacket}!footer@{footer}}
+\index{footer@{footer}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{footer}{footer}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+::footer}
+
+
+
+2-\/byte footer marking the end of the Nalu packet. 
+
+\mbox{\Hypertarget{classNaluPacket_a8c45d3807903b196959ae94980806b1d}\label{classNaluPacket_a8c45d3807903b196959ae94980806b1d}} 
+\index{NaluPacket@{NaluPacket}!header@{header}}
+\index{header@{header}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+::header}
+
+
+
+2-\/byte header for the Nalu packet. 
+
+\mbox{\Hypertarget{classNaluPacket_af8ac6bf9f217f94e29d2a3c4c167c537}\label{classNaluPacket_af8ac6bf9f217f94e29d2a3c4c167c537}} 
+\index{NaluPacket@{NaluPacket}!info@{info}}
+\index{info@{info}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{info}{info}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+::info}
+
+
+
+1-\/byte info field containing reserved bits and an error code. The lower 4 bits store the error code. 
+
+\mbox{\Hypertarget{classNaluPacket_ae3943e161dce6440d32f226be99abde2}\label{classNaluPacket_ae3943e161dce6440d32f226be99abde2}} 
+\index{NaluPacket@{NaluPacket}!logical\_position@{logical\_position}}
+\index{logical\_position@{logical\_position}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{logical\_position}{logical\_position}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+::logical\+\_\+position}
+
+
+
+2-\/byte logical position of the Nalu packet. 
+
+\mbox{\Hypertarget{classNaluPacket_a860a09eb19d6586cc94cd5ab425b226b}\label{classNaluPacket_a860a09eb19d6586cc94cd5ab425b226b}} 
+\index{NaluPacket@{NaluPacket}!parser\_index@{parser\_index}}
+\index{parser\_index@{parser\_index}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{parser\_index}{parser\_index}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+::parser\+\_\+index}
+
+
+
+2-\/byte index used to track the order of parsed packets. 
+
+\mbox{\Hypertarget{classNaluPacket_ae82b63012728f27527ece872e793e190}\label{classNaluPacket_ae82b63012728f27527ece872e793e190}} 
+\index{NaluPacket@{NaluPacket}!physical\_position@{physical\_position}}
+\index{physical\_position@{physical\_position}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{physical\_position}{physical\_position}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+::physical\+\_\+position}
+
+
+
+2-\/byte physical position of the Nalu packet. 
+
+\mbox{\Hypertarget{classNaluPacket_aa9b665ccfdbaf99aba1dee5fc11adbdb}\label{classNaluPacket_aa9b665ccfdbaf99aba1dee5fc11adbdb}} 
+\index{NaluPacket@{NaluPacket}!raw\_samples@{raw\_samples}}
+\index{raw\_samples@{raw\_samples}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{raw\_samples}{raw\_samples}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+::raw\+\_\+samples\mbox{[}64\mbox{]}}
+
+
+
+64-\/byte array storing raw samples in the Nalu packet. 
+
+\mbox{\Hypertarget{classNaluPacket_a9fa50a2e29e9134f592d88f22bbcdef6}\label{classNaluPacket_a9fa50a2e29e9134f592d88f22bbcdef6}} 
+\index{NaluPacket@{NaluPacket}!trigger\_time@{trigger\_time}}
+\index{trigger\_time@{trigger\_time}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{trigger\_time}{trigger\_time}}
+{\footnotesize\ttfamily uint32\+\_\+t Nalu\+Packet\+::trigger\+\_\+time}
+
+
+
+4-\/byte trigger time representing the timestamp of the packet. 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__packet_8h}{nalu\+\_\+packet.\+h}}\item 
+src/\mbox{\hyperlink{nalu__packet_8cpp}{nalu\+\_\+packet.\+cpp}}\end{DoxyCompactItemize}

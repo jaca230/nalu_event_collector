@@ -1,0 +1,216 @@
+\hypertarget{classNaluEventCollector}{}\doxysection{Nalu\+Event\+Collector Class Reference}
+\label{classNaluEventCollector}\index{NaluEventCollector@{NaluEventCollector}}
+
+
+Collects, processes, and manages events from UDP data streams.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+event\+\_\+collector.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluEventCollector_a44bac6ec66a8c26061a95010a0d9d7c5}{Nalu\+Event\+Collector}} (const \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}} \&params)
+\begin{DoxyCompactList}\small\item\em Constructor for \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEventCollector_a5d45e2a109016488a5e250676b0e4a12}{$\sim$\+Nalu\+Event\+Collector}} ()
+\begin{DoxyCompactList}\small\item\em Destructor for \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}. Stops the collector thread and cleans up resources. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventCollector_aa084380fa21058ef7bf1526f7d809f74}{start}} ()
+\begin{DoxyCompactList}\small\item\em Starts the event collector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventCollector_a85c9677f39dfd32f6bcd2ae6479fcb30}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the event collector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventCollector_a6e1977af8386f8eb321a9e8433df80a5}{collect}} ()
+\begin{DoxyCompactList}\small\item\em Collects data from the receiver, parses it, and builds events. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventCollector_a865b8c11f5917ad376069b416e8b3915}{print\+Performance\+Stats}} ()
+\begin{DoxyCompactList}\small\item\em Prints the rolling average performance statistics. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ \mbox{\hyperlink{classNaluEventCollector_abd37884368aa629e65d943b818d15072}{get\+\_\+events}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the events that have been collected. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}} \mbox{\hyperlink{classNaluEventCollector_a94c1c474023c1a25276ee1b93a980aed}{get\+\_\+timing\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the current timing data for the collector. \end{DoxyCompactList}\item 
+std\+::pair$<$ \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}}, std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ $>$ \mbox{\hyperlink{classNaluEventCollector_aff1f0cf442bab3525b1526174c5ff736}{get\+\_\+data}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves both timing data and events. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventCollector_a8cea204f073fa007b784c153f2b167fd}{clear\+\_\+events}} ()
+\begin{DoxyCompactList}\small\item\em Clears the collected events that have already been processed. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} \& \mbox{\hyperlink{classNaluEventCollector_a23a7960607cec1bd1c1d864ea1abade0}{get\+\_\+receiver}} ()
+\begin{DoxyCompactList}\small\item\em Accessor for the UDP receiver. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} \& \mbox{\hyperlink{classNaluEventCollector_ad905490bd67d0dcfb2ccc338c3ca7a2c}{get\+\_\+parser}} ()
+\begin{DoxyCompactList}\small\item\em Accessor for the packet parser. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}} \& \mbox{\hyperlink{classNaluEventCollector_aefb8d161ae93da35529349d4eb3ce68f}{get\+\_\+event\+\_\+builder}} ()
+\begin{DoxyCompactList}\small\item\em Accessor for the event builder. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Collects, processes, and manages events from UDP data streams. 
+
+This class is responsible for managing the collection process of NALU (Network Abstraction Layer Unit) events from incoming UDP streams. It utilizes a receiver to fetch raw packet data, parses the data into packets, and builds events from these packets. The collector operates in a separate thread, continuously collecting and processing data. It also computes performance statistics such as data rate and processing times. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluEventCollector_a44bac6ec66a8c26061a95010a0d9d7c5}\label{classNaluEventCollector_a44bac6ec66a8c26061a95010a0d9d7c5}} 
+\index{NaluEventCollector@{NaluEventCollector}!NaluEventCollector@{NaluEventCollector}}
+\index{NaluEventCollector@{NaluEventCollector}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{NaluEventCollector()}{NaluEventCollector()}}
+{\footnotesize\ttfamily Nalu\+Event\+Collector\+::\+Nalu\+Event\+Collector (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}} \&}]{params }\end{DoxyParamCaption})}
+
+
+
+Constructor for \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & The parameters to initialize the collector with. These include UDP receiver, packet parser, event builder, and sleep time between cycles. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventCollector_a5d45e2a109016488a5e250676b0e4a12}\label{classNaluEventCollector_a5d45e2a109016488a5e250676b0e4a12}} 
+\index{NaluEventCollector@{NaluEventCollector}!````~NaluEventCollector@{$\sim$NaluEventCollector}}
+\index{````~NaluEventCollector@{$\sim$NaluEventCollector}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{$\sim$NaluEventCollector()}{~NaluEventCollector()}}
+{\footnotesize\ttfamily Nalu\+Event\+Collector\+::$\sim$\+Nalu\+Event\+Collector (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor for \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}. Stops the collector thread and cleans up resources. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluEventCollector_a8cea204f073fa007b784c153f2b167fd}\label{classNaluEventCollector_a8cea204f073fa007b784c153f2b167fd}} 
+\index{NaluEventCollector@{NaluEventCollector}!clear\_events@{clear\_events}}
+\index{clear\_events@{clear\_events}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{clear\_events()}{clear\_events()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Collector\+::clear\+\_\+events (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Clears the collected events that have already been processed. 
+
+This method clears events from the buffer that have already been processed up to the last event index. \mbox{\Hypertarget{classNaluEventCollector_a6e1977af8386f8eb321a9e8433df80a5}\label{classNaluEventCollector_a6e1977af8386f8eb321a9e8433df80a5}} 
+\index{NaluEventCollector@{NaluEventCollector}!collect@{collect}}
+\index{collect@{collect}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{collect()}{collect()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Collector\+::collect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Collects data from the receiver, parses it, and builds events. 
+
+This method performs the data collection, parsing, and event building in a single cycle. It computes the time taken for each step and updates the performance statistics. \mbox{\Hypertarget{classNaluEventCollector_aff1f0cf442bab3525b1526174c5ff736}\label{classNaluEventCollector_aff1f0cf442bab3525b1526174c5ff736}} 
+\index{NaluEventCollector@{NaluEventCollector}!get\_data@{get\_data}}
+\index{get\_data@{get\_data}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{get\_data()}{get\_data()}}
+{\footnotesize\ttfamily std\+::pair$<$ \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}}, std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ $>$ Nalu\+Event\+Collector\+::get\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves both timing data and events. 
+
+This method provides a pair consisting of the current timing data and the events collected in the most recent cycle.
+
+\begin{DoxyReturn}{Returns}
+A pair containing the timing data and the events. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventCollector_aefb8d161ae93da35529349d4eb3ce68f}\label{classNaluEventCollector_aefb8d161ae93da35529349d4eb3ce68f}} 
+\index{NaluEventCollector@{NaluEventCollector}!get\_event\_builder@{get\_event\_builder}}
+\index{get\_event\_builder@{get\_event\_builder}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{get\_event\_builder()}{get\_event\_builder()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}}\& Nalu\+Event\+Collector\+::get\+\_\+event\+\_\+builder (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Accessor for the event builder. 
+
+\begin{DoxyReturn}{Returns}
+The event builder used by the event collector. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventCollector_abd37884368aa629e65d943b818d15072}\label{classNaluEventCollector_abd37884368aa629e65d943b818d15072}} 
+\index{NaluEventCollector@{NaluEventCollector}!get\_events@{get\_events}}
+\index{get\_events@{get\_events}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{get\_events()}{get\_events()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ Nalu\+Event\+Collector\+::get\+\_\+events (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves the events that have been collected. 
+
+This method returns a list of events that are considered complete, based on the configured windows and channels.
+
+\begin{DoxyReturn}{Returns}
+A vector of pointers to complete events. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventCollector_ad905490bd67d0dcfb2ccc338c3ca7a2c}\label{classNaluEventCollector_ad905490bd67d0dcfb2ccc338c3ca7a2c}} 
+\index{NaluEventCollector@{NaluEventCollector}!get\_parser@{get\_parser}}
+\index{get\_parser@{get\_parser}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{get\_parser()}{get\_parser()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}}\& Nalu\+Event\+Collector\+::get\+\_\+parser (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Accessor for the packet parser. 
+
+\begin{DoxyReturn}{Returns}
+The packet parser used by the event collector. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventCollector_a23a7960607cec1bd1c1d864ea1abade0}\label{classNaluEventCollector_a23a7960607cec1bd1c1d864ea1abade0}} 
+\index{NaluEventCollector@{NaluEventCollector}!get\_receiver@{get\_receiver}}
+\index{get\_receiver@{get\_receiver}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{get\_receiver()}{get\_receiver()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}}\& Nalu\+Event\+Collector\+::get\+\_\+receiver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Accessor for the UDP receiver. 
+
+\begin{DoxyReturn}{Returns}
+The UDP receiver used by the event collector. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventCollector_a94c1c474023c1a25276ee1b93a980aed}\label{classNaluEventCollector_a94c1c474023c1a25276ee1b93a980aed}} 
+\index{NaluEventCollector@{NaluEventCollector}!get\_timing\_data@{get\_timing\_data}}
+\index{get\_timing\_data@{get\_timing\_data}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{get\_timing\_data()}{get\_timing\_data()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}} Nalu\+Event\+Collector\+::get\+\_\+timing\+\_\+data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves the current timing data for the collector. 
+
+This method provides the timing data that tracks the performance metrics for the most recent collection cycle.
+
+\begin{DoxyReturn}{Returns}
+The current timing data. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventCollector_a865b8c11f5917ad376069b416e8b3915}\label{classNaluEventCollector_a865b8c11f5917ad376069b416e8b3915}} 
+\index{NaluEventCollector@{NaluEventCollector}!printPerformanceStats@{printPerformanceStats}}
+\index{printPerformanceStats@{printPerformanceStats}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{printPerformanceStats()}{printPerformanceStats()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Collector\+::print\+Performance\+Stats (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Prints the rolling average performance statistics. 
+
+This method prints the rolling averages for data rate, parse time, event time, UDP time, and data processed. \mbox{\Hypertarget{classNaluEventCollector_aa084380fa21058ef7bf1526f7d809f74}\label{classNaluEventCollector_aa084380fa21058ef7bf1526f7d809f74}} 
+\index{NaluEventCollector@{NaluEventCollector}!start@{start}}
+\index{start@{start}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Collector\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Starts the event collector. 
+
+This method starts the UDP receiver and launches a dedicated thread for collecting data. \mbox{\Hypertarget{classNaluEventCollector_a85c9677f39dfd32f6bcd2ae6479fcb30}\label{classNaluEventCollector_a85c9677f39dfd32f6bcd2ae6479fcb30}} 
+\index{NaluEventCollector@{NaluEventCollector}!stop@{stop}}
+\index{stop@{stop}!NaluEventCollector@{NaluEventCollector}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Collector\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Stops the event collector. 
+
+This method stops the UDP receiver and terminates the collection thread. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__event__collector_8h}{nalu\+\_\+event\+\_\+collector.\+h}}\item 
+src/\mbox{\hyperlink{nalu__event__collector_8cpp}{nalu\+\_\+event\+\_\+collector.\+cpp}}\end{DoxyCompactItemize}

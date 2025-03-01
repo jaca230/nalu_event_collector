@@ -1,0 +1,26 @@
+digraph "include/nalu_event_collector_params.h"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="include/nalu_event\l_collector_params.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="include/nalu_event\l_builder.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__event__builder_8h.html",tooltip=" "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="src/nalu_event_builder.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__event__builder_8cpp.html",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="include/nalu_event\l_collector.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__event__collector_8h.html",tooltip=" "];
+  Node4 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="src/nalu_event_collector.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__event__collector_8cpp.html",tooltip=" "];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="include/nalu_packet\l_parser.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__packet__parser_8h.html",tooltip="This file defines the NaluPacketParser class responsible for parsing Nalu packets from a byte stream."];
+  Node6 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="src/nalu_packet_parser.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__packet__parser_8cpp.html",tooltip=" "];
+  Node6 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="include/nalu_udp_receiver.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__udp__receiver_8h.html",tooltip=" "];
+  Node8 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="src/nalu_udp_receiver.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__udp__receiver_8cpp.html",tooltip=" "];
+  Node8 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

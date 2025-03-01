@@ -1,0 +1,280 @@
+\hypertarget{classNaluEventBuffer}{}\doxysection{Nalu\+Event\+Buffer Class Reference}
+\label{classNaluEventBuffer}\index{NaluEventBuffer@{NaluEventBuffer}}
+
+
+Class for managing a buffer of Nalu\+Events, including adding, retrieving, and removing events.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+event\+\_\+buffer.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluEventBuffer_a9b2dbd4b4264bb89086ab7574fda2d24}{Nalu\+Event\+Buffer}} (size\+\_\+t max\+\_\+events, \mbox{\hyperlink{classNaluTimeDifferenceCalculator}{Nalu\+Time\+Difference\+Calculator}} \&time\+\_\+diff\+\_\+calculator, size\+\_\+t max\+\_\+lookback, size\+\_\+t max\+\_\+event\+\_\+size, uint16\+\_\+t event\+\_\+header, uint16\+\_\+t event\+\_\+trailer)
+\begin{DoxyCompactList}\small\item\em Constructs a \mbox{\hyperlink{classNaluEventBuffer}{Nalu\+Event\+Buffer}} with the specified parameters. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEventBuffer_a5997f089f24254cea9f59e1a6b2ffcee}{$\sim$\+Nalu\+Event\+Buffer}} ()
+\begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuffer_a14bedefffd3db9b365608607eea4b40a}{add\+\_\+event}} (std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $>$ event)
+\begin{DoxyCompactList}\small\item\em Adds a new event to the buffer. \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $>$ $>$ \& \mbox{\hyperlink{classNaluEventBuffer_ac7072b1fa66e4c61b3dbc45eee5f3ba6}{get\+\_\+events}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves all events currently in the buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} \& \mbox{\hyperlink{classNaluEventBuffer_aa5975f1f6b12779594f2c56af07b810b}{get\+\_\+latest\+\_\+event}} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the latest event in the buffer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} \& \mbox{\hyperlink{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}{get\+\_\+event\+\_\+by\+\_\+index}} (size\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Retrieves an event by its index. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuffer_ac11f738a211897eb56bea88336e9a2d9}{set\+\_\+on\+\_\+overflow\+\_\+callback}} (std\+::function$<$ void()$>$ callback)
+\begin{DoxyCompactList}\small\item\em Sets the callback function to be invoked when the buffer overflows. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuffer_ac1a03164f7deb51b3b0d64af89be02c5}{set\+\_\+max\+\_\+events}} (size\+\_\+t max\+\_\+events)
+\begin{DoxyCompactList}\small\item\em Sets the maximum number of events the buffer can hold. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ \mbox{\hyperlink{classNaluEventBuffer_a32ad59f07e78b93d1f8a5fa41cf8b0cb}{get\+\_\+events\+\_\+after\+\_\+timestamp}} (const std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \&timestamp, ssize\+\_\+t seed\+\_\+index=-\/1) const
+\begin{DoxyCompactList}\small\item\em Retrieves events that were added after a specified timestamp. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classNaluEventBuffer_afdad0928b31b05e4ce1d74af5c2950ee}{remove\+\_\+events\+\_\+before\+\_\+timestamp}} (const std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \&timestamp, ssize\+\_\+t seed\+\_\+index=-\/1)
+\begin{DoxyCompactList}\small\item\em Removes events that were added before a specified timestamp. \end{DoxyCompactList}\item 
+std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ \mbox{\hyperlink{classNaluEventBuffer_a634e9229e6c3e6242561f434f66015d5}{get\+\_\+events\+\_\+after\+\_\+index\+\_\+inclusive}} (size\+\_\+t index) const
+\begin{DoxyCompactList}\small\item\em Retrieves events after a specified index, inclusive. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classNaluEventBuffer_a505bba9047fac531b70b7c72b7b83cf7}{remove\+\_\+events\+\_\+before\+\_\+index\+\_\+exclusive}} (size\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Removes events before a specified index (exclusive). \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuffer_a82aa4d84d603731c094565fd5f2f3d1f}{add\+\_\+packet}} (const \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} \&packet, bool \&in\+\_\+safety\+\_\+buffer\+\_\+zone, uint32\+\_\+t \&event\+\_\+index)
+\begin{DoxyCompactList}\small\item\em Adds a packet to the event buffer, creating or updating events as needed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for managing a buffer of Nalu\+Events, including adding, retrieving, and removing events. 
+
+This class is responsible for holding and managing a collection of {\ttfamily \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}}} objects. It includes methods to add new events, retrieve events, and remove events based on various criteria. The class is thread-\/safe, with synchronization ensured using a mutex. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluEventBuffer_a9b2dbd4b4264bb89086ab7574fda2d24}\label{classNaluEventBuffer_a9b2dbd4b4264bb89086ab7574fda2d24}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!NaluEventBuffer@{NaluEventBuffer}}
+\index{NaluEventBuffer@{NaluEventBuffer}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{NaluEventBuffer()}{NaluEventBuffer()}}
+{\footnotesize\ttfamily Nalu\+Event\+Buffer\+::\+Nalu\+Event\+Buffer (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{max\+\_\+events,  }\item[{\mbox{\hyperlink{classNaluTimeDifferenceCalculator}{Nalu\+Time\+Difference\+Calculator}} \&}]{time\+\_\+diff\+\_\+calculator,  }\item[{size\+\_\+t}]{max\+\_\+lookback,  }\item[{size\+\_\+t}]{max\+\_\+event\+\_\+size,  }\item[{uint16\+\_\+t}]{event\+\_\+header,  }\item[{uint16\+\_\+t}]{event\+\_\+trailer }\end{DoxyParamCaption})}
+
+
+
+Constructs a \mbox{\hyperlink{classNaluEventBuffer}{Nalu\+Event\+Buffer}} with the specified parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em max\+\_\+events} & The maximum number of events the buffer can hold. \\
+\hline
+{\em time\+\_\+diff\+\_\+calculator} & The calculator used to compute time differences. \\
+\hline
+{\em max\+\_\+lookback} & The maximum number of past events to consider when adding a new packet. \\
+\hline
+{\em max\+\_\+event\+\_\+size} & The maximum size of an individual event. \\
+\hline
+{\em event\+\_\+header} & The header used for constructing events. \\
+\hline
+{\em event\+\_\+trailer} & The trailer used for constructing events. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventBuffer_a5997f089f24254cea9f59e1a6b2ffcee}\label{classNaluEventBuffer_a5997f089f24254cea9f59e1a6b2ffcee}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!````~NaluEventBuffer@{$\sim$NaluEventBuffer}}
+\index{````~NaluEventBuffer@{$\sim$NaluEventBuffer}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{$\sim$NaluEventBuffer()}{~NaluEventBuffer()}}
+{\footnotesize\ttfamily Nalu\+Event\+Buffer\+::$\sim$\+Nalu\+Event\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destructor. 
+
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluEventBuffer_a14bedefffd3db9b365608607eea4b40a}\label{classNaluEventBuffer_a14bedefffd3db9b365608607eea4b40a}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!add\_event@{add\_event}}
+\index{add\_event@{add\_event}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{add\_event()}{add\_event()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Buffer\+::add\+\_\+event (\begin{DoxyParamCaption}\item[{std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $>$}]{event }\end{DoxyParamCaption})}
+
+
+
+Adds a new event to the buffer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em event} & A unique pointer to the event to be added.\\
+\hline
+\end{DoxyParams}
+Throws an exception if the buffer has reached its maximum capacity. \mbox{\Hypertarget{classNaluEventBuffer_a82aa4d84d603731c094565fd5f2f3d1f}\label{classNaluEventBuffer_a82aa4d84d603731c094565fd5f2f3d1f}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!add\_packet@{add\_packet}}
+\index{add\_packet@{add\_packet}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{add\_packet()}{add\_packet()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Buffer\+::add\+\_\+packet (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} \&}]{packet,  }\item[{bool \&}]{in\+\_\+safety\+\_\+buffer\+\_\+zone,  }\item[{uint32\+\_\+t \&}]{event\+\_\+index }\end{DoxyParamCaption})}
+
+
+
+Adds a packet to the event buffer, creating or updating events as needed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em packet} & The packet to add to the buffer. \\
+\hline
+{\em in\+\_\+safety\+\_\+buffer\+\_\+zone} & A reference to a flag indicating if the packet is within the safety buffer zone. \\
+\hline
+{\em event\+\_\+index} & A reference to the event index, incremented for each new event. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}\label{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!get\_event\_by\_index@{get\_event\_by\_index}}
+\index{get\_event\_by\_index@{get\_event\_by\_index}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{get\_event\_by\_index()}{get\_event\_by\_index()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} \& Nalu\+Event\+Buffer\+::get\+\_\+event\+\_\+by\+\_\+index (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption})}
+
+
+
+Retrieves an event by its index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & The index of the event to retrieve. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A reference to the event at the specified index.
+\end{DoxyReturn}
+Throws an exception if the index is out of range. \mbox{\Hypertarget{classNaluEventBuffer_ac7072b1fa66e4c61b3dbc45eee5f3ba6}\label{classNaluEventBuffer_ac7072b1fa66e4c61b3dbc45eee5f3ba6}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!get\_events@{get\_events}}
+\index{get\_events@{get\_events}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{get\_events()}{get\_events()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $>$ $>$ \& Nalu\+Event\+Buffer\+::get\+\_\+events (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves all events currently in the buffer. 
+
+\begin{DoxyReturn}{Returns}
+A reference to a vector of unique pointers to events. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuffer_a634e9229e6c3e6242561f434f66015d5}\label{classNaluEventBuffer_a634e9229e6c3e6242561f434f66015d5}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!get\_events\_after\_index\_inclusive@{get\_events\_after\_index\_inclusive}}
+\index{get\_events\_after\_index\_inclusive@{get\_events\_after\_index\_inclusive}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{get\_events\_after\_index\_inclusive()}{get\_events\_after\_index\_inclusive()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ Nalu\+Event\+Buffer\+::get\+\_\+events\+\_\+after\+\_\+index\+\_\+inclusive (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption}) const}
+
+
+
+Retrieves events after a specified index, inclusive. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & The index from which to start retrieving events. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of pointers to events after the given index. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuffer_a32ad59f07e78b93d1f8a5fa41cf8b0cb}\label{classNaluEventBuffer_a32ad59f07e78b93d1f8a5fa41cf8b0cb}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!get\_events\_after\_timestamp@{get\_events\_after\_timestamp}}
+\index{get\_events\_after\_timestamp@{get\_events\_after\_timestamp}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{get\_events\_after\_timestamp()}{get\_events\_after\_timestamp()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ Nalu\+Event\+Buffer\+::get\+\_\+events\+\_\+after\+\_\+timestamp (\begin{DoxyParamCaption}\item[{const std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \&}]{timestamp,  }\item[{ssize\+\_\+t}]{seed\+\_\+index = {\ttfamily -\/1} }\end{DoxyParamCaption}) const}
+
+
+
+Retrieves events that were added after a specified timestamp. 
+
+This method performs a binary search to find the first event added after the provided timestamp.
+
+
+\begin{DoxyParams}{Parameters}
+{\em timestamp} & The timestamp to compare against. \\
+\hline
+{\em seed\+\_\+index} & The index from which to start searching (default is -\/1). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of pointers to events added after the timestamp. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuffer_aa5975f1f6b12779594f2c56af07b810b}\label{classNaluEventBuffer_aa5975f1f6b12779594f2c56af07b810b}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!get\_latest\_event@{get\_latest\_event}}
+\index{get\_latest\_event@{get\_latest\_event}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{get\_latest\_event()}{get\_latest\_event()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} \& Nalu\+Event\+Buffer\+::get\+\_\+latest\+\_\+event (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves the latest event in the buffer. 
+
+\begin{DoxyReturn}{Returns}
+A reference to the latest event.
+\end{DoxyReturn}
+Throws an exception if the buffer is empty. \mbox{\Hypertarget{classNaluEventBuffer_a505bba9047fac531b70b7c72b7b83cf7}\label{classNaluEventBuffer_a505bba9047fac531b70b7c72b7b83cf7}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!remove\_events\_before\_index\_exclusive@{remove\_events\_before\_index\_exclusive}}
+\index{remove\_events\_before\_index\_exclusive@{remove\_events\_before\_index\_exclusive}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{remove\_events\_before\_index\_exclusive()}{remove\_events\_before\_index\_exclusive()}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Event\+Buffer\+::remove\+\_\+events\+\_\+before\+\_\+index\+\_\+exclusive (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption})}
+
+
+
+Removes events before a specified index (exclusive). 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & The index to compare against. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of events removed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuffer_afdad0928b31b05e4ce1d74af5c2950ee}\label{classNaluEventBuffer_afdad0928b31b05e4ce1d74af5c2950ee}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!remove\_events\_before\_timestamp@{remove\_events\_before\_timestamp}}
+\index{remove\_events\_before\_timestamp@{remove\_events\_before\_timestamp}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{remove\_events\_before\_timestamp()}{remove\_events\_before\_timestamp()}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Event\+Buffer\+::remove\+\_\+events\+\_\+before\+\_\+timestamp (\begin{DoxyParamCaption}\item[{const std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \&}]{timestamp,  }\item[{ssize\+\_\+t}]{seed\+\_\+index = {\ttfamily -\/1} }\end{DoxyParamCaption})}
+
+
+
+Removes events that were added before a specified timestamp. 
+
+This method performs a binary search to find the first event added after the provided timestamp and removes all events before it.
+
+
+\begin{DoxyParams}{Parameters}
+{\em timestamp} & The timestamp to compare against. \\
+\hline
+{\em seed\+\_\+index} & The index from which to start searching (default is -\/1). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The number of events removed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuffer_ac1a03164f7deb51b3b0d64af89be02c5}\label{classNaluEventBuffer_ac1a03164f7deb51b3b0d64af89be02c5}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!set\_max\_events@{set\_max\_events}}
+\index{set\_max\_events@{set\_max\_events}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{set\_max\_events()}{set\_max\_events()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Buffer\+::set\+\_\+max\+\_\+events (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{max\+\_\+events }\end{DoxyParamCaption})}
+
+
+
+Sets the maximum number of events the buffer can hold. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em max\+\_\+events} & The new maximum number of events. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventBuffer_ac11f738a211897eb56bea88336e9a2d9}\label{classNaluEventBuffer_ac11f738a211897eb56bea88336e9a2d9}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!set\_on\_overflow\_callback@{set\_on\_overflow\_callback}}
+\index{set\_on\_overflow\_callback@{set\_on\_overflow\_callback}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{set\_on\_overflow\_callback()}{set\_on\_overflow\_callback()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Buffer\+::set\+\_\+on\+\_\+overflow\+\_\+callback (\begin{DoxyParamCaption}\item[{std\+::function$<$ void()$>$}]{callback }\end{DoxyParamCaption})}
+
+
+
+Sets the callback function to be invoked when the buffer overflows. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em callback} & A function to call when the buffer is full. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__event__buffer_8h}{nalu\+\_\+event\+\_\+buffer.\+h}}\item 
+src/\mbox{\hyperlink{nalu__event__buffer_8cpp}{nalu\+\_\+event\+\_\+buffer.\+cpp}}\end{DoxyCompactItemize}

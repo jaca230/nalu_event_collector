@@ -1,0 +1,33 @@
+\hypertarget{nalu__packet__parser_8h}{}\doxysection{include/nalu\+\_\+packet\+\_\+parser.h File Reference}
+\label{nalu__packet__parser_8h}\index{include/nalu\_packet\_parser.h@{include/nalu\_packet\_parser.h}}
+
+
+This file defines the \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} class responsible for parsing Nalu packets from a byte stream.  
+
+
+{\ttfamily \#include $<$cstdint$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}nalu\+\_\+event\+\_\+collector\+\_\+params.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}nalu\+\_\+packet.\+h\char`\"{}}\newline
+Include dependency graph for nalu\+\_\+packet\+\_\+parser.\+h\+:
+% FIG 0
+This graph shows which files directly or indirectly include this file\+:
+% FIG 1
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}}
+\begin{DoxyCompactList}\small\item\em A class for parsing Nalu packets from a byte stream. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This file defines the \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} class responsible for parsing Nalu packets from a byte stream. 
+
+The \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} class is used to process raw byte streams, identify valid Nalu packets, and store them in a vector of \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} structures. The class includes functionality to validate packet integrity with start and stop markers, extract relevant data from the byte stream, and handle any leftover or incomplete packets.
+
+The class is configurable with several parameters such as packet size, marker values, and timing masks.
+
+\begin{DoxyNote}{Note}
+The parsing process can be customized by setting flags for checking packet integrity. 
+\end{DoxyNote}

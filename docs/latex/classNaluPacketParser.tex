@@ -1,0 +1,271 @@
+\hypertarget{classNaluPacketParser}{}\doxysection{Nalu\+Packet\+Parser Class Reference}
+\label{classNaluPacketParser}\index{NaluPacketParser@{NaluPacketParser}}
+
+
+A class for parsing Nalu packets from a byte stream.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+packet\+\_\+parser.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluPacketParser_aa13651e0449d8c9bbe530e52ff82ef8a}{Nalu\+Packet\+Parser}} (size\+\_\+t packet\+\_\+size=74, const std\+::vector$<$ uint8\+\_\+t $>$ \&start\+\_\+marker=\{0x0E\}, const std\+::vector$<$ uint8\+\_\+t $>$ \&stop\+\_\+marker=\{0x\+FA, 0x5A\}, uint8\+\_\+t chan\+\_\+mask=0x3F, uint8\+\_\+t chan\+\_\+shift=0, uint8\+\_\+t abs\+\_\+wind\+\_\+mask=0x3F, uint8\+\_\+t evt\+\_\+wind\+\_\+mask=0x3F, uint8\+\_\+t evt\+\_\+wind\+\_\+shift=6, uint16\+\_\+t timing\+\_\+mask=0x\+FFF, uint8\+\_\+t timing\+\_\+shift=12, bool check\+\_\+packet\+\_\+integrity=false, uint16\+\_\+t constructed\+\_\+packet\+\_\+header=0x\+AAAA, uint16\+\_\+t constructed\+\_\+packet\+\_\+footer=0x\+FFFF)
+\begin{DoxyCompactList}\small\item\em Constructor with default values, including header and footer. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluPacketParser_a673d1967a59a170f214a1d797530680f}{Nalu\+Packet\+Parser}} (const \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}} \&params)
+\begin{DoxyCompactList}\small\item\em Constructor that accepts parameters encapsulated in a parameter struct. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classNaluPacketParser_aae97b5cc8462afed8cf73ae858dac122}{get\+\_\+packet\+\_\+size}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_ae955f7253f2fa4392368016146536961}{set\+\_\+packet\+\_\+size}} (size\+\_\+t packet\+\_\+size)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacketParser_ac84ff051f98f20e0e3135cea71bcf6d7}{get\+\_\+chan\+\_\+mask}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_a422144142ee8ff62f72a6db8f334e424}{set\+\_\+chan\+\_\+mask}} (uint8\+\_\+t chan\+\_\+mask)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacketParser_aec6cc9165934b44a93a544b0504a8d13}{get\+\_\+chan\+\_\+shift}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_a35965c1c12ac06d5e83dbee4610718bf}{set\+\_\+chan\+\_\+shift}} (uint8\+\_\+t chan\+\_\+shift)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacketParser_a03e6232e0010315892226333076579c0}{get\+\_\+abs\+\_\+wind\+\_\+mask}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_af3fac6448b66f30f9b275dd4a9e7cf11}{set\+\_\+abs\+\_\+wind\+\_\+mask}} (uint8\+\_\+t abs\+\_\+wind\+\_\+mask)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacketParser_ab8b203ff667925a19eb3b681fadd05ea}{get\+\_\+evt\+\_\+wind\+\_\+mask}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_afb752533bfc06c2f2f7f06dfdda48aaa}{set\+\_\+evt\+\_\+wind\+\_\+mask}} (uint8\+\_\+t evt\+\_\+wind\+\_\+mask)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacketParser_ab72e8fbcbd15061db59b19b4b9f9e285}{get\+\_\+evt\+\_\+wind\+\_\+shift}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_af4c0c456ef25e127317f1253aa399dc4}{set\+\_\+evt\+\_\+wind\+\_\+shift}} (uint8\+\_\+t evt\+\_\+wind\+\_\+shift)
+\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluPacketParser_ab088bf190ebce2ff691bbcbf11d4e60a}{get\+\_\+timing\+\_\+mask}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_a19bebe0218b60143e0fdd37c18ff8a77}{set\+\_\+timing\+\_\+mask}} (uint16\+\_\+t timing\+\_\+mask)
+\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluPacketParser_afb1c39f1350d6bf9934c4a766a88264e}{get\+\_\+timing\+\_\+shift}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_a7eb0a5b50fac60b9c9727b015f913ab9}{set\+\_\+timing\+\_\+shift}} (uint8\+\_\+t timing\+\_\+shift)
+\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classNaluPacketParser_a0b3dc0371fe800b1e25693c8c03f2b5b}{get\+\_\+start\+\_\+marker}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_a3bf8adc0ca14255dd5e9f30917ab5fbe}{set\+\_\+start\+\_\+marker}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&start\+\_\+marker)
+\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{classNaluPacketParser_a2f5126a2e388af227c4fad92c3e12645}{get\+\_\+stop\+\_\+marker}} () const
+\item 
+void \mbox{\hyperlink{classNaluPacketParser_af64402d8ef6864105b66a94990b490d4}{set\+\_\+stop\+\_\+marker}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&stop\+\_\+marker)
+\item 
+std\+::vector$<$ \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} $>$ \mbox{\hyperlink{classNaluPacketParser_abceb2643ed8d37ac89f66fa9f9b3b02a}{process\+\_\+stream}} (const std\+::vector$<$ uint8\+\_\+t $>$ \&byte\+\_\+stream)
+\begin{DoxyCompactList}\small\item\em Processes a byte stream and parses Nalu packets. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class for parsing Nalu packets from a byte stream. 
+
+The \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} processes byte streams, identifies Nalu packets based on specified start and stop markers, and extracts relevant data into \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} structures. It supports both marker-\/based integrity checks and raw parsing for custom use cases. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluPacketParser_aa13651e0449d8c9bbe530e52ff82ef8a}\label{classNaluPacketParser_aa13651e0449d8c9bbe530e52ff82ef8a}} 
+\index{NaluPacketParser@{NaluPacketParser}!NaluPacketParser@{NaluPacketParser}}
+\index{NaluPacketParser@{NaluPacketParser}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{NaluPacketParser()}{NaluPacketParser()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Nalu\+Packet\+Parser\+::\+Nalu\+Packet\+Parser (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{packet\+\_\+size = {\ttfamily 74},  }\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{start\+\_\+marker = {\ttfamily \{0x0E\}},  }\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{stop\+\_\+marker = {\ttfamily \{0xFA,~0x5A\}},  }\item[{uint8\+\_\+t}]{chan\+\_\+mask = {\ttfamily 0x3F},  }\item[{uint8\+\_\+t}]{chan\+\_\+shift = {\ttfamily 0},  }\item[{uint8\+\_\+t}]{abs\+\_\+wind\+\_\+mask = {\ttfamily 0x3F},  }\item[{uint8\+\_\+t}]{evt\+\_\+wind\+\_\+mask = {\ttfamily 0x3F},  }\item[{uint8\+\_\+t}]{evt\+\_\+wind\+\_\+shift = {\ttfamily 6},  }\item[{uint16\+\_\+t}]{timing\+\_\+mask = {\ttfamily 0xFFF},  }\item[{uint8\+\_\+t}]{timing\+\_\+shift = {\ttfamily 12},  }\item[{bool}]{check\+\_\+packet\+\_\+integrity = {\ttfamily false},  }\item[{uint16\+\_\+t}]{constructed\+\_\+packet\+\_\+header = {\ttfamily 0xAAAA},  }\item[{uint16\+\_\+t}]{constructed\+\_\+packet\+\_\+footer = {\ttfamily 0xFFFF} }\end{DoxyParamCaption})}
+
+
+
+Constructor with default values, including header and footer. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em packet\+\_\+size} & The size of each packet in bytes. \\
+\hline
+{\em start\+\_\+marker} & The start marker used to identify the beginning of a packet. \\
+\hline
+{\em stop\+\_\+marker} & The stop marker used to identify the end of a packet. \\
+\hline
+{\em chan\+\_\+mask} & Mask to extract channel data from the byte stream. \\
+\hline
+{\em chan\+\_\+shift} & Bitwise shift for channel data extraction. \\
+\hline
+{\em abs\+\_\+wind\+\_\+mask} & Mask for absolute window data. \\
+\hline
+{\em evt\+\_\+wind\+\_\+mask} & Mask for event window data. \\
+\hline
+{\em evt\+\_\+wind\+\_\+shift} & Bitwise shift for event window data. \\
+\hline
+{\em timing\+\_\+mask} & Mask to extract timing data. \\
+\hline
+{\em timing\+\_\+shift} & Bitwise shift for timing data extraction. \\
+\hline
+{\em check\+\_\+packet\+\_\+integrity} & Flag to enable or disable packet integrity checks. \\
+\hline
+{\em constructed\+\_\+packet\+\_\+header} & The header to be used for constructed packets. \\
+\hline
+{\em constructed\+\_\+packet\+\_\+footer} & The footer to be used for constructed packets. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluPacketParser_a673d1967a59a170f214a1d797530680f}\label{classNaluPacketParser_a673d1967a59a170f214a1d797530680f}} 
+\index{NaluPacketParser@{NaluPacketParser}!NaluPacketParser@{NaluPacketParser}}
+\index{NaluPacketParser@{NaluPacketParser}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{NaluPacketParser()}{NaluPacketParser()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Nalu\+Packet\+Parser\+::\+Nalu\+Packet\+Parser (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}} \&}]{params }\end{DoxyParamCaption})}
+
+
+
+Constructor that accepts parameters encapsulated in a parameter struct. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & The \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}} struct containing the configuration values. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluPacketParser_a03e6232e0010315892226333076579c0}\label{classNaluPacketParser_a03e6232e0010315892226333076579c0}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_abs\_wind\_mask@{get\_abs\_wind\_mask}}
+\index{get\_abs\_wind\_mask@{get\_abs\_wind\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_abs\_wind\_mask()}{get\_abs\_wind\_mask()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+abs\+\_\+wind\+\_\+mask (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_ac84ff051f98f20e0e3135cea71bcf6d7}\label{classNaluPacketParser_ac84ff051f98f20e0e3135cea71bcf6d7}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_chan\_mask@{get\_chan\_mask}}
+\index{get\_chan\_mask@{get\_chan\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_chan\_mask()}{get\_chan\_mask()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+chan\+\_\+mask (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_aec6cc9165934b44a93a544b0504a8d13}\label{classNaluPacketParser_aec6cc9165934b44a93a544b0504a8d13}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_chan\_shift@{get\_chan\_shift}}
+\index{get\_chan\_shift@{get\_chan\_shift}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_chan\_shift()}{get\_chan\_shift()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+chan\+\_\+shift (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_ab8b203ff667925a19eb3b681fadd05ea}\label{classNaluPacketParser_ab8b203ff667925a19eb3b681fadd05ea}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_evt\_wind\_mask@{get\_evt\_wind\_mask}}
+\index{get\_evt\_wind\_mask@{get\_evt\_wind\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_evt\_wind\_mask()}{get\_evt\_wind\_mask()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+evt\+\_\+wind\+\_\+mask (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_ab72e8fbcbd15061db59b19b4b9f9e285}\label{classNaluPacketParser_ab72e8fbcbd15061db59b19b4b9f9e285}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_evt\_wind\_shift@{get\_evt\_wind\_shift}}
+\index{get\_evt\_wind\_shift@{get\_evt\_wind\_shift}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_evt\_wind\_shift()}{get\_evt\_wind\_shift()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+evt\+\_\+wind\+\_\+shift (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_aae97b5cc8462afed8cf73ae858dac122}\label{classNaluPacketParser_aae97b5cc8462afed8cf73ae858dac122}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_packet\_size@{get\_packet\_size}}
+\index{get\_packet\_size@{get\_packet\_size}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_packet\_size()}{get\_packet\_size()}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+packet\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_a0b3dc0371fe800b1e25693c8c03f2b5b}\label{classNaluPacketParser_a0b3dc0371fe800b1e25693c8c03f2b5b}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_start\_marker@{get\_start\_marker}}
+\index{get\_start\_marker@{get\_start\_marker}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_start\_marker()}{get\_start\_marker()}}
+{\footnotesize\ttfamily std\+::vector$<$uint8\+\_\+t$>$ Nalu\+Packet\+Parser\+::get\+\_\+start\+\_\+marker (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_a2f5126a2e388af227c4fad92c3e12645}\label{classNaluPacketParser_a2f5126a2e388af227c4fad92c3e12645}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_stop\_marker@{get\_stop\_marker}}
+\index{get\_stop\_marker@{get\_stop\_marker}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_stop\_marker()}{get\_stop\_marker()}}
+{\footnotesize\ttfamily std\+::vector$<$uint8\+\_\+t$>$ Nalu\+Packet\+Parser\+::get\+\_\+stop\+\_\+marker (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_ab088bf190ebce2ff691bbcbf11d4e60a}\label{classNaluPacketParser_ab088bf190ebce2ff691bbcbf11d4e60a}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_timing\_mask@{get\_timing\_mask}}
+\index{get\_timing\_mask@{get\_timing\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_timing\_mask()}{get\_timing\_mask()}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+timing\+\_\+mask (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_afb1c39f1350d6bf9934c4a766a88264e}\label{classNaluPacketParser_afb1c39f1350d6bf9934c4a766a88264e}} 
+\index{NaluPacketParser@{NaluPacketParser}!get\_timing\_shift@{get\_timing\_shift}}
+\index{get\_timing\_shift@{get\_timing\_shift}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{get\_timing\_shift()}{get\_timing\_shift()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+::get\+\_\+timing\+\_\+shift (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+\mbox{\Hypertarget{classNaluPacketParser_abceb2643ed8d37ac89f66fa9f9b3b02a}\label{classNaluPacketParser_abceb2643ed8d37ac89f66fa9f9b3b02a}} 
+\index{NaluPacketParser@{NaluPacketParser}!process\_stream@{process\_stream}}
+\index{process\_stream@{process\_stream}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{process\_stream()}{process\_stream()}}
+{\footnotesize\ttfamily std\+::vector$<$ \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} $>$ Nalu\+Packet\+Parser\+::process\+\_\+stream (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{byte\+\_\+stream }\end{DoxyParamCaption})}
+
+
+
+Processes a byte stream and parses Nalu packets. 
+
+This method splits the byte stream into Nalu packets, validates each packet, and returns a vector of parsed \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} structures.
+
+
+\begin{DoxyParams}{Parameters}
+{\em byte\+\_\+stream} & The raw byte stream to be processed. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A vector of \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} structures. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluPacketParser_af3fac6448b66f30f9b275dd4a9e7cf11}\label{classNaluPacketParser_af3fac6448b66f30f9b275dd4a9e7cf11}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_abs\_wind\_mask@{set\_abs\_wind\_mask}}
+\index{set\_abs\_wind\_mask@{set\_abs\_wind\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_abs\_wind\_mask()}{set\_abs\_wind\_mask()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+abs\+\_\+wind\+\_\+mask (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{abs\+\_\+wind\+\_\+mask }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_a422144142ee8ff62f72a6db8f334e424}\label{classNaluPacketParser_a422144142ee8ff62f72a6db8f334e424}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_chan\_mask@{set\_chan\_mask}}
+\index{set\_chan\_mask@{set\_chan\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_chan\_mask()}{set\_chan\_mask()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+chan\+\_\+mask (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{chan\+\_\+mask }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_a35965c1c12ac06d5e83dbee4610718bf}\label{classNaluPacketParser_a35965c1c12ac06d5e83dbee4610718bf}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_chan\_shift@{set\_chan\_shift}}
+\index{set\_chan\_shift@{set\_chan\_shift}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_chan\_shift()}{set\_chan\_shift()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+chan\+\_\+shift (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{chan\+\_\+shift }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_afb752533bfc06c2f2f7f06dfdda48aaa}\label{classNaluPacketParser_afb752533bfc06c2f2f7f06dfdda48aaa}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_evt\_wind\_mask@{set\_evt\_wind\_mask}}
+\index{set\_evt\_wind\_mask@{set\_evt\_wind\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_evt\_wind\_mask()}{set\_evt\_wind\_mask()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+evt\+\_\+wind\+\_\+mask (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{evt\+\_\+wind\+\_\+mask }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_af4c0c456ef25e127317f1253aa399dc4}\label{classNaluPacketParser_af4c0c456ef25e127317f1253aa399dc4}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_evt\_wind\_shift@{set\_evt\_wind\_shift}}
+\index{set\_evt\_wind\_shift@{set\_evt\_wind\_shift}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_evt\_wind\_shift()}{set\_evt\_wind\_shift()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+evt\+\_\+wind\+\_\+shift (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{evt\+\_\+wind\+\_\+shift }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_ae955f7253f2fa4392368016146536961}\label{classNaluPacketParser_ae955f7253f2fa4392368016146536961}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_packet\_size@{set\_packet\_size}}
+\index{set\_packet\_size@{set\_packet\_size}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_packet\_size()}{set\_packet\_size()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+packet\+\_\+size (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{packet\+\_\+size }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_a3bf8adc0ca14255dd5e9f30917ab5fbe}\label{classNaluPacketParser_a3bf8adc0ca14255dd5e9f30917ab5fbe}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_start\_marker@{set\_start\_marker}}
+\index{set\_start\_marker@{set\_start\_marker}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_start\_marker()}{set\_start\_marker()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+start\+\_\+marker (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{start\+\_\+marker }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_af64402d8ef6864105b66a94990b490d4}\label{classNaluPacketParser_af64402d8ef6864105b66a94990b490d4}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_stop\_marker@{set\_stop\_marker}}
+\index{set\_stop\_marker@{set\_stop\_marker}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_stop\_marker()}{set\_stop\_marker()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+stop\+\_\+marker (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ uint8\+\_\+t $>$ \&}]{stop\+\_\+marker }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_a19bebe0218b60143e0fdd37c18ff8a77}\label{classNaluPacketParser_a19bebe0218b60143e0fdd37c18ff8a77}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_timing\_mask@{set\_timing\_mask}}
+\index{set\_timing\_mask@{set\_timing\_mask}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_timing\_mask()}{set\_timing\_mask()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+timing\+\_\+mask (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{timing\+\_\+mask }\end{DoxyParamCaption})}
+
+\mbox{\Hypertarget{classNaluPacketParser_a7eb0a5b50fac60b9c9727b015f913ab9}\label{classNaluPacketParser_a7eb0a5b50fac60b9c9727b015f913ab9}} 
+\index{NaluPacketParser@{NaluPacketParser}!set\_timing\_shift@{set\_timing\_shift}}
+\index{set\_timing\_shift@{set\_timing\_shift}!NaluPacketParser@{NaluPacketParser}}
+\doxysubsubsection{\texorpdfstring{set\_timing\_shift()}{set\_timing\_shift()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+Parser\+::set\+\_\+timing\+\_\+shift (\begin{DoxyParamCaption}\item[{uint8\+\_\+t}]{timing\+\_\+shift }\end{DoxyParamCaption})}
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__packet__parser_8h}{nalu\+\_\+packet\+\_\+parser.\+h}}\item 
+src/\mbox{\hyperlink{nalu__packet__parser_8cpp}{nalu\+\_\+packet\+\_\+parser.\+cpp}}\end{DoxyCompactItemize}

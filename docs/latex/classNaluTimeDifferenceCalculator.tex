@@ -1,0 +1,91 @@
+\hypertarget{classNaluTimeDifferenceCalculator}{}\doxysection{Nalu\+Time\+Difference\+Calculator Class Reference}
+\label{classNaluTimeDifferenceCalculator}\index{NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}}
+
+
+This class computes time differences based on the clock cycles of the board. It also checks if the time difference is within a specified threshold, taking into account a maximum trigger time and its half value to handle wraparounds in the clock cycle counts.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+time\+\_\+difference\+\_\+calculator.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluTimeDifferenceCalculator_a53a37eaefa3650691339b7331a83ac89}{Nalu\+Time\+Difference\+Calculator}} (uint32\+\_\+t max\+\_\+trigger\+\_\+time, uint32\+\_\+t time\+\_\+threshold)
+\begin{DoxyCompactList}\small\item\em Constructor to initialize the time difference calculator. \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classNaluTimeDifferenceCalculator_abc84072060912f30323275373bbe3d9b}{compute\+\_\+time\+\_\+diff}} (uint32\+\_\+t new\+\_\+time, uint32\+\_\+t old\+\_\+time) const
+\begin{DoxyCompactList}\small\item\em Compute the adjusted time difference between two time values in clock cycles. The calculation considers potential wraparound in the clock cycles. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classNaluTimeDifferenceCalculator_a50a51b14c1e184838d6639139ae4711d}{is\+\_\+within\+\_\+threshold}} (uint32\+\_\+t new\+\_\+time, uint32\+\_\+t old\+\_\+time) const
+\begin{DoxyCompactList}\small\item\em Check if the computed time difference between two time values is within the specified threshold. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+This class computes time differences based on the clock cycles of the board. It also checks if the time difference is within a specified threshold, taking into account a maximum trigger time and its half value to handle wraparounds in the clock cycle counts. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluTimeDifferenceCalculator_a53a37eaefa3650691339b7331a83ac89}\label{classNaluTimeDifferenceCalculator_a53a37eaefa3650691339b7331a83ac89}} 
+\index{NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}!NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}}
+\index{NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}!NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}}
+\doxysubsubsection{\texorpdfstring{NaluTimeDifferenceCalculator()}{NaluTimeDifferenceCalculator()}}
+{\footnotesize\ttfamily Nalu\+Time\+Difference\+Calculator\+::\+Nalu\+Time\+Difference\+Calculator (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{max\+\_\+trigger\+\_\+time,  }\item[{uint32\+\_\+t}]{time\+\_\+threshold }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructor to initialize the time difference calculator. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em max\+\_\+trigger\+\_\+time} & The maximum trigger time (in clock cycles). \\
+\hline
+{\em time\+\_\+threshold} & The maximum allowable time difference (in clock cycles) for a valid event. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluTimeDifferenceCalculator_abc84072060912f30323275373bbe3d9b}\label{classNaluTimeDifferenceCalculator_abc84072060912f30323275373bbe3d9b}} 
+\index{NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}!compute\_time\_diff@{compute\_time\_diff}}
+\index{compute\_time\_diff@{compute\_time\_diff}!NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}}
+\doxysubsubsection{\texorpdfstring{compute\_time\_diff()}{compute\_time\_diff()}}
+{\footnotesize\ttfamily uint32\+\_\+t Nalu\+Time\+Difference\+Calculator\+::compute\+\_\+time\+\_\+diff (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{new\+\_\+time,  }\item[{uint32\+\_\+t}]{old\+\_\+time }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Compute the adjusted time difference between two time values in clock cycles. The calculation considers potential wraparound in the clock cycles. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+time} & The newer time value (in clock cycles). \\
+\hline
+{\em old\+\_\+time} & The older time value (in clock cycles). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The adjusted time difference (in clock cycles). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluTimeDifferenceCalculator_a50a51b14c1e184838d6639139ae4711d}\label{classNaluTimeDifferenceCalculator_a50a51b14c1e184838d6639139ae4711d}} 
+\index{NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}!is\_within\_threshold@{is\_within\_threshold}}
+\index{is\_within\_threshold@{is\_within\_threshold}!NaluTimeDifferenceCalculator@{NaluTimeDifferenceCalculator}}
+\doxysubsubsection{\texorpdfstring{is\_within\_threshold()}{is\_within\_threshold()}}
+{\footnotesize\ttfamily bool Nalu\+Time\+Difference\+Calculator\+::is\+\_\+within\+\_\+threshold (\begin{DoxyParamCaption}\item[{uint32\+\_\+t}]{new\+\_\+time,  }\item[{uint32\+\_\+t}]{old\+\_\+time }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Check if the computed time difference between two time values is within the specified threshold. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em new\+\_\+time} & The newer time value (in clock cycles). \\
+\hline
+{\em old\+\_\+time} & The older time value (in clock cycles). \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the time difference is within the threshold, false otherwise. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__time__difference__calculator_8h}{nalu\+\_\+time\+\_\+difference\+\_\+calculator.\+h}}\end{DoxyCompactItemize}

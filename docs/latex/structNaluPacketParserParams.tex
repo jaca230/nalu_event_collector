@@ -1,0 +1,189 @@
+\hypertarget{structNaluPacketParserParams}{}\doxysection{Nalu\+Packet\+Parser\+Params Struct Reference}
+\label{structNaluPacketParserParams}\index{NaluPacketParserParams@{NaluPacketParserParams}}
+
+
+Struct for \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} parameters.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+event\+\_\+collector\+\_\+params.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structNaluPacketParserParams_acf4f57ac4fabc822d0b680777211c02d}{Nalu\+Packet\+Parser\+Params}} (size\+\_\+t pkt\+\_\+size=74, std\+::vector$<$ uint8\+\_\+t $>$ start\+\_\+m=\{0x0E\}, std\+::vector$<$ uint8\+\_\+t $>$ stop\+\_\+m=\{0x\+FA, 0x5A\}, uint8\+\_\+t ch\+\_\+mask=0x3F, uint8\+\_\+t ch\+\_\+shift=0, uint8\+\_\+t abs\+\_\+w\+\_\+mask=0x3F, uint8\+\_\+t evt\+\_\+w\+\_\+mask=0x3F, uint8\+\_\+t evt\+\_\+w\+\_\+shift=6, uint16\+\_\+t t\+\_\+mask=0x\+FFF, uint8\+\_\+t t\+\_\+shift=12, bool integrity=false, uint16\+\_\+t header=0x\+AAAA, uint16\+\_\+t footer=0x\+FFFF)
+\begin{DoxyCompactList}\small\item\em Default constructor with default values for \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a30d09c986f15c2c479caa4d9f106d3c4}{packet\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Size of a single packet. \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{structNaluPacketParserParams_aee3963040374779dced996780038f9fb}{start\+\_\+marker}}
+\begin{DoxyCompactList}\small\item\em Start marker to identify the beginning of a packet. \end{DoxyCompactList}\item 
+std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{structNaluPacketParserParams_a3a1a876b3d1131ab2a31c8fab8e74697}{stop\+\_\+marker}}
+\begin{DoxyCompactList}\small\item\em Stop marker to identify the end of a packet. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a98030d10567fd890ae893c1de1c93847}{chan\+\_\+mask}}
+\begin{DoxyCompactList}\small\item\em Channel mask for packet extraction. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a990e9f9832e12ca88daed137590927df}{chan\+\_\+shift}}
+\begin{DoxyCompactList}\small\item\em Shift value for channel extraction. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a3da12be441b5b5f8e27df05eb513da31}{abs\+\_\+wind\+\_\+mask}}
+\begin{DoxyCompactList}\small\item\em Absolute window mask for packet processing. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a86aa46ac85ba6af8b384ec001813bd66}{evt\+\_\+wind\+\_\+mask}}
+\begin{DoxyCompactList}\small\item\em Event window mask for packet processing. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_ac8d09418ad2a50d8b94035a2f973fdd4}{evt\+\_\+wind\+\_\+shift}}
+\begin{DoxyCompactList}\small\item\em Event window shift value. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a4a8363f3b6c9680eb4e558be14b8727e}{timing\+\_\+mask}}
+\begin{DoxyCompactList}\small\item\em Mask for timing-\/related information in the packet. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_ab82f954ddc6d9f3c3c117ae0850e37ca}{timing\+\_\+shift}}
+\begin{DoxyCompactList}\small\item\em Shift for timing-\/related information. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{structNaluPacketParserParams_a27ea9218f25b83acb7e337bb207408e3}{check\+\_\+packet\+\_\+integrity}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a9810e0806599060ce12953a2a9d566c4}{constructed\+\_\+packet\+\_\+header}}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a99165e6041a3f0462dd29b3c8cffc845}{constructed\+\_\+packet\+\_\+footer}}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Struct for \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} parameters. 
+
+This struct holds the configuration parameters for the \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}}, which parses incoming NALU packets and extracts relevant information. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structNaluPacketParserParams_acf4f57ac4fabc822d0b680777211c02d}\label{structNaluPacketParserParams_acf4f57ac4fabc822d0b680777211c02d}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!NaluPacketParserParams@{NaluPacketParserParams}}
+\index{NaluPacketParserParams@{NaluPacketParserParams}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{NaluPacketParserParams()}{NaluPacketParserParams()}}
+{\footnotesize\ttfamily Nalu\+Packet\+Parser\+Params\+::\+Nalu\+Packet\+Parser\+Params (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{pkt\+\_\+size = {\ttfamily 74},  }\item[{std\+::vector$<$ uint8\+\_\+t $>$}]{start\+\_\+m = {\ttfamily \{0x0E\}},  }\item[{std\+::vector$<$ uint8\+\_\+t $>$}]{stop\+\_\+m = {\ttfamily \{0xFA,~0x5A\}},  }\item[{uint8\+\_\+t}]{ch\+\_\+mask = {\ttfamily 0x3F},  }\item[{uint8\+\_\+t}]{ch\+\_\+shift = {\ttfamily 0},  }\item[{uint8\+\_\+t}]{abs\+\_\+w\+\_\+mask = {\ttfamily 0x3F},  }\item[{uint8\+\_\+t}]{evt\+\_\+w\+\_\+mask = {\ttfamily 0x3F},  }\item[{uint8\+\_\+t}]{evt\+\_\+w\+\_\+shift = {\ttfamily 6},  }\item[{uint16\+\_\+t}]{t\+\_\+mask = {\ttfamily 0xFFF},  }\item[{uint8\+\_\+t}]{t\+\_\+shift = {\ttfamily 12},  }\item[{bool}]{integrity = {\ttfamily false},  }\item[{uint16\+\_\+t}]{header = {\ttfamily 0xAAAA},  }\item[{uint16\+\_\+t}]{footer = {\ttfamily 0xFFFF} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Default constructor with default values for \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}}. 
+
+Initializes parameters to their default values if not provided. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structNaluPacketParserParams_a3da12be441b5b5f8e27df05eb513da31}\label{structNaluPacketParserParams_a3da12be441b5b5f8e27df05eb513da31}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!abs\_wind\_mask@{abs\_wind\_mask}}
+\index{abs\_wind\_mask@{abs\_wind\_mask}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{abs\_wind\_mask}{abs\_wind\_mask}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+Params\+::abs\+\_\+wind\+\_\+mask}
+
+
+
+Absolute window mask for packet processing. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_a98030d10567fd890ae893c1de1c93847}\label{structNaluPacketParserParams_a98030d10567fd890ae893c1de1c93847}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!chan\_mask@{chan\_mask}}
+\index{chan\_mask@{chan\_mask}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{chan\_mask}{chan\_mask}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+Params\+::chan\+\_\+mask}
+
+
+
+Channel mask for packet extraction. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_a990e9f9832e12ca88daed137590927df}\label{structNaluPacketParserParams_a990e9f9832e12ca88daed137590927df}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!chan\_shift@{chan\_shift}}
+\index{chan\_shift@{chan\_shift}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{chan\_shift}{chan\_shift}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+Params\+::chan\+\_\+shift}
+
+
+
+Shift value for channel extraction. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_a27ea9218f25b83acb7e337bb207408e3}\label{structNaluPacketParserParams_a27ea9218f25b83acb7e337bb207408e3}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!check\_packet\_integrity@{check\_packet\_integrity}}
+\index{check\_packet\_integrity@{check\_packet\_integrity}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{check\_packet\_integrity}{check\_packet\_integrity}}
+{\footnotesize\ttfamily bool Nalu\+Packet\+Parser\+Params\+::check\+\_\+packet\+\_\+integrity}
+
+Flag indicating whether to check packet integrity. \mbox{\Hypertarget{structNaluPacketParserParams_a99165e6041a3f0462dd29b3c8cffc845}\label{structNaluPacketParserParams_a99165e6041a3f0462dd29b3c8cffc845}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!constructed\_packet\_footer@{constructed\_packet\_footer}}
+\index{constructed\_packet\_footer@{constructed\_packet\_footer}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{constructed\_packet\_footer}{constructed\_packet\_footer}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+Parser\+Params\+::constructed\+\_\+packet\+\_\+footer}
+
+Footer value for the constructed packet. \mbox{\Hypertarget{structNaluPacketParserParams_a9810e0806599060ce12953a2a9d566c4}\label{structNaluPacketParserParams_a9810e0806599060ce12953a2a9d566c4}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!constructed\_packet\_header@{constructed\_packet\_header}}
+\index{constructed\_packet\_header@{constructed\_packet\_header}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{constructed\_packet\_header}{constructed\_packet\_header}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+Parser\+Params\+::constructed\+\_\+packet\+\_\+header}
+
+Header value for the constructed packet. \mbox{\Hypertarget{structNaluPacketParserParams_a86aa46ac85ba6af8b384ec001813bd66}\label{structNaluPacketParserParams_a86aa46ac85ba6af8b384ec001813bd66}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!evt\_wind\_mask@{evt\_wind\_mask}}
+\index{evt\_wind\_mask@{evt\_wind\_mask}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{evt\_wind\_mask}{evt\_wind\_mask}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+Params\+::evt\+\_\+wind\+\_\+mask}
+
+
+
+Event window mask for packet processing. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_ac8d09418ad2a50d8b94035a2f973fdd4}\label{structNaluPacketParserParams_ac8d09418ad2a50d8b94035a2f973fdd4}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!evt\_wind\_shift@{evt\_wind\_shift}}
+\index{evt\_wind\_shift@{evt\_wind\_shift}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{evt\_wind\_shift}{evt\_wind\_shift}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+Params\+::evt\+\_\+wind\+\_\+shift}
+
+
+
+Event window shift value. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_a30d09c986f15c2c479caa4d9f106d3c4}\label{structNaluPacketParserParams_a30d09c986f15c2c479caa4d9f106d3c4}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!packet\_size@{packet\_size}}
+\index{packet\_size@{packet\_size}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{packet\_size}{packet\_size}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Packet\+Parser\+Params\+::packet\+\_\+size}
+
+
+
+Size of a single packet. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_aee3963040374779dced996780038f9fb}\label{structNaluPacketParserParams_aee3963040374779dced996780038f9fb}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!start\_marker@{start\_marker}}
+\index{start\_marker@{start\_marker}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{start\_marker}{start\_marker}}
+{\footnotesize\ttfamily std\+::vector$<$uint8\+\_\+t$>$ Nalu\+Packet\+Parser\+Params\+::start\+\_\+marker}
+
+
+
+Start marker to identify the beginning of a packet. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_a3a1a876b3d1131ab2a31c8fab8e74697}\label{structNaluPacketParserParams_a3a1a876b3d1131ab2a31c8fab8e74697}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!stop\_marker@{stop\_marker}}
+\index{stop\_marker@{stop\_marker}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{stop\_marker}{stop\_marker}}
+{\footnotesize\ttfamily std\+::vector$<$uint8\+\_\+t$>$ Nalu\+Packet\+Parser\+Params\+::stop\+\_\+marker}
+
+
+
+Stop marker to identify the end of a packet. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_a4a8363f3b6c9680eb4e558be14b8727e}\label{structNaluPacketParserParams_a4a8363f3b6c9680eb4e558be14b8727e}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!timing\_mask@{timing\_mask}}
+\index{timing\_mask@{timing\_mask}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{timing\_mask}{timing\_mask}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Packet\+Parser\+Params\+::timing\+\_\+mask}
+
+
+
+Mask for timing-\/related information in the packet. 
+
+\mbox{\Hypertarget{structNaluPacketParserParams_ab82f954ddc6d9f3c3c117ae0850e37ca}\label{structNaluPacketParserParams_ab82f954ddc6d9f3c3c117ae0850e37ca}} 
+\index{NaluPacketParserParams@{NaluPacketParserParams}!timing\_shift@{timing\_shift}}
+\index{timing\_shift@{timing\_shift}!NaluPacketParserParams@{NaluPacketParserParams}}
+\doxysubsubsection{\texorpdfstring{timing\_shift}{timing\_shift}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Packet\+Parser\+Params\+::timing\+\_\+shift}
+
+
+
+Shift for timing-\/related information. 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__event__collector__params_8h}{nalu\+\_\+event\+\_\+collector\+\_\+params.\+h}}\end{DoxyCompactItemize}

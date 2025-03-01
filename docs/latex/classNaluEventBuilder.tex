@@ -1,0 +1,164 @@
+\hypertarget{classNaluEventBuilder}{}\doxysection{Nalu\+Event\+Builder Class Reference}
+\label{classNaluEventBuilder}\index{NaluEventBuilder@{NaluEventBuilder}}
+
+
+Class for building events from Nalu packets.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+event\+\_\+builder.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluEventBuilder_aa1dfaf8b3fe64ecbaeee8e07ab2d9973}{Nalu\+Event\+Builder}} (std\+::vector$<$ int $>$ channels, int windows, int time\+\_\+threshold=5000, uint32\+\_\+t max\+\_\+trigger\+\_\+time=16777216, size\+\_\+t max\+\_\+lookback=2, size\+\_\+t event\+\_\+max\+\_\+size=1024, uint16\+\_\+t event\+\_\+header=0x\+BBBB, uint16\+\_\+t event\+\_\+trailer=0x\+EEEE)
+\begin{DoxyCompactList}\small\item\em Constructor to initialize \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}} with specific parameters. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEventBuilder_ab7bc1c4f8e1d042305ec7d62fbb54b31}{Nalu\+Event\+Builder}} (const \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}} \&params)
+\begin{DoxyCompactList}\small\item\em Constructor that initializes \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}} with parameters from \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuilder_a9832be91c006ae9fdc47a99c02cdabd4}{collect\+\_\+events}} (const std\+::vector$<$ \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} $>$ \&packets)
+\begin{DoxyCompactList}\small\item\em Collects events from the provided packets. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEventBuffer}{Nalu\+Event\+Buffer}} \& \mbox{\hyperlink{classNaluEventBuilder_a69e9cd225f65909fb1bd2bd6830740b7}{get\+\_\+event\+\_\+buffer}} ()
+\begin{DoxyCompactList}\small\item\em Gets the internal event buffer. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classNaluEventBuilder_a34c53bf188a7bdcd6aa8f749199f5bb7}{get\+\_\+windows}} () const
+\begin{DoxyCompactList}\small\item\em Gets the number of windows used for event collection. \end{DoxyCompactList}\item 
+const std\+::vector$<$ int $>$ \& \mbox{\hyperlink{classNaluEventBuilder_a5322ab61b9e6a795aa424be95046fbf1}{get\+\_\+channels}} () const
+\begin{DoxyCompactList}\small\item\em Gets the channels used for event collection. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuilder_adaf6f02b9fe20d29a645b3ddd254f21d}{set\+\_\+post\+\_\+event\+\_\+safety\+\_\+buffer\+\_\+counter\+\_\+max}} (size\+\_\+t counter\+\_\+max)
+\begin{DoxyCompactList}\small\item\em Sets the maximum size for the post-\/event safety buffer counter. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class for building events from Nalu packets. 
+
+The {\ttfamily \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}}} class is responsible for collecting events from Nalu packets. It manages the event buffer, handles the safety buffer zone, and provides methods for collecting events and interacting with the internal event buffer. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluEventBuilder_aa1dfaf8b3fe64ecbaeee8e07ab2d9973}\label{classNaluEventBuilder_aa1dfaf8b3fe64ecbaeee8e07ab2d9973}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!NaluEventBuilder@{NaluEventBuilder}}
+\index{NaluEventBuilder@{NaluEventBuilder}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{NaluEventBuilder()}{NaluEventBuilder()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Nalu\+Event\+Builder\+::\+Nalu\+Event\+Builder (\begin{DoxyParamCaption}\item[{std\+::vector$<$ int $>$}]{channels,  }\item[{int}]{windows,  }\item[{int}]{time\+\_\+threshold = {\ttfamily 5000},  }\item[{uint32\+\_\+t}]{max\+\_\+trigger\+\_\+time = {\ttfamily 16777216},  }\item[{size\+\_\+t}]{max\+\_\+lookback = {\ttfamily 2},  }\item[{size\+\_\+t}]{event\+\_\+max\+\_\+size = {\ttfamily 1024},  }\item[{uint16\+\_\+t}]{event\+\_\+header = {\ttfamily 0xBBBB},  }\item[{uint16\+\_\+t}]{event\+\_\+trailer = {\ttfamily 0xEEEE} }\end{DoxyParamCaption})}
+
+
+
+Constructor to initialize \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}} with specific parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em channels} & The channels used for event collection. \\
+\hline
+{\em windows} & The number of windows to be used for each event. \\
+\hline
+{\em time\+\_\+threshold} & The time threshold for triggering an event (default\+: 5000). \\
+\hline
+{\em max\+\_\+trigger\+\_\+time} & The maximum trigger time for events (default\+: 16777216). \\
+\hline
+{\em max\+\_\+lookback} & The maximum lookback for events (default\+: 2). \\
+\hline
+{\em event\+\_\+max\+\_\+size} & The maximum size of an event buffer (default\+: 1024). \\
+\hline
+{\em event\+\_\+header} & The header to be added to the event (default\+: 0x\+BBBB). \\
+\hline
+{\em event\+\_\+trailer} & The trailer to be added to the event (default\+: 0x\+EEEE). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventBuilder_ab7bc1c4f8e1d042305ec7d62fbb54b31}\label{classNaluEventBuilder_ab7bc1c4f8e1d042305ec7d62fbb54b31}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!NaluEventBuilder@{NaluEventBuilder}}
+\index{NaluEventBuilder@{NaluEventBuilder}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{NaluEventBuilder()}{NaluEventBuilder()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Nalu\+Event\+Builder\+::\+Nalu\+Event\+Builder (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}} \&}]{params }\end{DoxyParamCaption})}
+
+
+
+Constructor that initializes \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}} with parameters from \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & The parameters for the \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}} taken from \mbox{\hyperlink{structNaluEventCollectorParams}{Nalu\+Event\+Collector\+Params}}. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluEventBuilder_a9832be91c006ae9fdc47a99c02cdabd4}\label{classNaluEventBuilder_a9832be91c006ae9fdc47a99c02cdabd4}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!collect\_events@{collect\_events}}
+\index{collect\_events@{collect\_events}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{collect\_events()}{collect\_events()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Builder\+::collect\+\_\+events (\begin{DoxyParamCaption}\item[{const std\+::vector$<$ \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} $>$ \&}]{packets }\end{DoxyParamCaption})}
+
+
+
+Collects events from the provided packets. 
+
+This method processes the given packets and adds them to the event buffer, managing the safety buffer and event index.
+
+
+\begin{DoxyParams}{Parameters}
+{\em packets} & The list of Nalu packets to be processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventBuilder_a5322ab61b9e6a795aa424be95046fbf1}\label{classNaluEventBuilder_a5322ab61b9e6a795aa424be95046fbf1}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!get\_channels@{get\_channels}}
+\index{get\_channels@{get\_channels}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{get\_channels()}{get\_channels()}}
+{\footnotesize\ttfamily const std\+::vector$<$int$>$\& Nalu\+Event\+Builder\+::get\+\_\+channels (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the channels used for event collection. 
+
+\begin{DoxyReturn}{Returns}
+The list of channel numbers. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuilder_a69e9cd225f65909fb1bd2bd6830740b7}\label{classNaluEventBuilder_a69e9cd225f65909fb1bd2bd6830740b7}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!get\_event\_buffer@{get\_event\_buffer}}
+\index{get\_event\_buffer@{get\_event\_buffer}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{get\_event\_buffer()}{get\_event\_buffer()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluEventBuffer}{Nalu\+Event\+Buffer}}\& Nalu\+Event\+Builder\+::get\+\_\+event\+\_\+buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the internal event buffer. 
+
+This method provides access to the internal event buffer for event management.
+
+\begin{DoxyReturn}{Returns}
+Reference to the event buffer. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuilder_a34c53bf188a7bdcd6aa8f749199f5bb7}\label{classNaluEventBuilder_a34c53bf188a7bdcd6aa8f749199f5bb7}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!get\_windows@{get\_windows}}
+\index{get\_windows@{get\_windows}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{get\_windows()}{get\_windows()}}
+{\footnotesize\ttfamily int Nalu\+Event\+Builder\+::get\+\_\+windows (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Gets the number of windows used for event collection. 
+
+\begin{DoxyReturn}{Returns}
+The number of windows. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEventBuilder_adaf6f02b9fe20d29a645b3ddd254f21d}\label{classNaluEventBuilder_adaf6f02b9fe20d29a645b3ddd254f21d}} 
+\index{NaluEventBuilder@{NaluEventBuilder}!set\_post\_event\_safety\_buffer\_counter\_max@{set\_post\_event\_safety\_buffer\_counter\_max}}
+\index{set\_post\_event\_safety\_buffer\_counter\_max@{set\_post\_event\_safety\_buffer\_counter\_max}!NaluEventBuilder@{NaluEventBuilder}}
+\doxysubsubsection{\texorpdfstring{set\_post\_event\_safety\_buffer\_counter\_max()}{set\_post\_event\_safety\_buffer\_counter\_max()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Builder\+::set\+\_\+post\+\_\+event\+\_\+safety\+\_\+buffer\+\_\+counter\+\_\+max (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{counter\+\_\+max }\end{DoxyParamCaption})}
+
+
+
+Sets the maximum size for the post-\/event safety buffer counter. 
+
+This value determines when the safety buffer zone should be exited.
+
+
+\begin{DoxyParams}{Parameters}
+{\em counter\+\_\+max} & The new maximum size for the safety buffer counter. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__event__builder_8h}{nalu\+\_\+event\+\_\+builder.\+h}}\item 
+src/\mbox{\hyperlink{nalu__event__builder_8cpp}{nalu\+\_\+event\+\_\+builder.\+cpp}}\end{DoxyCompactItemize}

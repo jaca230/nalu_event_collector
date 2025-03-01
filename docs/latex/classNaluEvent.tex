@@ -1,0 +1,314 @@
+\hypertarget{classNaluEvent}{}\doxysection{Nalu\+Event Class Reference}
+\label{classNaluEvent}\index{NaluEvent@{NaluEvent}}
+
+
+Represents a single NALU event consisting of multiple NALU packets.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+event.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluEvent_a38869356a6bfecbfe852f636cfa41bca}{Nalu\+Event}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluEvent_a3eed21e3f15e61c0ce50b70a1760f242}{Nalu\+Event}} (uint16\+\_\+t hdr, uint16\+\_\+t extra\+\_\+info, uint32\+\_\+t idx, uint32\+\_\+t ref\+\_\+time, uint16\+\_\+t size, uint16\+\_\+t num, uint16\+\_\+t ftr, uint16\+\_\+t max\+\_\+num\+\_\+packets)
+\begin{DoxyCompactList}\small\item\em Constructor that initializes the event with specific values. \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{classNaluEvent_af5c16fc2ee668eb1a709d28515fba4e9}{get\+\_\+error\+\_\+code}} () const
+\begin{DoxyCompactList}\small\item\em Gets the error code from the info field. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classNaluEvent_a2377b59e1e0cfde75134047cea653e07}{get\+\_\+size}} () const
+\begin{DoxyCompactList}\small\item\em Calculates the size of the entire event in bytes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEvent_a063195e789fe3cfab3022cf7e12bec50}{serialize\+\_\+to\+\_\+buffer}} (char $\ast$buffer) const
+\begin{DoxyCompactList}\small\item\em Serializes the event into a buffer. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEvent_aff8642289cff7a7f949a4b18b19ab028}{add\+\_\+packet}} (const \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} \&packet)
+\begin{DoxyCompactList}\small\item\em Adds a packet to the event. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classNaluEvent_aae0e0350b00786d5b90aa09377f70fdc}{is\+\_\+event\+\_\+complete}} (int windows, const std\+::vector$<$ int $>$ \&channels) const
+\begin{DoxyCompactList}\small\item\em Checks if the event is complete based on the number of packets and available channels. \end{DoxyCompactList}\item 
+std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{classNaluEvent_af6783080ce1e63c778e8b4f4c78a4b23}{get\+\_\+creation\+\_\+timestamp}} () const
+\begin{DoxyCompactList}\small\item\em Gets the creation timestamp of the event. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluEvent_af9e6008eccf376a8a340273f61f617c0}{header}}
+\begin{DoxyCompactList}\small\item\em Header of the event (2 bytes). \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluEvent_a826aa146d849cbaff97002d93a990e19}{info}}
+\begin{DoxyCompactList}\small\item\em Extra information about the event (2 bytes). \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classNaluEvent_a7784cd8a46a25557fbd40edb2973d5d7}{index}}
+\begin{DoxyCompactList}\small\item\em Unique index for the event (4 bytes). \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{classNaluEvent_a0b1aba8d4603a53f5aa60fd1573c19f0}{reference\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em The reference time for the event (4 bytes). \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluEvent_aba310afdc904fb8ba7ffa74138aa2de5}{packet\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Packet size (2 bytes). \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluEvent_af04c39b0f7fb3761c00c4708f09b328a}{num\+\_\+packets}}
+\begin{DoxyCompactList}\small\item\em The number of packets in the event (2 bytes). \end{DoxyCompactList}\item 
+std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}}\mbox{[}$\,$\mbox{]}$>$ \mbox{\hyperlink{classNaluEvent_a03741f36d073e16230b7467c0714a6c7}{packets}}
+\begin{DoxyCompactList}\small\item\em A dynamically allocated array of \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} objects representing the packets in the event. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{classNaluEvent_a2967a16e5208d6506a7467b1895cbfdb}{footer}}
+\begin{DoxyCompactList}\small\item\em Footer of the event (2 bytes). \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classNaluEvent_a6f0fa0864dfea83c0f2ad282c0a3a463}{max\+\_\+packets}}
+\begin{DoxyCompactList}\small\item\em Maximum number of packets that can be stored in this event. \end{DoxyCompactList}\item 
+std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point \mbox{\hyperlink{classNaluEvent_aa8661634fc4d3a60d9f60209bb7b232a}{creation\+\_\+timestamp}}
+\begin{DoxyCompactList}\small\item\em Timestamp when the event was created. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a single NALU event consisting of multiple NALU packets. 
+
+The {\ttfamily \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}}} class stores the header, information, reference time, and a collection of Nalu\+Packets associated with a single event. It supports adding packets, serializing the event data, and checking if the event is complete based on predefined windows and channels. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluEvent_a38869356a6bfecbfe852f636cfa41bca}\label{classNaluEvent_a38869356a6bfecbfe852f636cfa41bca}} 
+\index{NaluEvent@{NaluEvent}!NaluEvent@{NaluEvent}}
+\index{NaluEvent@{NaluEvent}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{NaluEvent()}{NaluEvent()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Nalu\+Event\+::\+Nalu\+Event (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor. 
+
+Initializes all members to zero or null, and sets the creation timestamp to the current time. \mbox{\Hypertarget{classNaluEvent_a3eed21e3f15e61c0ce50b70a1760f242}\label{classNaluEvent_a3eed21e3f15e61c0ce50b70a1760f242}} 
+\index{NaluEvent@{NaluEvent}!NaluEvent@{NaluEvent}}
+\index{NaluEvent@{NaluEvent}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{NaluEvent()}{NaluEvent()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Nalu\+Event\+::\+Nalu\+Event (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{hdr,  }\item[{uint16\+\_\+t}]{extra\+\_\+info,  }\item[{uint32\+\_\+t}]{idx,  }\item[{uint32\+\_\+t}]{ref\+\_\+time,  }\item[{uint16\+\_\+t}]{size,  }\item[{uint16\+\_\+t}]{num,  }\item[{uint16\+\_\+t}]{ftr,  }\item[{uint16\+\_\+t}]{max\+\_\+num\+\_\+packets }\end{DoxyParamCaption})}
+
+
+
+Constructor that initializes the event with specific values. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hdr} & The header of the event. \\
+\hline
+{\em extra\+\_\+info} & Extra information about the event. \\
+\hline
+{\em idx} & The unique index of the event. \\
+\hline
+{\em ref\+\_\+time} & The reference time for the event. \\
+\hline
+{\em size} & The size of each packet in the event. \\
+\hline
+{\em num} & The number of packets in the event. \\
+\hline
+{\em ftr} & The footer of the event. \\
+\hline
+{\em max\+\_\+num\+\_\+packets} & The maximum number of packets that the event can store. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluEvent_aff8642289cff7a7f949a4b18b19ab028}\label{classNaluEvent_aff8642289cff7a7f949a4b18b19ab028}} 
+\index{NaluEvent@{NaluEvent}!add\_packet@{add\_packet}}
+\index{add\_packet@{add\_packet}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{add\_packet()}{add\_packet()}}
+{\footnotesize\ttfamily void Nalu\+Event\+::add\+\_\+packet (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} \&}]{packet }\end{DoxyParamCaption})}
+
+
+
+Adds a packet to the event. 
+
+If there is space for more packets (based on {\ttfamily max\+\_\+packets}), the packet is added to the event. If the event has reached the maximum packet count, an exception is thrown.
+
+
+\begin{DoxyParams}{Parameters}
+{\em packet} & The packet to add to the event. \\
+\hline
+\end{DoxyParams}
+
+\begin{DoxyExceptions}{Exceptions}
+{\em std\+::overflow\+\_\+error} & if the number of packets exceeds the maximum allowed. \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classNaluEvent_af6783080ce1e63c778e8b4f4c78a4b23}\label{classNaluEvent_af6783080ce1e63c778e8b4f4c78a4b23}} 
+\index{NaluEvent@{NaluEvent}!get\_creation\_timestamp@{get\_creation\_timestamp}}
+\index{get\_creation\_timestamp@{get\_creation\_timestamp}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{get\_creation\_timestamp()}{get\_creation\_timestamp()}}
+{\footnotesize\ttfamily std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point Nalu\+Event\+::get\+\_\+creation\+\_\+timestamp (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Gets the creation timestamp of the event. 
+
+\begin{DoxyReturn}{Returns}
+The time point when the event was created. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEvent_af5c16fc2ee668eb1a709d28515fba4e9}\label{classNaluEvent_af5c16fc2ee668eb1a709d28515fba4e9}} 
+\index{NaluEvent@{NaluEvent}!get\_error\_code@{get\_error\_code}}
+\index{get\_error\_code@{get\_error\_code}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{get\_error\_code()}{get\_error\_code()}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Event\+::get\+\_\+error\+\_\+code (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Gets the error code from the info field. 
+
+The last 4 bits of the {\ttfamily info} field represent the error code.
+
+\begin{DoxyReturn}{Returns}
+The error code (last 4 bits of {\ttfamily info}). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEvent_a2377b59e1e0cfde75134047cea653e07}\label{classNaluEvent_a2377b59e1e0cfde75134047cea653e07}} 
+\index{NaluEvent@{NaluEvent}!get\_size@{get\_size}}
+\index{get\_size@{get\_size}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Event\+::get\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Calculates the size of the entire event in bytes. 
+
+\begin{DoxyReturn}{Returns}
+The size of the event (header, data, and all packets). 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEvent_aae0e0350b00786d5b90aa09377f70fdc}\label{classNaluEvent_aae0e0350b00786d5b90aa09377f70fdc}} 
+\index{NaluEvent@{NaluEvent}!is\_event\_complete@{is\_event\_complete}}
+\index{is\_event\_complete@{is\_event\_complete}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{is\_event\_complete()}{is\_event\_complete()}}
+{\footnotesize\ttfamily bool Nalu\+Event\+::is\+\_\+event\+\_\+complete (\begin{DoxyParamCaption}\item[{int}]{windows,  }\item[{const std\+::vector$<$ int $>$ \&}]{channels }\end{DoxyParamCaption}) const}
+
+
+
+Checks if the event is complete based on the number of packets and available channels. 
+
+The event is considered complete if the number of packets is greater than or equal to the number of windows times the number of channels.
+
+
+\begin{DoxyParams}{Parameters}
+{\em windows} & The number of windows to check. \\
+\hline
+{\em channels} & A list of channel identifiers. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if the event is complete, false otherwise. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEvent_a063195e789fe3cfab3022cf7e12bec50}\label{classNaluEvent_a063195e789fe3cfab3022cf7e12bec50}} 
+\index{NaluEvent@{NaluEvent}!serialize\_to\_buffer@{serialize\_to\_buffer}}
+\index{serialize\_to\_buffer@{serialize\_to\_buffer}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{serialize\_to\_buffer()}{serialize\_to\_buffer()}}
+{\footnotesize\ttfamily void Nalu\+Event\+::serialize\+\_\+to\+\_\+buffer (\begin{DoxyParamCaption}\item[{char $\ast$}]{buffer }\end{DoxyParamCaption}) const}
+
+
+
+Serializes the event into a buffer. 
+
+The event is serialized into the provided buffer, which includes the header, packets, and footer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer to serialize the event into. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classNaluEvent_aa8661634fc4d3a60d9f60209bb7b232a}\label{classNaluEvent_aa8661634fc4d3a60d9f60209bb7b232a}} 
+\index{NaluEvent@{NaluEvent}!creation\_timestamp@{creation\_timestamp}}
+\index{creation\_timestamp@{creation\_timestamp}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{creation\_timestamp}{creation\_timestamp}}
+{\footnotesize\ttfamily std\+::chrono\+::steady\+\_\+clock\+::time\+\_\+point Nalu\+Event\+::creation\+\_\+timestamp}
+
+
+
+Timestamp when the event was created. 
+
+\mbox{\Hypertarget{classNaluEvent_a2967a16e5208d6506a7467b1895cbfdb}\label{classNaluEvent_a2967a16e5208d6506a7467b1895cbfdb}} 
+\index{NaluEvent@{NaluEvent}!footer@{footer}}
+\index{footer@{footer}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{footer}{footer}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::footer}
+
+
+
+Footer of the event (2 bytes). 
+
+\mbox{\Hypertarget{classNaluEvent_af9e6008eccf376a8a340273f61f617c0}\label{classNaluEvent_af9e6008eccf376a8a340273f61f617c0}} 
+\index{NaluEvent@{NaluEvent}!header@{header}}
+\index{header@{header}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::header}
+
+
+
+Header of the event (2 bytes). 
+
+\mbox{\Hypertarget{classNaluEvent_a7784cd8a46a25557fbd40edb2973d5d7}\label{classNaluEvent_a7784cd8a46a25557fbd40edb2973d5d7}} 
+\index{NaluEvent@{NaluEvent}!index@{index}}
+\index{index@{index}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{index}{index}}
+{\footnotesize\ttfamily uint32\+\_\+t Nalu\+Event\+::index}
+
+
+
+Unique index for the event (4 bytes). 
+
+\mbox{\Hypertarget{classNaluEvent_a826aa146d849cbaff97002d93a990e19}\label{classNaluEvent_a826aa146d849cbaff97002d93a990e19}} 
+\index{NaluEvent@{NaluEvent}!info@{info}}
+\index{info@{info}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{info}{info}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::info}
+
+
+
+Extra information about the event (2 bytes). 
+
+\mbox{\Hypertarget{classNaluEvent_a6f0fa0864dfea83c0f2ad282c0a3a463}\label{classNaluEvent_a6f0fa0864dfea83c0f2ad282c0a3a463}} 
+\index{NaluEvent@{NaluEvent}!max\_packets@{max\_packets}}
+\index{max\_packets@{max\_packets}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{max\_packets}{max\_packets}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Event\+::max\+\_\+packets}
+
+
+
+Maximum number of packets that can be stored in this event. 
+
+\mbox{\Hypertarget{classNaluEvent_af04c39b0f7fb3761c00c4708f09b328a}\label{classNaluEvent_af04c39b0f7fb3761c00c4708f09b328a}} 
+\index{NaluEvent@{NaluEvent}!num\_packets@{num\_packets}}
+\index{num\_packets@{num\_packets}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{num\_packets}{num\_packets}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::num\+\_\+packets}
+
+
+
+The number of packets in the event (2 bytes). 
+
+\mbox{\Hypertarget{classNaluEvent_aba310afdc904fb8ba7ffa74138aa2de5}\label{classNaluEvent_aba310afdc904fb8ba7ffa74138aa2de5}} 
+\index{NaluEvent@{NaluEvent}!packet\_size@{packet\_size}}
+\index{packet\_size@{packet\_size}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{packet\_size}{packet\_size}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::packet\+\_\+size}
+
+
+
+Packet size (2 bytes). 
+
+\mbox{\Hypertarget{classNaluEvent_a03741f36d073e16230b7467c0714a6c7}\label{classNaluEvent_a03741f36d073e16230b7467c0714a6c7}} 
+\index{NaluEvent@{NaluEvent}!packets@{packets}}
+\index{packets@{packets}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{packets}{packets}}
+{\footnotesize\ttfamily std\+::unique\+\_\+ptr$<$\mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}}\mbox{[}$\,$\mbox{]}$>$ Nalu\+Event\+::packets}
+
+
+
+A dynamically allocated array of \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} objects representing the packets in the event. 
+
+\mbox{\Hypertarget{classNaluEvent_a0b1aba8d4603a53f5aa60fd1573c19f0}\label{classNaluEvent_a0b1aba8d4603a53f5aa60fd1573c19f0}} 
+\index{NaluEvent@{NaluEvent}!reference\_time@{reference\_time}}
+\index{reference\_time@{reference\_time}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{reference\_time}{reference\_time}}
+{\footnotesize\ttfamily uint32\+\_\+t Nalu\+Event\+::reference\+\_\+time}
+
+
+
+The reference time for the event (4 bytes). 
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__event_8h}{nalu\+\_\+event.\+h}}\item 
+src/\mbox{\hyperlink{nalu__event_8cpp}{nalu\+\_\+event.\+cpp}}\end{DoxyCompactItemize}

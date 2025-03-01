@@ -1,0 +1,165 @@
+\hypertarget{structNaluCollectorTimingData}{}\doxysection{Nalu\+Collector\+Timing\+Data Struct Reference}
+\label{structNaluCollectorTimingData}\index{NaluCollectorTimingData@{NaluCollectorTimingData}}
+
+
+Holds timing data for a single collection cycle of the \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+collector\+\_\+timing\+\_\+data.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{structNaluCollectorTimingData_a3274ea14761c6927076b8cd6998aa1a8}{serialize\+\_\+to\+\_\+buffer}} (char $\ast$buffer) const
+\begin{DoxyCompactList}\small\item\em Serializes the \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}} to a buffer in one operation. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{structNaluCollectorTimingData_aeb68a9970dab9d7526e13acce54d8ab0}{get\+\_\+size}} () const
+\begin{DoxyCompactList}\small\item\em Returns the size of the \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}} struct in bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+size\+\_\+t \mbox{\hyperlink{structNaluCollectorTimingData_a302948f0336b9fe4c983bdffbc71bb59}{collection\+\_\+cycle\+\_\+index}}
+\begin{DoxyCompactList}\small\item\em The index of the current collection cycle. @size 8 bytes (size\+\_\+t) \end{DoxyCompactList}\item 
+long long \mbox{\hyperlink{structNaluCollectorTimingData_ab2842a7718d5cbfc147776df8b15fa09}{collection\+\_\+cycle\+\_\+timestamp\+\_\+ns}}
+\begin{DoxyCompactList}\small\item\em Timestamp of the current collection cycle in nanoseconds. @size 8 bytes (long long) \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{structNaluCollectorTimingData_ac5ee27fd0937612926230ffe3eb8a2c0}{udp\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Time spent receiving UDP data, in seconds. @size 8 bytes (double) \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{structNaluCollectorTimingData_a50192da84b6d9557eb596cf24fc774e6}{parse\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Time spent parsing the received packets, in seconds. @size 8 bytes (double) \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{structNaluCollectorTimingData_aea21100188de155ea2435d220f94b57a}{event\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Time spent processing events after parsing the packets, in seconds. @size 8 bytes (double) \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{structNaluCollectorTimingData_a5fbd0a1f717ae9c699bbfe5097e6b986}{total\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em Total time for the collection cycle, in seconds. @size 8 bytes (double) \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{structNaluCollectorTimingData_a69dd8b6fc6d8372a51dbd4385aaad8ec}{data\+\_\+processed}}
+\begin{DoxyCompactList}\small\item\em Amount of data processed in the current cycle, in bytes. @size 8 bytes (size\+\_\+t) \end{DoxyCompactList}\item 
+double \mbox{\hyperlink{structNaluCollectorTimingData_ae7cccc87dbcc90084329d1ca128d48f3}{data\+\_\+rate}}
+\begin{DoxyCompactList}\small\item\em Data rate for the collection cycle, in MB/s. @size 8 bytes (double) \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Holds timing data for a single collection cycle of the \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}. 
+
+This struct stores various time metrics and performance data related to each cycle of data collection, such as time spent on receiving UDP data, parsing packets, processing events, and overall cycle performance. It is used to monitor and optimize the data collection process. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structNaluCollectorTimingData_aeb68a9970dab9d7526e13acce54d8ab0}\label{structNaluCollectorTimingData_aeb68a9970dab9d7526e13acce54d8ab0}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!get\_size@{get\_size}}
+\index{get\_size@{get\_size}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{get\_size()}{get\_size()}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Collector\+Timing\+Data\+::get\+\_\+size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Returns the size of the \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}} struct in bytes. 
+
+This method can be used to determine how much space is required for serialization.
+
+\begin{DoxyReturn}{Returns}
+The size of the struct in bytes. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structNaluCollectorTimingData_a3274ea14761c6927076b8cd6998aa1a8}\label{structNaluCollectorTimingData_a3274ea14761c6927076b8cd6998aa1a8}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!serialize\_to\_buffer@{serialize\_to\_buffer}}
+\index{serialize\_to\_buffer@{serialize\_to\_buffer}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{serialize\_to\_buffer()}{serialize\_to\_buffer()}}
+{\footnotesize\ttfamily void Nalu\+Collector\+Timing\+Data\+::serialize\+\_\+to\+\_\+buffer (\begin{DoxyParamCaption}\item[{char $\ast$}]{buffer }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Serializes the \mbox{\hyperlink{structNaluCollectorTimingData}{Nalu\+Collector\+Timing\+Data}} to a buffer in one operation. 
+
+This method converts the struct into a byte array representation that can be transmitted or stored. The buffer should be large enough to hold all data in the struct.
+
+
+\begin{DoxyParams}{Parameters}
+{\em buffer} & The buffer to which the struct is serialized. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structNaluCollectorTimingData_a302948f0336b9fe4c983bdffbc71bb59}\label{structNaluCollectorTimingData_a302948f0336b9fe4c983bdffbc71bb59}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!collection\_cycle\_index@{collection\_cycle\_index}}
+\index{collection\_cycle\_index@{collection\_cycle\_index}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{collection\_cycle\_index}{collection\_cycle\_index}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Collector\+Timing\+Data\+::collection\+\_\+cycle\+\_\+index}
+
+
+
+The index of the current collection cycle. @size 8 bytes (size\+\_\+t) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_ab2842a7718d5cbfc147776df8b15fa09}\label{structNaluCollectorTimingData_ab2842a7718d5cbfc147776df8b15fa09}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!collection\_cycle\_timestamp\_ns@{collection\_cycle\_timestamp\_ns}}
+\index{collection\_cycle\_timestamp\_ns@{collection\_cycle\_timestamp\_ns}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{collection\_cycle\_timestamp\_ns}{collection\_cycle\_timestamp\_ns}}
+{\footnotesize\ttfamily long long Nalu\+Collector\+Timing\+Data\+::collection\+\_\+cycle\+\_\+timestamp\+\_\+ns}
+
+
+
+Timestamp of the current collection cycle in nanoseconds. @size 8 bytes (long long) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_a69dd8b6fc6d8372a51dbd4385aaad8ec}\label{structNaluCollectorTimingData_a69dd8b6fc6d8372a51dbd4385aaad8ec}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!data\_processed@{data\_processed}}
+\index{data\_processed@{data\_processed}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{data\_processed}{data\_processed}}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Collector\+Timing\+Data\+::data\+\_\+processed}
+
+
+
+Amount of data processed in the current cycle, in bytes. @size 8 bytes (size\+\_\+t) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_ae7cccc87dbcc90084329d1ca128d48f3}\label{structNaluCollectorTimingData_ae7cccc87dbcc90084329d1ca128d48f3}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!data\_rate@{data\_rate}}
+\index{data\_rate@{data\_rate}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{data\_rate}{data\_rate}}
+{\footnotesize\ttfamily double Nalu\+Collector\+Timing\+Data\+::data\+\_\+rate}
+
+
+
+Data rate for the collection cycle, in MB/s. @size 8 bytes (double) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_aea21100188de155ea2435d220f94b57a}\label{structNaluCollectorTimingData_aea21100188de155ea2435d220f94b57a}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!event\_time@{event\_time}}
+\index{event\_time@{event\_time}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{event\_time}{event\_time}}
+{\footnotesize\ttfamily double Nalu\+Collector\+Timing\+Data\+::event\+\_\+time}
+
+
+
+Time spent processing events after parsing the packets, in seconds. @size 8 bytes (double) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_a50192da84b6d9557eb596cf24fc774e6}\label{structNaluCollectorTimingData_a50192da84b6d9557eb596cf24fc774e6}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!parse\_time@{parse\_time}}
+\index{parse\_time@{parse\_time}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{parse\_time}{parse\_time}}
+{\footnotesize\ttfamily double Nalu\+Collector\+Timing\+Data\+::parse\+\_\+time}
+
+
+
+Time spent parsing the received packets, in seconds. @size 8 bytes (double) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_a5fbd0a1f717ae9c699bbfe5097e6b986}\label{structNaluCollectorTimingData_a5fbd0a1f717ae9c699bbfe5097e6b986}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!total\_time@{total\_time}}
+\index{total\_time@{total\_time}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{total\_time}{total\_time}}
+{\footnotesize\ttfamily double Nalu\+Collector\+Timing\+Data\+::total\+\_\+time}
+
+
+
+Total time for the collection cycle, in seconds. @size 8 bytes (double) 
+
+\mbox{\Hypertarget{structNaluCollectorTimingData_ac5ee27fd0937612926230ffe3eb8a2c0}\label{structNaluCollectorTimingData_ac5ee27fd0937612926230ffe3eb8a2c0}} 
+\index{NaluCollectorTimingData@{NaluCollectorTimingData}!udp\_time@{udp\_time}}
+\index{udp\_time@{udp\_time}!NaluCollectorTimingData@{NaluCollectorTimingData}}
+\doxysubsubsection{\texorpdfstring{udp\_time}{udp\_time}}
+{\footnotesize\ttfamily double Nalu\+Collector\+Timing\+Data\+::udp\+\_\+time}
+
+
+
+Time spent receiving UDP data, in seconds. @size 8 bytes (double) 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__collector__timing__data_8h}{nalu\+\_\+collector\+\_\+timing\+\_\+data.\+h}}\end{DoxyCompactItemize}

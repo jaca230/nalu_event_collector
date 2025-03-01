@@ -1,0 +1,126 @@
+\hypertarget{classNaluUdpReceiver}{}\doxysection{Nalu\+Udp\+Receiver Class Reference}
+\label{classNaluUdpReceiver}\index{NaluUdpReceiver@{NaluUdpReceiver}}
+
+
+A class for receiving UDP packets, parsing them, and storing the data in a buffer.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+udp\+\_\+receiver.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classNaluUdpReceiver_ae0407e467b32848f6da5cbb4e21a6b59}{Nalu\+Udp\+Receiver}} (const std\+::string \&address, uint16\+\_\+t port, size\+\_\+t buffer\+\_\+size=1024 $\ast$1024 $\ast$100, size\+\_\+t max\+\_\+packet\+\_\+size=1040, int timeout\+\_\+sec=10)
+\begin{DoxyCompactList}\small\item\em Constructs a \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} instance. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluUdpReceiver_a8e3e1da1206e8fd15f2cfef78cba79a5}{Nalu\+Udp\+Receiver}} (const \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}} \&params)
+\begin{DoxyCompactList}\small\item\em Constructs a \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} instance using parameters encapsulated in a \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}} structure. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluUdpReceiver_a5b27f99ee0fd720ec09209d9c85eab33}{$\sim$\+Nalu\+Udp\+Receiver}} ()
+\begin{DoxyCompactList}\small\item\em Destroys the \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} instance and stops the receiver thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluUdpReceiver_a8162195b6cd659b8b9eabc62d3a0c460}{start}} ()
+\begin{DoxyCompactList}\small\item\em Starts the UDP receiver in a separate thread. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluUdpReceiver_a60e6837130faeaffcf0ea4f1aee06894}{stop}} ()
+\begin{DoxyCompactList}\small\item\em Stops the UDP receiver and terminates the receiver thread. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classNaluUdpDataBuffer}{Nalu\+Udp\+Data\+Buffer}} \& \mbox{\hyperlink{classNaluUdpReceiver_af2f56bc2dfb4a6dcad5bd4227108a0ee}{get\+Data\+Buffer}} ()
+\begin{DoxyCompactList}\small\item\em Gets the reference to the \mbox{\hyperlink{classNaluUdpDataBuffer}{Nalu\+Udp\+Data\+Buffer}} where received data is stored. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class for receiving UDP packets, parsing them, and storing the data in a buffer. 
+
+This class provides functionality to initialize a UDP socket, receive packets, and store them in a buffer for further processing. It runs in a separate thread to continuously receive data from the network. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classNaluUdpReceiver_ae0407e467b32848f6da5cbb4e21a6b59}\label{classNaluUdpReceiver_ae0407e467b32848f6da5cbb4e21a6b59}} 
+\index{NaluUdpReceiver@{NaluUdpReceiver}!NaluUdpReceiver@{NaluUdpReceiver}}
+\index{NaluUdpReceiver@{NaluUdpReceiver}!NaluUdpReceiver@{NaluUdpReceiver}}
+\doxysubsubsection{\texorpdfstring{NaluUdpReceiver()}{NaluUdpReceiver()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily Nalu\+Udp\+Receiver\+::\+Nalu\+Udp\+Receiver (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{address,  }\item[{uint16\+\_\+t}]{port,  }\item[{size\+\_\+t}]{buffer\+\_\+size = {\ttfamily 1024~$\ast$~1024~$\ast$~100},  }\item[{size\+\_\+t}]{max\+\_\+packet\+\_\+size = {\ttfamily 1040},  }\item[{int}]{timeout\+\_\+sec = {\ttfamily 10} }\end{DoxyParamCaption})}
+
+
+
+Constructs a \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} instance. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em address} & The address to bind the receiver to (e.\+g., \char`\"{}127.\+0.\+0.\+1\char`\"{}). \\
+\hline
+{\em port} & The port number to bind the receiver to. \\
+\hline
+{\em buffer\+\_\+size} & The size of the UDP data buffer to store received data. \\
+\hline
+{\em max\+\_\+packet\+\_\+size} & The maximum size of each UDP packet to receive. \\
+\hline
+{\em timeout\+\_\+sec} & The timeout duration (in seconds) for receiving packets. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluUdpReceiver_a8e3e1da1206e8fd15f2cfef78cba79a5}\label{classNaluUdpReceiver_a8e3e1da1206e8fd15f2cfef78cba79a5}} 
+\index{NaluUdpReceiver@{NaluUdpReceiver}!NaluUdpReceiver@{NaluUdpReceiver}}
+\index{NaluUdpReceiver@{NaluUdpReceiver}!NaluUdpReceiver@{NaluUdpReceiver}}
+\doxysubsubsection{\texorpdfstring{NaluUdpReceiver()}{NaluUdpReceiver()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily Nalu\+Udp\+Receiver\+::\+Nalu\+Udp\+Receiver (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}} \&}]{params }\end{DoxyParamCaption})}
+
+
+
+Constructs a \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} instance using parameters encapsulated in a \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}} structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em params} & A structure containing the configuration parameters for the receiver. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classNaluUdpReceiver_a5b27f99ee0fd720ec09209d9c85eab33}\label{classNaluUdpReceiver_a5b27f99ee0fd720ec09209d9c85eab33}} 
+\index{NaluUdpReceiver@{NaluUdpReceiver}!````~NaluUdpReceiver@{$\sim$NaluUdpReceiver}}
+\index{````~NaluUdpReceiver@{$\sim$NaluUdpReceiver}!NaluUdpReceiver@{NaluUdpReceiver}}
+\doxysubsubsection{\texorpdfstring{$\sim$NaluUdpReceiver()}{~NaluUdpReceiver()}}
+{\footnotesize\ttfamily Nalu\+Udp\+Receiver\+::$\sim$\+Nalu\+Udp\+Receiver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroys the \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} instance and stops the receiver thread. 
+
+This method ensures that any resources allocated during the receiver\textquotesingle{}s lifecycle are cleaned up. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classNaluUdpReceiver_af2f56bc2dfb4a6dcad5bd4227108a0ee}\label{classNaluUdpReceiver_af2f56bc2dfb4a6dcad5bd4227108a0ee}} 
+\index{NaluUdpReceiver@{NaluUdpReceiver}!getDataBuffer@{getDataBuffer}}
+\index{getDataBuffer@{getDataBuffer}!NaluUdpReceiver@{NaluUdpReceiver}}
+\doxysubsubsection{\texorpdfstring{getDataBuffer()}{getDataBuffer()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classNaluUdpDataBuffer}{Nalu\+Udp\+Data\+Buffer}} \& Nalu\+Udp\+Receiver\+::get\+Data\+Buffer (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the reference to the \mbox{\hyperlink{classNaluUdpDataBuffer}{Nalu\+Udp\+Data\+Buffer}} where received data is stored. 
+
+This buffer contains all received UDP packet data that can be processed further.
+
+\begin{DoxyReturn}{Returns}
+Reference to the \mbox{\hyperlink{classNaluUdpDataBuffer}{Nalu\+Udp\+Data\+Buffer}} instance. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classNaluUdpReceiver_a8162195b6cd659b8b9eabc62d3a0c460}\label{classNaluUdpReceiver_a8162195b6cd659b8b9eabc62d3a0c460}} 
+\index{NaluUdpReceiver@{NaluUdpReceiver}!start@{start}}
+\index{start@{start}!NaluUdpReceiver@{NaluUdpReceiver}}
+\doxysubsubsection{\texorpdfstring{start()}{start()}}
+{\footnotesize\ttfamily void Nalu\+Udp\+Receiver\+::start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Starts the UDP receiver in a separate thread. 
+
+This method initializes the UDP socket and starts receiving packets in a loop. \mbox{\Hypertarget{classNaluUdpReceiver_a60e6837130faeaffcf0ea4f1aee06894}\label{classNaluUdpReceiver_a60e6837130faeaffcf0ea4f1aee06894}} 
+\index{NaluUdpReceiver@{NaluUdpReceiver}!stop@{stop}}
+\index{stop@{stop}!NaluUdpReceiver@{NaluUdpReceiver}}
+\doxysubsubsection{\texorpdfstring{stop()}{stop()}}
+{\footnotesize\ttfamily void Nalu\+Udp\+Receiver\+::stop (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Stops the UDP receiver and terminates the receiver thread. 
+
+This method shuts down the receiver and cleans up resources, such as closing the UDP socket. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__udp__receiver_8h}{nalu\+\_\+udp\+\_\+receiver.\+h}}\item 
+src/\mbox{\hyperlink{nalu__udp__receiver_8cpp}{nalu\+\_\+udp\+\_\+receiver.\+cpp}}\end{DoxyCompactItemize}
