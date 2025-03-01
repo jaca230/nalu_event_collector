@@ -1,15 +1,15 @@
 #ifndef NALU_PACKET_H
 #define NALU_PACKET_H
 
-#include <cstdint>
 #include <cstddef>  // For size_t
+#include <cstdint>
 
 /// @class NaluPacket
-/// @brief This class represents a single Nalu packet, including fields such as header, info byte,
-/// channel, trigger time, logical/physical positions, raw samples, and footer.
-/// The packet's structure is fixed at 80 bytes in total.
+/// @brief This class represents a single Nalu packet, including fields such as
+/// header, info byte, channel, trigger time, logical/physical positions, raw
+/// samples, and footer. The packet's structure is fixed at 80 bytes in total.
 class NaluPacket {
-public:
+   public:
     /// @brief 2-byte header for the Nalu packet.
     uint16_t header;
 
@@ -41,7 +41,8 @@ public:
     /// @brief Default constructor initializes all member variables to zero.
     NaluPacket();
 
-    /// @brief Constructor for initialization with full info byte and other Nalu packet fields.
+    /// @brief Constructor for initialization with full info byte and other Nalu
+    /// packet fields.
     /// @param hdr The header value (2 bytes).
     /// @param ch The channel value (1 byte).
     /// @param trig_time The trigger time value (4 bytes).
@@ -51,10 +52,12 @@ public:
     /// @param ftr The footer value (2 bytes).
     /// @param full_info The full info byte (1 byte).
     /// @param index The parser index value (2 bytes, default value is 0).
-    NaluPacket(uint16_t hdr, uint8_t ch, uint32_t trig_time, uint16_t log_pos, uint16_t phys_pos,
-               uint8_t samples[64], uint16_t ftr, uint8_t full_info, uint16_t index = 0);
+    NaluPacket(uint16_t hdr, uint8_t ch, uint32_t trig_time, uint16_t log_pos,
+               uint16_t phys_pos, uint8_t samples[64], uint16_t ftr,
+               uint8_t full_info, uint16_t index = 0);
 
-    /// @brief Extracts and returns the error code from the info byte (lower 4 bits).
+    /// @brief Extracts and returns the error code from the info byte (lower 4
+    /// bits).
     /// @return The error code (4 bits) from the info byte.
     uint8_t get_error_code() const;
 
@@ -62,8 +65,8 @@ public:
     /// @return The total size of the packet (should always be 80 bytes).
     uint16_t get_size() const;
 
-private:
+   private:
     // No private members, all fields are publicly accessible
 };
 
-#endif // NALU_PACKET_H
+#endif  // NALU_PACKET_H

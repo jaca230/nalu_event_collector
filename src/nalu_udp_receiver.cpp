@@ -1,10 +1,15 @@
 #include "nalu_udp_receiver.h"
-#include "nalu_event_collector_logger.h"
-#include <cstring>
-#include <unistd.h>
-#include <arpa/inet.h>
 
-NaluUdpReceiver::NaluUdpReceiver(const std::string& address, uint16_t port, size_t buffer_size, size_t max_packet_size, int timeout_sec)
+#include <arpa/inet.h>
+#include <unistd.h>
+
+#include <cstring>
+
+#include "nalu_event_collector_logger.h"
+
+NaluUdpReceiver::NaluUdpReceiver(const std::string& address, uint16_t port,
+                                 size_t buffer_size, size_t max_packet_size,
+                                 int timeout_sec)
     : address_(address),
       port_(port),
       max_packet_size_(max_packet_size),
@@ -14,11 +19,10 @@ NaluUdpReceiver::NaluUdpReceiver(const std::string& address, uint16_t port, size
       timeout_sec_(timeout_sec) {}
 
 NaluUdpReceiver::NaluUdpReceiver(const NaluUdpReceiverParams& params)
-    : NaluUdpReceiver(params.address, params.port, params.buffer_size, params.max_packet_size, params.timeout_sec) {}
+    : NaluUdpReceiver(params.address, params.port, params.buffer_size,
+                      params.max_packet_size, params.timeout_sec) {}
 
-NaluUdpReceiver::~NaluUdpReceiver() {
-    stop();
-}
+NaluUdpReceiver::~NaluUdpReceiver() { stop(); }
 
 void NaluUdpReceiver::initSocket() {
     socket_fd_ = socket(AF_INET, SOCK_DGRAM, 0);
@@ -32,16 +36,18 @@ void NaluUdpReceiver::initSocket() {
     server_addr.sin_port = htons(port_);
     inet_pton(AF_INET, address_.c_str(), &server_addr.sin_addr);
 
-    if (bind(socket_fd_, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+    if (bind(socket_fd_, (struct sockaddr*)&server_addr, sizeof(server_addr)) <
+        0) {
         NaluEventCollectorLogger::error("Failed to bind to socket");
         throw std::runtime_error("Failed to bind socket");
     }
 
     if (timeout_sec_ > 0) {
-        struct timeval timeout{};
+        struct timeval timeout {};
         timeout.tv_sec = timeout_sec_;
         timeout.tv_usec = 0;
-        setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+        setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                   sizeof(timeout));
     }
 }
 
@@ -77,8 +83,9 @@ void NaluUdpReceiver::receiveLoop() {
             sockaddr_in client_addr{};
             socklen_t client_addr_len = sizeof(client_addr);
 
-            ssize_t received_bytes = recvfrom(socket_fd_, UDP_packet_buffer, max_packet_size_, 0,
-                                              (struct sockaddr*)&client_addr, &client_addr_len);
+            ssize_t received_bytes =
+                recvfrom(socket_fd_, UDP_packet_buffer, max_packet_size_, 0,
+                         (struct sockaddr*)&client_addr, &client_addr_len);
 
             if (received_bytes < 0) {
                 if (!running_) break;
@@ -86,8 +93,9 @@ void NaluUdpReceiver::receiveLoop() {
             }
 
             if (received_bytes < 16) {
-                NaluEventCollectorLogger::warning("Malformed packet: too small (" + 
-                                               std::to_string(received_bytes) + " bytes received)");
+                NaluEventCollectorLogger::warning(
+                    "Malformed packet: too small (" +
+                    std::to_string(received_bytes) + " bytes received)");
                 continue;
             }
 
@@ -96,9 +104,10 @@ void NaluUdpReceiver::receiveLoop() {
             payload_size = ntohs(payload_size);
 
             if (payload_size != static_cast<uint16_t>(received_bytes - 16)) {
-                NaluEventCollectorLogger::warning("Malformed packet: expected payload size " + 
-                                               std::to_string(payload_size) + ", but received " + 
-                                               std::to_string(received_bytes - 16) + " bytes.");
+                NaluEventCollectorLogger::warning(
+                    "Malformed packet: expected payload size " +
+                    std::to_string(payload_size) + ", but received " +
+                    std::to_string(received_bytes - 16) + " bytes.");
                 continue;
             }
 
@@ -107,7 +116,8 @@ void NaluUdpReceiver::receiveLoop() {
 
         delete[] UDP_packet_buffer;
     } catch (const std::exception& e) {
-        NaluEventCollectorLogger::error("Receiver thread error: " + std::string(e.what()));
+        NaluEventCollectorLogger::error("Receiver thread error: " +
+                                        std::string(e.what()));
     }
 }
 
