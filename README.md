@@ -166,6 +166,13 @@ The `NaluEventCollector` class is the core interface for interacting with the Na
 
 ### Key Methods
 
+For any of the methods, you'll first need to construct the collector
+```cpp
+#include "nalu_event_collector.h"
+//Construct "params" struct. See above.
+NaluEventCollector collector(params);
+```
+
 #### `void start();`
 
 Starts the event collection process. This method initializes the UDP receiver and spawns a background thread that continuously collects data.
@@ -174,7 +181,6 @@ Starts the event collection process. This method initializes the UDP receiver an
 - **Usage**: Call this method to begin the event collection. The process will continue until explicitly stopped.
 
 ```cpp
-NaluEventCollector collector(params);
 collector.start();
 ```
 
@@ -197,7 +203,6 @@ Collects events from the UDP buffer and processes them based on the configured p
 - **Thread-Safe**: The method handles synchronization internally to ensure data integrity during the collection process, making it safe for use in multi-threaded environments.
 
 ```cpp
-NaluEventCollector collector(params);
 collector.collect();  // Manually triggers the event collection
 auto [events, timing] = collector.get_data();
 ```
@@ -214,7 +219,7 @@ Retrieves both the collected events and the associated timing data for the most 
 ```cpp
 auto [events, timing] = collector.get_data();
 std::cout << "Number of events: " << events.size() << "\n";
-std::cout << "Average processing time: " << timing.avg_processing_time_us << " us\n";
+std::cout << "Processing time: " << timing.total_time << " s\n";
 ```
 
 - **Usage**: Use this method to obtain both the events and the performance statistics in a single call. This is especially useful when you need to process or analyze both the data and timing information together.
@@ -251,7 +256,7 @@ Returns the most recent collection cycle's timing data, including details such a
 
 ```cpp
 auto timing = collector.get_timing_data();
-std::cout << "Processing time: " << timing.avg_processing_time_us << " us\n";
+std::cout << "Processing time: " << timing.total_time << " s\n";
 ```
 
 #### `void printPerformanceStats();`
@@ -425,3 +430,6 @@ This library is licensed under the MIT License. See the `LICENSE` file for more 
 ## License
 
 MIT License. See LICENSE file for details.
+
+## AI in documentation
+Most of this documentation was written by AI. I have reviewed it for correctness, but it is possible there are errors.
