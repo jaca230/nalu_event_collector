@@ -26,7 +26,7 @@ target_link_libraries(main PRIVATE nalu_event_collector_lib)
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_PREFIX}/include/nalu_event_collector)
 
 # Install the library into /usr/local/nalu_event_collector/lib
-install(TARGETS nalu_event_collector_lib DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/nalu_event_collector)
+install(TARGETS nalu_event_collector DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
 
 # Do not install the executable by default
 # Uncomment the following line to install the executable if needed:
