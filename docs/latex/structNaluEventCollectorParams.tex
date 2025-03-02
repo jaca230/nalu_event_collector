@@ -13,11 +13,6 @@ Struct that holds all parameters required for the \mbox{\hyperlink{classNaluEven
 
 Collaboration diagram for Nalu\+Event\+Collector\+Params\+:
 % FIG 0
-\doxysubsection*{Public Member Functions}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\hyperlink{structNaluEventCollectorParams_a405cedb81ca90f6f80b994a3487b08c6}{Nalu\+Event\+Collector\+Params}} (\mbox{\hyperlink{structNaluEventBuilderParams}{Nalu\+Event\+Builder\+Params}} eb\+\_\+params=\mbox{\hyperlink{structNaluEventBuilderParams}{Nalu\+Event\+Builder\+Params}}(), \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}} ur\+\_\+params=\mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}}(), \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}} pp\+\_\+params=\mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}}(), std\+::chrono\+::microseconds \mbox{\hyperlink{structNaluEventCollectorParams_a886978382d59009aef5f450db13eac5c}{sleep\+\_\+time\+\_\+us}}=std\+::chrono\+::microseconds(-\/1))
-\begin{DoxyCompactList}\small\item\em Default constructor that initializes all parameters. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -27,27 +22,14 @@ Collaboration diagram for Nalu\+Event\+Collector\+Params\+:
 \begin{DoxyCompactList}\small\item\em Parameters for the \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}}. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}} \mbox{\hyperlink{structNaluEventCollectorParams_a0607d29cd4f8622353ef431829a172fc}{packet\+\_\+parser\+\_\+params}}
 \begin{DoxyCompactList}\small\item\em Parameters for the \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}}. \end{DoxyCompactList}\item 
-std\+::chrono\+::microseconds \mbox{\hyperlink{structNaluEventCollectorParams_a886978382d59009aef5f450db13eac5c}{sleep\+\_\+time\+\_\+us}}
-\begin{DoxyCompactList}\small\item\em Sleep time between collection cycles. \end{DoxyCompactList}\end{DoxyCompactItemize}
+std\+::chrono\+::microseconds \mbox{\hyperlink{structNaluEventCollectorParams_a886978382d59009aef5f450db13eac5c}{sleep\+\_\+time\+\_\+us}} = std\+::chrono\+::microseconds(-\/1)
+\begin{DoxyCompactList}\small\item\em Default sleep time between collection cycles. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
 Struct that holds all parameters required for the \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}}. 
 
 This struct aggregates all the configuration parameters for the \mbox{\hyperlink{classNaluEventCollector}{Nalu\+Event\+Collector}} class, including the \mbox{\hyperlink{classNaluEventBuilder}{Nalu\+Event\+Builder}}, \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}}, and \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} parameters. 
-
-\doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{structNaluEventCollectorParams_a405cedb81ca90f6f80b994a3487b08c6}\label{structNaluEventCollectorParams_a405cedb81ca90f6f80b994a3487b08c6}} 
-\index{NaluEventCollectorParams@{NaluEventCollectorParams}!NaluEventCollectorParams@{NaluEventCollectorParams}}
-\index{NaluEventCollectorParams@{NaluEventCollectorParams}!NaluEventCollectorParams@{NaluEventCollectorParams}}
-\doxysubsubsection{\texorpdfstring{NaluEventCollectorParams()}{NaluEventCollectorParams()}}
-{\footnotesize\ttfamily Nalu\+Event\+Collector\+Params\+::\+Nalu\+Event\+Collector\+Params (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structNaluEventBuilderParams}{Nalu\+Event\+Builder\+Params}}}]{eb\+\_\+params = {\ttfamily \mbox{\hyperlink{structNaluEventBuilderParams}{Nalu\+Event\+Builder\+Params}}()},  }\item[{\mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}}}]{ur\+\_\+params = {\ttfamily \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}}()},  }\item[{\mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}}}]{pp\+\_\+params = {\ttfamily \mbox{\hyperlink{structNaluPacketParserParams}{Nalu\+Packet\+Parser\+Params}}()},  }\item[{std\+::chrono\+::microseconds}]{sleep\+\_\+time\+\_\+us = {\ttfamily std\+:\+:chrono\+:\+:microseconds(-\/1)} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Default constructor that initializes all parameters. 
-
-Allows custom initialization for all parameters, with default values provided for each. 
 
 \doxysubsection{Member Data Documentation}
 \mbox{\Hypertarget{structNaluEventCollectorParams_aa13d7e87f1c39cc76468c64b2945622d}\label{structNaluEventCollectorParams_aa13d7e87f1c39cc76468c64b2945622d}} 
@@ -74,11 +56,11 @@ Parameters for the \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}
 \index{NaluEventCollectorParams@{NaluEventCollectorParams}!sleep\_time\_us@{sleep\_time\_us}}
 \index{sleep\_time\_us@{sleep\_time\_us}!NaluEventCollectorParams@{NaluEventCollectorParams}}
 \doxysubsubsection{\texorpdfstring{sleep\_time\_us}{sleep\_time\_us}}
-{\footnotesize\ttfamily std\+::chrono\+::microseconds Nalu\+Event\+Collector\+Params\+::sleep\+\_\+time\+\_\+us}
+{\footnotesize\ttfamily std\+::chrono\+::microseconds Nalu\+Event\+Collector\+Params\+::sleep\+\_\+time\+\_\+us = std\+::chrono\+::microseconds(-\/1)}
 
 
 
-Sleep time between collection cycles. 
+Default sleep time between collection cycles. 
 
 \mbox{\Hypertarget{structNaluEventCollectorParams_aed22ab537f79796913af947eea52bd0a}\label{structNaluEventCollectorParams_aed22ab537f79796913af947eea52bd0a}} 
 \index{NaluEventCollectorParams@{NaluEventCollectorParams}!udp\_receiver\_params@{udp\_receiver\_params}}

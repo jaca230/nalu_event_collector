@@ -62,7 +62,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structNaluPacketParserParams-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -75,161 +74,52 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="nalu__event__collector__params_8h_source.html">nalu_event_collector_params.h</a>&gt;</code></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:acf4f57ac4fabc822d0b680777211c02d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#acf4f57ac4fabc822d0b680777211c02d">NaluPacketParserParams</a> (size_t pkt_size=74, std::vector&lt; uint8_t &gt; start_m={0x0E}, std::vector&lt; uint8_t &gt; stop_m={0xFA, 0x5A}, uint8_t ch_mask=0x3F, uint8_t ch_shift=0, uint8_t abs_w_mask=0x3F, uint8_t evt_w_mask=0x3F, uint8_t evt_w_shift=6, uint16_t t_mask=0xFFF, uint8_t t_shift=12, bool integrity=false, uint16_t header=0xAAAA, uint16_t footer=0xFFFF)</td></tr>
-<tr class="memdesc:acf4f57ac4fabc822d0b680777211c02d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor with default values for <a class="el" href="structNaluPacketParserParams.html" title="Struct for NaluPacketParser parameters.">NaluPacketParserParams</a>.  <a href="structNaluPacketParserParams.html#acf4f57ac4fabc822d0b680777211c02d">More...</a><br /></td></tr>
-<tr class="separator:acf4f57ac4fabc822d0b680777211c02d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a30d09c986f15c2c479caa4d9f106d3c4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a30d09c986f15c2c479caa4d9f106d3c4">packet_size</a></td></tr>
-<tr class="memdesc:a30d09c986f15c2c479caa4d9f106d3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Size of a single packet.  <a href="structNaluPacketParserParams.html#a30d09c986f15c2c479caa4d9f106d3c4">More...</a><br /></td></tr>
+<tr class="memitem:a30d09c986f15c2c479caa4d9f106d3c4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a30d09c986f15c2c479caa4d9f106d3c4">packet_size</a> = 74</td></tr>
+<tr class="memdesc:a30d09c986f15c2c479caa4d9f106d3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default size of a single packet.  <a href="structNaluPacketParserParams.html#a30d09c986f15c2c479caa4d9f106d3c4">More...</a><br /></td></tr>
 <tr class="separator:a30d09c986f15c2c479caa4d9f106d3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee3963040374779dced996780038f9fb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb">start_marker</a></td></tr>
-<tr class="memdesc:aee3963040374779dced996780038f9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start marker to identify the beginning of a packet.  <a href="structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb">More...</a><br /></td></tr>
+<tr class="memitem:aee3963040374779dced996780038f9fb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb">start_marker</a> = {0x0E}</td></tr>
+<tr class="memdesc:aee3963040374779dced996780038f9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default start marker to identify the beginning of a packet.  <a href="structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb">More...</a><br /></td></tr>
 <tr class="separator:aee3963040374779dced996780038f9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697">stop_marker</a></td></tr>
-<tr class="memdesc:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop marker to identify the end of a packet.  <a href="structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697">More...</a><br /></td></tr>
+<tr class="memitem:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697">stop_marker</a> = {0xFA, 0x5A}</td></tr>
+<tr class="memdesc:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default stop marker to identify the end of a packet.  <a href="structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697">More...</a><br /></td></tr>
 <tr class="separator:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a98030d10567fd890ae893c1de1c93847"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a98030d10567fd890ae893c1de1c93847">chan_mask</a></td></tr>
-<tr class="memdesc:a98030d10567fd890ae893c1de1c93847"><td class="mdescLeft">&#160;</td><td class="mdescRight">Channel mask for packet extraction.  <a href="structNaluPacketParserParams.html#a98030d10567fd890ae893c1de1c93847">More...</a><br /></td></tr>
+<tr class="memitem:a98030d10567fd890ae893c1de1c93847"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a98030d10567fd890ae893c1de1c93847">chan_mask</a> = 0x3F</td></tr>
+<tr class="memdesc:a98030d10567fd890ae893c1de1c93847"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default channel mask for packet extraction.  <a href="structNaluPacketParserParams.html#a98030d10567fd890ae893c1de1c93847">More...</a><br /></td></tr>
 <tr class="separator:a98030d10567fd890ae893c1de1c93847"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a990e9f9832e12ca88daed137590927df"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a990e9f9832e12ca88daed137590927df">chan_shift</a></td></tr>
-<tr class="memdesc:a990e9f9832e12ca88daed137590927df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift value for channel extraction.  <a href="structNaluPacketParserParams.html#a990e9f9832e12ca88daed137590927df">More...</a><br /></td></tr>
+<tr class="memitem:a990e9f9832e12ca88daed137590927df"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a990e9f9832e12ca88daed137590927df">chan_shift</a> = 0</td></tr>
+<tr class="memdesc:a990e9f9832e12ca88daed137590927df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default shift value for channel extraction.  <a href="structNaluPacketParserParams.html#a990e9f9832e12ca88daed137590927df">More...</a><br /></td></tr>
 <tr class="separator:a990e9f9832e12ca88daed137590927df"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3da12be441b5b5f8e27df05eb513da31"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a3da12be441b5b5f8e27df05eb513da31">abs_wind_mask</a></td></tr>
-<tr class="memdesc:a3da12be441b5b5f8e27df05eb513da31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Absolute window mask for packet processing.  <a href="structNaluPacketParserParams.html#a3da12be441b5b5f8e27df05eb513da31">More...</a><br /></td></tr>
+<tr class="memitem:a3da12be441b5b5f8e27df05eb513da31"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a3da12be441b5b5f8e27df05eb513da31">abs_wind_mask</a> = 0x3F</td></tr>
+<tr class="memdesc:a3da12be441b5b5f8e27df05eb513da31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default absolute window mask for packet processing.  <a href="structNaluPacketParserParams.html#a3da12be441b5b5f8e27df05eb513da31">More...</a><br /></td></tr>
 <tr class="separator:a3da12be441b5b5f8e27df05eb513da31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86aa46ac85ba6af8b384ec001813bd66"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a86aa46ac85ba6af8b384ec001813bd66">evt_wind_mask</a></td></tr>
-<tr class="memdesc:a86aa46ac85ba6af8b384ec001813bd66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event window mask for packet processing.  <a href="structNaluPacketParserParams.html#a86aa46ac85ba6af8b384ec001813bd66">More...</a><br /></td></tr>
+<tr class="memitem:a86aa46ac85ba6af8b384ec001813bd66"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a86aa46ac85ba6af8b384ec001813bd66">evt_wind_mask</a> = 0x3F</td></tr>
+<tr class="memdesc:a86aa46ac85ba6af8b384ec001813bd66"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default event window mask for packet processing.  <a href="structNaluPacketParserParams.html#a86aa46ac85ba6af8b384ec001813bd66">More...</a><br /></td></tr>
 <tr class="separator:a86aa46ac85ba6af8b384ec001813bd66"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac8d09418ad2a50d8b94035a2f973fdd4"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#ac8d09418ad2a50d8b94035a2f973fdd4">evt_wind_shift</a></td></tr>
-<tr class="memdesc:ac8d09418ad2a50d8b94035a2f973fdd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Event window shift value.  <a href="structNaluPacketParserParams.html#ac8d09418ad2a50d8b94035a2f973fdd4">More...</a><br /></td></tr>
+<tr class="memitem:ac8d09418ad2a50d8b94035a2f973fdd4"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#ac8d09418ad2a50d8b94035a2f973fdd4">evt_wind_shift</a> = 6</td></tr>
+<tr class="memdesc:ac8d09418ad2a50d8b94035a2f973fdd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default event window shift value.  <a href="structNaluPacketParserParams.html#ac8d09418ad2a50d8b94035a2f973fdd4">More...</a><br /></td></tr>
 <tr class="separator:ac8d09418ad2a50d8b94035a2f973fdd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a8363f3b6c9680eb4e558be14b8727e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a4a8363f3b6c9680eb4e558be14b8727e">timing_mask</a></td></tr>
-<tr class="memdesc:a4a8363f3b6c9680eb4e558be14b8727e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mask for timing-related information in the packet.  <a href="structNaluPacketParserParams.html#a4a8363f3b6c9680eb4e558be14b8727e">More...</a><br /></td></tr>
+<tr class="memitem:a4a8363f3b6c9680eb4e558be14b8727e"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a4a8363f3b6c9680eb4e558be14b8727e">timing_mask</a> = 0xFFF</td></tr>
+<tr class="memdesc:a4a8363f3b6c9680eb4e558be14b8727e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default mask for timing-related information in the packet.  <a href="structNaluPacketParserParams.html#a4a8363f3b6c9680eb4e558be14b8727e">More...</a><br /></td></tr>
 <tr class="separator:a4a8363f3b6c9680eb4e558be14b8727e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab82f954ddc6d9f3c3c117ae0850e37ca"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#ab82f954ddc6d9f3c3c117ae0850e37ca">timing_shift</a></td></tr>
-<tr class="memdesc:ab82f954ddc6d9f3c3c117ae0850e37ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shift for timing-related information.  <a href="structNaluPacketParserParams.html#ab82f954ddc6d9f3c3c117ae0850e37ca">More...</a><br /></td></tr>
+<tr class="memitem:ab82f954ddc6d9f3c3c117ae0850e37ca"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#ab82f954ddc6d9f3c3c117ae0850e37ca">timing_shift</a> = 12</td></tr>
+<tr class="memdesc:ab82f954ddc6d9f3c3c117ae0850e37ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default shift for timing-related information.  <a href="structNaluPacketParserParams.html#ab82f954ddc6d9f3c3c117ae0850e37ca">More...</a><br /></td></tr>
 <tr class="separator:ab82f954ddc6d9f3c3c117ae0850e37ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27ea9218f25b83acb7e337bb207408e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a27ea9218f25b83acb7e337bb207408e3">check_packet_integrity</a></td></tr>
+<tr class="memitem:a27ea9218f25b83acb7e337bb207408e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a27ea9218f25b83acb7e337bb207408e3">check_packet_integrity</a> = false</td></tr>
+<tr class="memdesc:a27ea9218f25b83acb7e337bb207408e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default flag indicating whether to check packet integrity.  <a href="structNaluPacketParserParams.html#a27ea9218f25b83acb7e337bb207408e3">More...</a><br /></td></tr>
 <tr class="separator:a27ea9218f25b83acb7e337bb207408e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9810e0806599060ce12953a2a9d566c4"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a9810e0806599060ce12953a2a9d566c4">constructed_packet_header</a></td></tr>
+<tr class="memitem:a9810e0806599060ce12953a2a9d566c4"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a9810e0806599060ce12953a2a9d566c4">constructed_packet_header</a> = 0xAAAA</td></tr>
+<tr class="memdesc:a9810e0806599060ce12953a2a9d566c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default header value for the constructed packet.  <a href="structNaluPacketParserParams.html#a9810e0806599060ce12953a2a9d566c4">More...</a><br /></td></tr>
 <tr class="separator:a9810e0806599060ce12953a2a9d566c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99165e6041a3f0462dd29b3c8cffc845"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a99165e6041a3f0462dd29b3c8cffc845">constructed_packet_footer</a></td></tr>
+<tr class="memitem:a99165e6041a3f0462dd29b3c8cffc845"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a99165e6041a3f0462dd29b3c8cffc845">constructed_packet_footer</a> = 0xFFFF</td></tr>
+<tr class="memdesc:a99165e6041a3f0462dd29b3c8cffc845"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default footer value for the constructed packet.  <a href="structNaluPacketParserParams.html#a99165e6041a3f0462dd29b3c8cffc845">More...</a><br /></td></tr>
 <tr class="separator:a99165e6041a3f0462dd29b3c8cffc845"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct for <a class="el" href="classNaluPacketParser.html" title="A class for parsing Nalu packets from a byte stream.">NaluPacketParser</a> parameters. </p>
 <p>This struct holds the configuration parameters for the <a class="el" href="classNaluPacketParser.html" title="A class for parsing Nalu packets from a byte stream.">NaluPacketParser</a>, which parses incoming NALU packets and extracts relevant information. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="acf4f57ac4fabc822d0b680777211c02d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf4f57ac4fabc822d0b680777211c02d">&#9670;&nbsp;</a></span>NaluPacketParserParams()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">NaluPacketParserParams::NaluPacketParserParams </td>
-          <td>(</td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>pkt_size</em> = <code>74</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; uint8_t &gt;&#160;</td>
-          <td class="paramname"><em>start_m</em> = <code>{0x0E}</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::vector&lt; uint8_t &gt;&#160;</td>
-          <td class="paramname"><em>stop_m</em> = <code>{0xFA,&#160;0x5A}</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>ch_mask</em> = <code>0x3F</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>ch_shift</em> = <code>0</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>abs_w_mask</em> = <code>0x3F</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>evt_w_mask</em> = <code>0x3F</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>evt_w_shift</em> = <code>6</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>t_mask</em> = <code>0xFFF</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>t_shift</em> = <code>12</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>integrity</em> = <code>false</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>header</em> = <code>0xAAAA</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>footer</em> = <code>0xFFFF</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Default constructor with default values for <a class="el" href="structNaluPacketParserParams.html" title="Struct for NaluPacketParser parameters.">NaluPacketParserParams</a>. </p>
-<p>Initializes parameters to their default values if not provided. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="a3da12be441b5b5f8e27df05eb513da31"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a3da12be441b5b5f8e27df05eb513da31">&#9670;&nbsp;</a></span>abs_wind_mask</h2>
 
@@ -237,12 +127,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t NaluPacketParserParams::abs_wind_mask</td>
+          <td class="memname">uint8_t NaluPacketParserParams::abs_wind_mask = 0x3F</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Absolute window mask for packet processing. </p>
+<p>Default absolute window mask for packet processing. </p>
 
 </div>
 </div>
@@ -253,12 +143,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t NaluPacketParserParams::chan_mask</td>
+          <td class="memname">uint8_t NaluPacketParserParams::chan_mask = 0x3F</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Channel mask for packet extraction. </p>
+<p>Default channel mask for packet extraction. </p>
 
 </div>
 </div>
@@ -269,12 +159,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t NaluPacketParserParams::chan_shift</td>
+          <td class="memname">uint8_t NaluPacketParserParams::chan_shift = 0</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Shift value for channel extraction. </p>
+<p>Default shift value for channel extraction. </p>
 
 </div>
 </div>
@@ -285,11 +175,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool NaluPacketParserParams::check_packet_integrity</td>
+          <td class="memname">bool NaluPacketParserParams::check_packet_integrity = false</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Flag indicating whether to check packet integrity. </p>
+
+<p>Default flag indicating whether to check packet integrity. </p>
 
 </div>
 </div>
@@ -300,11 +191,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t NaluPacketParserParams::constructed_packet_footer</td>
+          <td class="memname">uint16_t NaluPacketParserParams::constructed_packet_footer = 0xFFFF</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Footer value for the constructed packet. </p>
+
+<p>Default footer value for the constructed packet. </p>
 
 </div>
 </div>
@@ -315,11 +207,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t NaluPacketParserParams::constructed_packet_header</td>
+          <td class="memname">uint16_t NaluPacketParserParams::constructed_packet_header = 0xAAAA</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Header value for the constructed packet. </p>
+
+<p>Default header value for the constructed packet. </p>
 
 </div>
 </div>
@@ -330,12 +223,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t NaluPacketParserParams::evt_wind_mask</td>
+          <td class="memname">uint8_t NaluPacketParserParams::evt_wind_mask = 0x3F</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Event window mask for packet processing. </p>
+<p>Default event window mask for packet processing. </p>
 
 </div>
 </div>
@@ -346,12 +239,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t NaluPacketParserParams::evt_wind_shift</td>
+          <td class="memname">uint8_t NaluPacketParserParams::evt_wind_shift = 6</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Event window shift value. </p>
+<p>Default event window shift value. </p>
 
 </div>
 </div>
@@ -362,12 +255,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">size_t NaluPacketParserParams::packet_size</td>
+          <td class="memname">size_t NaluPacketParserParams::packet_size = 74</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Size of a single packet. </p>
+<p>Default size of a single packet. </p>
 
 </div>
 </div>
@@ -378,12 +271,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;uint8_t&gt; NaluPacketParserParams::start_marker</td>
+          <td class="memname">std::vector&lt;uint8_t&gt; NaluPacketParserParams::start_marker = {0x0E}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Start marker to identify the beginning of a packet. </p>
+<p>Default start marker to identify the beginning of a packet. </p>
 
 </div>
 </div>
@@ -394,12 +287,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;uint8_t&gt; NaluPacketParserParams::stop_marker</td>
+          <td class="memname">std::vector&lt;uint8_t&gt; NaluPacketParserParams::stop_marker = {0xFA, 0x5A}</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Stop marker to identify the end of a packet. </p>
+<p>Default stop marker to identify the end of a packet. </p>
 
 </div>
 </div>
@@ -410,12 +303,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t NaluPacketParserParams::timing_mask</td>
+          <td class="memname">uint16_t NaluPacketParserParams::timing_mask = 0xFFF</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Mask for timing-related information in the packet. </p>
+<p>Default mask for timing-related information in the packet. </p>
 
 </div>
 </div>
@@ -426,12 +319,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t NaluPacketParserParams::timing_shift</td>
+          <td class="memname">uint8_t NaluPacketParserParams::timing_shift = 12</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Shift for timing-related information. </p>
+<p>Default shift for timing-related information. </p>
 
 </div>
 </div>

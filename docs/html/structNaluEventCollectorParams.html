@@ -62,7 +62,6 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="structNaluEventCollectorParams-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -80,12 +79,6 @@ Collaboration diagram for NaluEventCollectorParams:</div>
 <div class="center"><img src="structNaluEventCollectorParams__coll__graph.png" border="0" usemap="#aNaluEventCollectorParams_coll__map" alt="Collaboration graph"/></div>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:a405cedb81ca90f6f80b994a3487b08c6"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEventCollectorParams.html#a405cedb81ca90f6f80b994a3487b08c6">NaluEventCollectorParams</a> (<a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a> eb_params=<a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a>(), <a class="el" href="structNaluUdpReceiverParams.html">NaluUdpReceiverParams</a> ur_params=<a class="el" href="structNaluUdpReceiverParams.html">NaluUdpReceiverParams</a>(), <a class="el" href="structNaluPacketParserParams.html">NaluPacketParserParams</a> pp_params=<a class="el" href="structNaluPacketParserParams.html">NaluPacketParserParams</a>(), std::chrono::microseconds <a class="el" href="structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c">sleep_time_us</a>=std::chrono::microseconds(-1))</td></tr>
-<tr class="memdesc:a405cedb81ca90f6f80b994a3487b08c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor that initializes all parameters.  <a href="structNaluEventCollectorParams.html#a405cedb81ca90f6f80b994a3487b08c6">More...</a><br /></td></tr>
-<tr class="separator:a405cedb81ca90f6f80b994a3487b08c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aa13d7e87f1c39cc76468c64b2945622d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEventCollectorParams.html#aa13d7e87f1c39cc76468c64b2945622d">event_builder_params</a></td></tr>
@@ -97,66 +90,14 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a0607d29cd4f8622353ef431829a172fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structNaluPacketParserParams.html">NaluPacketParserParams</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEventCollectorParams.html#a0607d29cd4f8622353ef431829a172fc">packet_parser_params</a></td></tr>
 <tr class="memdesc:a0607d29cd4f8622353ef431829a172fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parameters for the <a class="el" href="classNaluPacketParser.html" title="A class for parsing Nalu packets from a byte stream.">NaluPacketParser</a>.  <a href="structNaluEventCollectorParams.html#a0607d29cd4f8622353ef431829a172fc">More...</a><br /></td></tr>
 <tr class="separator:a0607d29cd4f8622353ef431829a172fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a886978382d59009aef5f450db13eac5c"><td class="memItemLeft" align="right" valign="top">std::chrono::microseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c">sleep_time_us</a></td></tr>
-<tr class="memdesc:a886978382d59009aef5f450db13eac5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sleep time between collection cycles.  <a href="structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c">More...</a><br /></td></tr>
+<tr class="memitem:a886978382d59009aef5f450db13eac5c"><td class="memItemLeft" align="right" valign="top">std::chrono::microseconds&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c">sleep_time_us</a> = std::chrono::microseconds(-1)</td></tr>
+<tr class="memdesc:a886978382d59009aef5f450db13eac5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default sleep time between collection cycles.  <a href="structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c">More...</a><br /></td></tr>
 <tr class="separator:a886978382d59009aef5f450db13eac5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Struct that holds all parameters required for the <a class="el" href="classNaluEventCollector.html" title="Collects, processes, and manages events from UDP data streams.">NaluEventCollector</a>. </p>
 <p>This struct aggregates all the configuration parameters for the <a class="el" href="classNaluEventCollector.html" title="Collects, processes, and manages events from UDP data streams.">NaluEventCollector</a> class, including the <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a>, <a class="el" href="classNaluUdpReceiver.html" title="A class for receiving UDP packets, parsing them, and storing the data in a buffer.">NaluUdpReceiver</a>, and <a class="el" href="classNaluPacketParser.html" title="A class for parsing Nalu packets from a byte stream.">NaluPacketParser</a> parameters. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a405cedb81ca90f6f80b994a3487b08c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a405cedb81ca90f6f80b994a3487b08c6">&#9670;&nbsp;</a></span>NaluEventCollectorParams()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">NaluEventCollectorParams::NaluEventCollectorParams </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a>&#160;</td>
-          <td class="paramname"><em>eb_params</em> = <code><a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a>()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structNaluUdpReceiverParams.html">NaluUdpReceiverParams</a>&#160;</td>
-          <td class="paramname"><em>ur_params</em> = <code><a class="el" href="structNaluUdpReceiverParams.html">NaluUdpReceiverParams</a>()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="structNaluPacketParserParams.html">NaluPacketParserParams</a>&#160;</td>
-          <td class="paramname"><em>pp_params</em> = <code><a class="el" href="structNaluPacketParserParams.html">NaluPacketParserParams</a>()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::chrono::microseconds&#160;</td>
-          <td class="paramname"><em>sleep_time_us</em> = <code>std::chrono::microseconds(-1)</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Default constructor that initializes all parameters. </p>
-<p>Allows custom initialization for all parameters, with default values provided for each. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
+</div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="aa13d7e87f1c39cc76468c64b2945622d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa13d7e87f1c39cc76468c64b2945622d">&#9670;&nbsp;</a></span>event_builder_params</h2>
 
@@ -196,12 +137,12 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::chrono::microseconds NaluEventCollectorParams::sleep_time_us</td>
+          <td class="memname">std::chrono::microseconds NaluEventCollectorParams::sleep_time_us = std::chrono::microseconds(-1)</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Sleep time between collection cycles. </p>
+<p>Default sleep time between collection cycles. </p>
 
 </div>
 </div>

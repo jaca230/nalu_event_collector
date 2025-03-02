@@ -79,9 +79,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aa1dfaf8b3fe64ecbaeee8e07ab2d9973"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuilder.html#aa1dfaf8b3fe64ecbaeee8e07ab2d9973">NaluEventBuilder</a> (std::vector&lt; int &gt; channels, int windows, int time_threshold=5000, uint32_t max_trigger_time=16777216, size_t max_lookback=2, size_t event_max_size=1024, uint16_t event_header=0xBBBB, uint16_t event_trailer=0xEEEE)</td></tr>
 <tr class="memdesc:aa1dfaf8b3fe64ecbaeee8e07ab2d9973"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor to initialize <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a> with specific parameters.  <a href="classNaluEventBuilder.html#aa1dfaf8b3fe64ecbaeee8e07ab2d9973">More...</a><br /></td></tr>
 <tr class="separator:aa1dfaf8b3fe64ecbaeee8e07ab2d9973"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab7bc1c4f8e1d042305ec7d62fbb54b31"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuilder.html#ab7bc1c4f8e1d042305ec7d62fbb54b31">NaluEventBuilder</a> (const <a class="el" href="structNaluEventCollectorParams.html">NaluEventCollectorParams</a> &amp;params)</td></tr>
-<tr class="memdesc:ab7bc1c4f8e1d042305ec7d62fbb54b31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that initializes <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a> with parameters from <a class="el" href="structNaluEventCollectorParams.html" title="Struct that holds all parameters required for the NaluEventCollector.">NaluEventCollectorParams</a>.  <a href="classNaluEventBuilder.html#ab7bc1c4f8e1d042305ec7d62fbb54b31">More...</a><br /></td></tr>
-<tr class="separator:ab7bc1c4f8e1d042305ec7d62fbb54b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbc7b6d334561329c9a13e1a82dfc884"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuilder.html#afbc7b6d334561329c9a13e1a82dfc884">NaluEventBuilder</a> (const <a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a> &amp;params)</td></tr>
+<tr class="memdesc:afbc7b6d334561329c9a13e1a82dfc884"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that initializes <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a> with parameters from <a class="el" href="structNaluEventCollectorParams.html" title="Struct that holds all parameters required for the NaluEventCollector.">NaluEventCollectorParams</a>.  <a href="classNaluEventBuilder.html#afbc7b6d334561329c9a13e1a82dfc884">More...</a><br /></td></tr>
+<tr class="separator:afbc7b6d334561329c9a13e1a82dfc884"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9832be91c006ae9fdc47a99c02cdabd4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuilder.html#a9832be91c006ae9fdc47a99c02cdabd4">collect_events</a> (const std::vector&lt; <a class="el" href="classNaluPacket.html">NaluPacket</a> &gt; &amp;packets)</td></tr>
 <tr class="memdesc:a9832be91c006ae9fdc47a99c02cdabd4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Collects events from the provided packets.  <a href="classNaluEventBuilder.html#a9832be91c006ae9fdc47a99c02cdabd4">More...</a><br /></td></tr>
 <tr class="separator:a9832be91c006ae9fdc47a99c02cdabd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -181,8 +181,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ab7bc1c4f8e1d042305ec7d62fbb54b31"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab7bc1c4f8e1d042305ec7d62fbb54b31">&#9670;&nbsp;</a></span>NaluEventBuilder() <span class="overload">[2/2]</span></h2>
+<a id="afbc7b6d334561329c9a13e1a82dfc884"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbc7b6d334561329c9a13e1a82dfc884">&#9670;&nbsp;</a></span>NaluEventBuilder() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -190,7 +190,7 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="memname">NaluEventBuilder::NaluEventBuilder </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structNaluEventCollectorParams.html">NaluEventCollectorParams</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structNaluEventBuilderParams.html">NaluEventBuilderParams</a> &amp;&#160;</td>
           <td class="paramname"><em>params</em></td><td>)</td>
           <td></td>
         </tr>
@@ -200,7 +200,7 @@ Public Member Functions</h2></td></tr>
 <p>Constructor that initializes <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a> with parameters from <a class="el" href="structNaluEventCollectorParams.html" title="Struct that holds all parameters required for the NaluEventCollector.">NaluEventCollectorParams</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">params</td><td>The parameters for the <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a> taken from <a class="el" href="structNaluEventCollectorParams.html" title="Struct that holds all parameters required for the NaluEventCollector.">NaluEventCollectorParams</a>. </td></tr>
+    <tr><td class="paramname">params</td><td>The parameters for the <a class="el" href="classNaluEventBuilder.html" title="Class for building events from Nalu packets.">NaluEventBuilder</a> taken from <a class="el" href="structNaluEventBuilderParams.html" title="Struct for NaluEventBuilder parameters.">NaluEventBuilderParams</a>. </td></tr>
   </table>
   </dd>
 </dl>

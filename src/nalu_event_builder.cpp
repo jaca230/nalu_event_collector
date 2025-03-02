@@ -22,15 +22,15 @@ NaluEventBuilder::NaluEventBuilder(std::vector<int> channels, int windows,
         std::ceil(channels.size() * windows * 0.10);
 }
 
-NaluEventBuilder::NaluEventBuilder(const NaluEventCollectorParams& params)
-    : NaluEventBuilder(params.event_builder_params.channels,
-                       params.event_builder_params.windows,
-                       params.event_builder_params.time_threshold,
-                       params.event_builder_params.max_trigger_time,
-                       params.event_builder_params.max_lookback,
-                       params.event_builder_params.max_events_in_buffer,
-                       params.event_builder_params.event_header,
-                       params.event_builder_params.event_trailer) {}
+NaluEventBuilder::NaluEventBuilder(const NaluEventBuilderParams& params)
+    : NaluEventBuilder(params.channels,
+                       params.windows,
+                       params.time_threshold,
+                       params.max_trigger_time,
+                       params.max_lookback,
+                       params.max_events_in_buffer,
+                       params.event_header,
+                       params.event_trailer) {}
 
 // Setter to adjust the post_event_safety_buffer_counter_max
 void NaluEventBuilder::set_post_event_safety_buffer_counter_max(

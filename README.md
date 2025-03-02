@@ -99,25 +99,48 @@ std::chrono::microseconds sleep_time_us(
 int main(int argc, char** argv) {
 
   // Set up parameters for the collector
-  NaluEventBuilderParams event_builder_params(
-      channels, windows, time_threshold, max_events_in_buffer, max_trigger_time,
-      max_lookback, event_header, event_trailer);
-  NaluUdpReceiverParams udp_receiver_params(udp_address, udp_port, buffer_size,
-                                            max_packet_size, timeout_sec);
-  NaluPacketParserParams packet_parser_params(
-      packet_size, start_marker, stop_marker, chan_mask, chan_shift,
-      abs_wind_mask, evt_wind_mask, evt_wind_shift, timing_mask, timing_shift,
-      check_packet_integrity, constructed_packet_header,
-      constructed_packet_footer);
+  // Manually set up the parameters for NaluEventBuilderParams
+  NaluEventBuilderParams event_builder_params;
+  event_builder_params.channels = channels;
+  event_builder_params.windows = windows;
+  event_builder_params.time_threshold = time_threshold;
+  event_builder_params.max_events_in_buffer = max_events_in_buffer;
+  event_builder_params.max_trigger_time = max_trigger_time;
+  event_builder_params.max_lookback = max_lookback;
+  event_builder_params.event_header = event_header;
+  event_builder_params.event_trailer = event_trailer;
 
-  // Create and initialize NaluEventCollectorParams with all parameters,
-  // including the new sleep_time_us
-  NaluEventCollectorParams collector_params(
-      event_builder_params, udp_receiver_params, packet_parser_params,
-      sleep_time_us);
+  // Manually set up the parameters for NaluUdpReceiverParams
+  NaluUdpReceiverParams udp_receiver_params;
+  udp_receiver_params.address = udp_address;
+  udp_receiver_params.port = udp_port;
+  udp_receiver_params.buffer_size = buffer_size;
+  udp_receiver_params.max_packet_size = max_packet_size;
+  udp_receiver_params.timeout_sec = timeout_sec;
 
-  // Create the collector
-  NaluEventCollector collector(collector_params);
+  // Manually set up the parameters for NaluPacketParserParams
+  NaluPacketParserParams packet_parser_params;
+  packet_parser_params.packet_size = packet_size;
+  packet_parser_params.start_marker = start_marker;
+  packet_parser_params.stop_marker = stop_marker;
+  packet_parser_params.chan_mask = chan_mask;
+  packet_parser_params.chan_shift = chan_shift;
+  packet_parser_params.abs_wind_mask = abs_wind_mask;
+  packet_parser_params.evt_wind_mask = evt_wind_mask;
+  packet_parser_params.evt_wind_shift = evt_wind_shift;
+  packet_parser_params.timing_mask = timing_mask;
+  packet_parser_params.timing_shift = timing_shift;
+  packet_parser_params.check_packet_integrity = check_packet_integrity;
+  packet_parser_params.constructed_packet_header = constructed_packet_header;
+  packet_parser_params.constructed_packet_footer = constructed_packet_footer;
+
+  // Manually create and set up NaluEventCollectorParams
+  NaluEventCollectorParams collector_params;
+  collector_params.event_builder_params = event_builder_params;
+  collector_params.udp_receiver_params = udp_receiver_params;
+  collector_params.packet_parser_params = packet_parser_params;
+  collector_params.sleep_time_us = sleep_time_us;
+
 
   // Manual collection loop
   collector.get_receiver().start();

@@ -48,9 +48,9 @@ class NaluEventBuilder {
      * NaluEventCollectorParams.
      *
      * @param params The parameters for the NaluEventBuilder taken from
-     * NaluEventCollectorParams.
+     * NaluEventBuilderParams.
      */
-    NaluEventBuilder(const NaluEventCollectorParams& params);
+    NaluEventBuilder(const NaluEventBuilderParams& params);
 
     /**
      * @brief Collects events from the provided packets.

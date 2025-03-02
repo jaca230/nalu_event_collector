@@ -12,35 +12,15 @@
  * which is responsible for collecting and managing events from NALU packets.
  */
 struct NaluEventBuilderParams {
-    std::vector<int> channels;    ///< List of channels.
-    int windows;                  ///< Number of windows.
-    int time_threshold;           ///< Time threshold for event triggering.
-    size_t max_events_in_buffer;  ///< Maximum number of events in the buffer.
-    uint32_t max_trigger_time;    ///< Maximum trigger time in clock cycles.
-    size_t max_lookback;          ///< Maximum lookback period for events.
-    uint16_t event_header;        ///< Header value for event.
-    uint16_t event_trailer;       ///< Trailer value for event.
-
-    /**
-     * @brief Default constructor with default values for
-     * NaluEventBuilderParams.
-     *
-     * Initializes parameters to their default values if not provided.
-     */
-    NaluEventBuilderParams(std::vector<int> ch = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
-                                                  10, 11, 12, 13, 14, 15},
-                           int win = 4, int time_thresh = 5000,
-                           size_t max_buf = 1000000,
-                           uint32_t max_time = 16777216, size_t max_look = 2,
-                           uint16_t header = 0xBBBB, uint16_t trailer = 0xEEEE)
-        : channels(ch),
-          windows(win),
-          time_threshold(time_thresh),
-          max_events_in_buffer(max_buf),
-          max_trigger_time(max_time),
-          max_lookback(max_look),
-          event_header(header),
-          event_trailer(trailer) {}
+    std::vector<int> channels = 
+        {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};    ///< Default list of channels.
+    int windows = 4;                  ///< Default number of windows.
+    int time_threshold = 5000;        ///< Default time threshold for event triggering.
+    size_t max_events_in_buffer = 1000000;  ///< Default maximum number of events in the buffer.
+    uint32_t max_trigger_time = 16777216;   ///< Default maximum trigger time in clock cycles.
+    size_t max_lookback = 2;          ///< Default maximum lookback period for events.
+    uint16_t event_header = 0xBBBB;        ///< Default header value for event.
+    uint16_t event_trailer = 0xEEEE;       ///< Default trailer value for event.
 };
 
 /**
@@ -50,25 +30,11 @@ struct NaluEventBuilderParams {
  * handles the UDP communication and receives raw packet data.
  */
 struct NaluUdpReceiverParams {
-    std::string address;     ///< IP address for UDP receiver.
-    uint16_t port;           ///< UDP port for receiver.
-    size_t buffer_size;      ///< Size of the buffer for storing incoming data.
-    size_t max_packet_size;  ///< Maximum size of a single packet.
-    int timeout_sec;  ///< Timeout duration in seconds for receiving data.
-
-    /**
-     * @brief Default constructor with default values for NaluUdpReceiverParams.
-     *
-     * Initializes parameters to their default values if not provided.
-     */
-    NaluUdpReceiverParams(std::string addr = "127.0.0.1", uint16_t p = 9000,
-                          size_t buf_size = 1024 * 1024 * 100,
-                          size_t pkt_size = 1040, int timeout = 10)
-        : address(addr),
-          port(p),
-          buffer_size(buf_size),
-          max_packet_size(pkt_size),
-          timeout_sec(timeout) {}
+    std::string address = "127.0.0.1";     ///< Default IP address for UDP receiver.
+    uint16_t port = 9000;           ///< Default UDP port for receiver.
+    size_t buffer_size = 1024 * 1024 * 100;      ///< Default size of the buffer for storing incoming data.
+    size_t max_packet_size = 1040;  ///< Default maximum size of a single packet.
+    int timeout_sec = 10;  ///< Default timeout duration in seconds for receiving data.
 };
 
 /**
@@ -78,53 +44,19 @@ struct NaluUdpReceiverParams {
  * which parses incoming NALU packets and extracts relevant information.
  */
 struct NaluPacketParserParams {
-    size_t packet_size;  ///< Size of a single packet.
-    std::vector<uint8_t>
-        start_marker;  ///< Start marker to identify the beginning of a packet.
-    std::vector<uint8_t>
-        stop_marker;         ///< Stop marker to identify the end of a packet.
-    uint8_t chan_mask;       ///< Channel mask for packet extraction.
-    uint8_t chan_shift;      ///< Shift value for channel extraction.
-    uint8_t abs_wind_mask;   ///< Absolute window mask for packet processing.
-    uint8_t evt_wind_mask;   ///< Event window mask for packet processing.
-    uint8_t evt_wind_shift;  ///< Event window shift value.
-    uint16_t
-        timing_mask;  ///< Mask for timing-related information in the packet.
-    uint8_t timing_shift;         ///< Shift for timing-related information.
-    bool check_packet_integrity;  ///< Flag indicating whether to check packet
-                                  ///< integrity.
-    uint16_t constructed_packet_header;  ///< Header value for the constructed
-                                         ///< packet.
-    uint16_t constructed_packet_footer;  ///< Footer value for the constructed
-                                         ///< packet.
-
-    /**
-     * @brief Default constructor with default values for
-     * NaluPacketParserParams.
-     *
-     * Initializes parameters to their default values if not provided.
-     */
-    NaluPacketParserParams(size_t pkt_size = 74,
-                           std::vector<uint8_t> start_m = {0x0E},
-                           std::vector<uint8_t> stop_m = {0xFA, 0x5A},
-                           uint8_t ch_mask = 0x3F, uint8_t ch_shift = 0,
-                           uint8_t abs_w_mask = 0x3F, uint8_t evt_w_mask = 0x3F,
-                           uint8_t evt_w_shift = 6, uint16_t t_mask = 0xFFF,
-                           uint8_t t_shift = 12, bool integrity = false,
-                           uint16_t header = 0xAAAA, uint16_t footer = 0xFFFF)
-        : packet_size(pkt_size),
-          start_marker(start_m),
-          stop_marker(stop_m),
-          chan_mask(ch_mask),
-          chan_shift(ch_shift),
-          abs_wind_mask(abs_w_mask),
-          evt_wind_mask(evt_w_mask),
-          evt_wind_shift(evt_w_shift),
-          timing_mask(t_mask),
-          timing_shift(t_shift),
-          check_packet_integrity(integrity),
-          constructed_packet_header(header),
-          constructed_packet_footer(footer) {}
+    size_t packet_size = 74;  ///< Default size of a single packet.
+    std::vector<uint8_t> start_marker = {0x0E};  ///< Default start marker to identify the beginning of a packet.
+    std::vector<uint8_t> stop_marker = {0xFA, 0x5A};         ///< Default stop marker to identify the end of a packet.
+    uint8_t chan_mask = 0x3F;       ///< Default channel mask for packet extraction.
+    uint8_t chan_shift = 0;      ///< Default shift value for channel extraction.
+    uint8_t abs_wind_mask = 0x3F;   ///< Default absolute window mask for packet processing.
+    uint8_t evt_wind_mask = 0x3F;   ///< Default event window mask for packet processing.
+    uint8_t evt_wind_shift = 6;  ///< Default event window shift value.
+    uint16_t timing_mask = 0xFFF;  ///< Default mask for timing-related information in the packet.
+    uint8_t timing_shift = 12;         ///< Default shift for timing-related information.
+    bool check_packet_integrity = false;  ///< Default flag indicating whether to check packet integrity.
+    uint16_t constructed_packet_header = 0xAAAA;  ///< Default header value for the constructed packet.
+    uint16_t constructed_packet_footer = 0xFFFF;  ///< Default footer value for the constructed packet.
 };
 
 /**
@@ -135,30 +67,10 @@ struct NaluPacketParserParams {
  * and NaluPacketParser parameters.
  */
 struct NaluEventCollectorParams {
-    NaluEventBuilderParams
-        event_builder_params;  ///< Parameters for the NaluEventBuilder.
-    NaluUdpReceiverParams
-        udp_receiver_params;  ///< Parameters for the NaluUdpReceiver.
-    NaluPacketParserParams
-        packet_parser_params;  ///< Parameters for the NaluPacketParser.
-    std::chrono::microseconds
-        sleep_time_us;  ///< Sleep time between collection cycles.
-
-    /**
-     * @brief Default constructor that initializes all parameters.
-     *
-     * Allows custom initialization for all parameters, with default values
-     * provided for each.
-     */
-    NaluEventCollectorParams(
-        NaluEventBuilderParams eb_params = NaluEventBuilderParams(),
-        NaluUdpReceiverParams ur_params = NaluUdpReceiverParams(),
-        NaluPacketParserParams pp_params = NaluPacketParserParams(),
-        std::chrono::microseconds sleep_time_us = std::chrono::microseconds(-1))
-        : event_builder_params(eb_params),
-          udp_receiver_params(ur_params),
-          packet_parser_params(pp_params),
-          sleep_time_us(sleep_time_us) {}
+    NaluEventBuilderParams event_builder_params;  ///< Parameters for the NaluEventBuilder.
+    NaluUdpReceiverParams udp_receiver_params;  ///< Parameters for the NaluUdpReceiver.
+    NaluPacketParserParams packet_parser_params;  ///< Parameters for the NaluPacketParser.
+    std::chrono::microseconds sleep_time_us = std::chrono::microseconds(-1);  ///< Default sleep time between collection cycles.
 };
 
 #endif  // NALU_EVENT_COLLECTOR_PARAMS_H

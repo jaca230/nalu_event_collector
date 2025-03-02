@@ -9,24 +9,19 @@ Struct for \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} paramete
 
 {\ttfamily \#include $<$nalu\+\_\+event\+\_\+collector\+\_\+params.\+h$>$}
 
-\doxysubsection*{Public Member Functions}
-\begin{DoxyCompactItemize}
-\item 
-\mbox{\hyperlink{structNaluUdpReceiverParams_a9abfd0f9c3ce727ad072316b37bf21d4}{Nalu\+Udp\+Receiver\+Params}} (std\+::string addr=\char`\"{}127.\+0.\+0.\+1\char`\"{}, uint16\+\_\+t p=9000, size\+\_\+t buf\+\_\+size=1024 $\ast$1024 $\ast$100, size\+\_\+t pkt\+\_\+size=1040, int timeout=10)
-\begin{DoxyCompactList}\small\item\em Default constructor with default values for \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
-std\+::string \mbox{\hyperlink{structNaluUdpReceiverParams_a840568bf982d2a1bacafecc63fe7e9c4}{address}}
-\begin{DoxyCompactList}\small\item\em IP address for UDP receiver. \end{DoxyCompactList}\item 
-uint16\+\_\+t \mbox{\hyperlink{structNaluUdpReceiverParams_ad6eb2fc5cbcc24b9bb7d50764ffc69ba}{port}}
-\begin{DoxyCompactList}\small\item\em UDP port for receiver. \end{DoxyCompactList}\item 
-size\+\_\+t \mbox{\hyperlink{structNaluUdpReceiverParams_aeb4cf5dc4f2d339fb15b8b6ee0c0f942}{buffer\+\_\+size}}
-\begin{DoxyCompactList}\small\item\em Size of the buffer for storing incoming data. \end{DoxyCompactList}\item 
-size\+\_\+t \mbox{\hyperlink{structNaluUdpReceiverParams_ab1d762f7d22edbc1d908cf6c97441c87}{max\+\_\+packet\+\_\+size}}
-\begin{DoxyCompactList}\small\item\em Maximum size of a single packet. \end{DoxyCompactList}\item 
-int \mbox{\hyperlink{structNaluUdpReceiverParams_a7fa9c69400d8eccc0656a1f38dcaacca}{timeout\+\_\+sec}}
-\begin{DoxyCompactList}\small\item\em Timeout duration in seconds for receiving data. \end{DoxyCompactList}\end{DoxyCompactItemize}
+std\+::string \mbox{\hyperlink{structNaluUdpReceiverParams_a840568bf982d2a1bacafecc63fe7e9c4}{address}} = \char`\"{}127.\+0.\+0.\+1\char`\"{}
+\begin{DoxyCompactList}\small\item\em Default IP address for UDP receiver. \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluUdpReceiverParams_ad6eb2fc5cbcc24b9bb7d50764ffc69ba}{port}} = 9000
+\begin{DoxyCompactList}\small\item\em Default UDP port for receiver. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{structNaluUdpReceiverParams_aeb4cf5dc4f2d339fb15b8b6ee0c0f942}{buffer\+\_\+size}} = 1024 $\ast$ 1024 $\ast$ 100
+\begin{DoxyCompactList}\small\item\em Default size of the buffer for storing incoming data. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{structNaluUdpReceiverParams_ab1d762f7d22edbc1d908cf6c97441c87}{max\+\_\+packet\+\_\+size}} = 1040
+\begin{DoxyCompactList}\small\item\em Default maximum size of a single packet. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{structNaluUdpReceiverParams_a7fa9c69400d8eccc0656a1f38dcaacca}{timeout\+\_\+sec}} = 10
+\begin{DoxyCompactList}\small\item\em Default timeout duration in seconds for receiving data. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -34,69 +29,56 @@ Struct for \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}} paramete
 
 This struct holds the configuration parameters for the \mbox{\hyperlink{classNaluUdpReceiver}{Nalu\+Udp\+Receiver}}, which handles the UDP communication and receives raw packet data. 
 
-\doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{structNaluUdpReceiverParams_a9abfd0f9c3ce727ad072316b37bf21d4}\label{structNaluUdpReceiverParams_a9abfd0f9c3ce727ad072316b37bf21d4}} 
-\index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
-\index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
-\doxysubsubsection{\texorpdfstring{NaluUdpReceiverParams()}{NaluUdpReceiverParams()}}
-{\footnotesize\ttfamily Nalu\+Udp\+Receiver\+Params\+::\+Nalu\+Udp\+Receiver\+Params (\begin{DoxyParamCaption}\item[{std\+::string}]{addr = {\ttfamily \char`\"{}127.0.0.1\char`\"{}},  }\item[{uint16\+\_\+t}]{p = {\ttfamily 9000},  }\item[{size\+\_\+t}]{buf\+\_\+size = {\ttfamily 1024~$\ast$~1024~$\ast$~100},  }\item[{size\+\_\+t}]{pkt\+\_\+size = {\ttfamily 1040},  }\item[{int}]{timeout = {\ttfamily 10} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
-
-
-
-Default constructor with default values for \mbox{\hyperlink{structNaluUdpReceiverParams}{Nalu\+Udp\+Receiver\+Params}}. 
-
-Initializes parameters to their default values if not provided. 
-
 \doxysubsection{Member Data Documentation}
 \mbox{\Hypertarget{structNaluUdpReceiverParams_a840568bf982d2a1bacafecc63fe7e9c4}\label{structNaluUdpReceiverParams_a840568bf982d2a1bacafecc63fe7e9c4}} 
 \index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!address@{address}}
 \index{address@{address}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
 \doxysubsubsection{\texorpdfstring{address}{address}}
-{\footnotesize\ttfamily std\+::string Nalu\+Udp\+Receiver\+Params\+::address}
+{\footnotesize\ttfamily std\+::string Nalu\+Udp\+Receiver\+Params\+::address = \char`\"{}127.\+0.\+0.\+1\char`\"{}}
 
 
 
-IP address for UDP receiver. 
+Default IP address for UDP receiver. 
 
 \mbox{\Hypertarget{structNaluUdpReceiverParams_aeb4cf5dc4f2d339fb15b8b6ee0c0f942}\label{structNaluUdpReceiverParams_aeb4cf5dc4f2d339fb15b8b6ee0c0f942}} 
 \index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!buffer\_size@{buffer\_size}}
 \index{buffer\_size@{buffer\_size}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
 \doxysubsubsection{\texorpdfstring{buffer\_size}{buffer\_size}}
-{\footnotesize\ttfamily size\+\_\+t Nalu\+Udp\+Receiver\+Params\+::buffer\+\_\+size}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Udp\+Receiver\+Params\+::buffer\+\_\+size = 1024 $\ast$ 1024 $\ast$ 100}
 
 
 
-Size of the buffer for storing incoming data. 
+Default size of the buffer for storing incoming data. 
 
 \mbox{\Hypertarget{structNaluUdpReceiverParams_ab1d762f7d22edbc1d908cf6c97441c87}\label{structNaluUdpReceiverParams_ab1d762f7d22edbc1d908cf6c97441c87}} 
 \index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!max\_packet\_size@{max\_packet\_size}}
 \index{max\_packet\_size@{max\_packet\_size}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
 \doxysubsubsection{\texorpdfstring{max\_packet\_size}{max\_packet\_size}}
-{\footnotesize\ttfamily size\+\_\+t Nalu\+Udp\+Receiver\+Params\+::max\+\_\+packet\+\_\+size}
+{\footnotesize\ttfamily size\+\_\+t Nalu\+Udp\+Receiver\+Params\+::max\+\_\+packet\+\_\+size = 1040}
 
 
 
-Maximum size of a single packet. 
+Default maximum size of a single packet. 
 
 \mbox{\Hypertarget{structNaluUdpReceiverParams_ad6eb2fc5cbcc24b9bb7d50764ffc69ba}\label{structNaluUdpReceiverParams_ad6eb2fc5cbcc24b9bb7d50764ffc69ba}} 
 \index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!port@{port}}
 \index{port@{port}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
 \doxysubsubsection{\texorpdfstring{port}{port}}
-{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Udp\+Receiver\+Params\+::port}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Udp\+Receiver\+Params\+::port = 9000}
 
 
 
-UDP port for receiver. 
+Default UDP port for receiver. 
 
 \mbox{\Hypertarget{structNaluUdpReceiverParams_a7fa9c69400d8eccc0656a1f38dcaacca}\label{structNaluUdpReceiverParams_a7fa9c69400d8eccc0656a1f38dcaacca}} 
 \index{NaluUdpReceiverParams@{NaluUdpReceiverParams}!timeout\_sec@{timeout\_sec}}
 \index{timeout\_sec@{timeout\_sec}!NaluUdpReceiverParams@{NaluUdpReceiverParams}}
 \doxysubsubsection{\texorpdfstring{timeout\_sec}{timeout\_sec}}
-{\footnotesize\ttfamily int Nalu\+Udp\+Receiver\+Params\+::timeout\+\_\+sec}
+{\footnotesize\ttfamily int Nalu\+Udp\+Receiver\+Params\+::timeout\+\_\+sec = 10}
 
 
 
-Timeout duration in seconds for receiving data. 
+Default timeout duration in seconds for receiving data. 
 
 
 
