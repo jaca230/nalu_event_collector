@@ -141,6 +141,14 @@ class NaluEventBuffer {
     void add_packet(const NaluPacket& packet, bool& in_safety_buffer_zone,
                     uint32_t& event_index);
 
+
+    /**
+     * @brief Clears all events in the buffer.
+     *
+     * This method removes all events from the buffer, effectively resetting it.
+     */
+    void clear();
+
    private:
     mutable std::mutex buffer_mutex;  ///< Mutex to protect the event buffer
     std::vector<std::unique_ptr<NaluEvent>>

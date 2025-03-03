@@ -151,6 +151,9 @@ NaluEventCollector::get_data() {
     // Check each event for completion
     for (auto* event : new_events) {
         bool is_complete = event->is_event_complete(windows, channels);
+        //std::cout << "Event is complete: " << is_complete << std::endl;
+        //std::cout << "Event num packets: " << event->num_packets << std::endl;
+        //std::cout << "Event reference time: " << event->reference_time << std::endl;
         if (is_complete) {
             complete_events.push_back(event);
         }

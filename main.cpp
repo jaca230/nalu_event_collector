@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "nalu_event_collector.h"
+#include "nalu_event_collector_logger.h"
 
 // Default UDP receiver parameters
 std::string udp_address = "192.168.1.1";  // UDP address
@@ -15,11 +16,13 @@ size_t max_packet_size = 1040;            // Max packet size
 int timeout_sec = 10;                     // Timeout in seconds
 
 // Default Event Builder parameters
+
 std::vector<int> channels = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
                              22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
-int windows = 4;  // Number of windows
-int time_threshold = 5000;  // Time threshold in milliseconds
+                                             
+int windows = 62;  // Number of windows
+int time_threshold = 5000;//95373/2;  // Time threshold in clock cycles
 size_t max_events_in_buffer = 1000000;  // Max events in buffer
 uint32_t max_trigger_time = 16777216;   // Max trigger time
 size_t max_lookback = 2;  // Max lookback
@@ -119,6 +122,8 @@ int main(int argc, char** argv) {
   // Create NaluEventCollector instance with the manually set parameters
   NaluEventCollector collector(collector_params);
 
+  NaluEventCollectorLogger::set_level(NaluEventCollectorLogger::LogLevel::DEBUG);
+
   if (run_in_background) {
     // Run the collector in the background
     collector.start();
@@ -152,6 +157,41 @@ int main(int argc, char** argv) {
       std::cout << "Summary of Events Received:\n";
       std::cout << "Total events received: " << events.size() << "\n";
       std::cout << "-------------------------------------------\n";
+
+      // Check if there are events in the middle
+      /*
+      if (!events.empty()) {
+        int middle_index = events.size() / 2;  // Middle event index
+        NaluEvent* middle_event = events[middle_index];
+
+        // Serialize the middle event to a buffer
+        char buffer[middle_event->get_size()];
+        middle_event->serialize_to_buffer(buffer);
+
+        // Print the serialized event as raw bytes in hexadecimal format
+        std::cout << "Serialized Event (Middle Event) Buffer: ";
+        for (size_t i = 0; i < middle_event->get_size(); ++i) {
+            std::cout << std::hex << static_cast<int>(buffer[i] & 0xFF) << " ";  // Print each byte in hex
+        }
+        std::cout << std::dec << std::endl;  // Reset to decimal for subsequent output
+
+        // Print detailed information about the middle event
+        std::cout << "Middle Event Details:\n";
+        std::cout << "Header: " << middle_event->header << std::endl;
+        std::cout << "Info: " << static_cast<int>(middle_event->info) << std::endl;
+        std::cout << "Index: " << middle_event->index << std::endl;
+        std::cout << "Reference Time: " << middle_event->reference_time << std::endl;
+        std::cout << "Packet Size: " << middle_event->packet_size << std::endl;
+        std::cout << "Number of Packets: " << middle_event->num_packets << std::endl;
+        std::cout << "Footer: " << middle_event->footer << std::endl;
+        std::cout << "Timestamp: " << std::chrono::duration_cast<std::chrono::milliseconds>(middle_event->creation_timestamp.time_since_epoch()).count() << "ms\n";
+      } else {
+        std::cout << "No events collected.\n";
+      }
+      */
+      
+
+
 
       // Clear events for the next cycle
       collector.clear_events();

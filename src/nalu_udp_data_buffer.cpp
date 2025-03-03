@@ -10,6 +10,11 @@ NaluUdpDataBuffer::NaluUdpDataBuffer(size_t size) : capacity_(size) {}
 void NaluUdpDataBuffer::append(const uint8_t* data, size_t size) {
     std::lock_guard<std::mutex> lock(mutex_);
 
+    if (data == nullptr) {
+        NaluEventCollectorLogger::error("Null pointer passed to append method.");
+        throw std::invalid_argument("Null pointer passed to append method.");
+    }
+
     if (buffer_.size() + size > capacity_) {
         if (overflow_callback_) {
             overflow_callback_();
@@ -25,6 +30,7 @@ void NaluUdpDataBuffer::append(const uint8_t* data, size_t size) {
     // Insert data into the buffer all at once
     buffer_.insert(buffer_.end(), data, data + size);
 }
+
 
 bool NaluUdpDataBuffer::pop(uint8_t& byte) {
     std::lock_guard<std::mutex> lock(mutex_);

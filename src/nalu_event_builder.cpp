@@ -37,14 +37,15 @@ void NaluEventBuilder::set_post_event_safety_buffer_counter_max(
     size_t counter_max) {
     post_event_safety_buffer_counter_max = counter_max;
 }
-
 // Method to collect events from packets
 void NaluEventBuilder::collect_events(const std::vector<NaluPacket>& packets) {
     for (const auto& packet : packets) {
+        // Add packet to the event buffer and manage the safety buffer
         event_buffer.add_packet(packet, in_safety_buffer_zone, event_index);
         manage_safety_buffer();
     }
 }
+
 
 void NaluEventBuilder::manage_safety_buffer() {
     if (in_safety_buffer_zone) {

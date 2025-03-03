@@ -116,6 +116,8 @@ std::vector<NaluPacket> NaluPacketParser::process_stream(
 void NaluPacketParser::process_packet(std::vector<NaluPacket>& packets,
                                       const uint8_t* byte_stream,
                                       size_t start_index, uint8_t error_code) {
+
+    
     NaluPacket p;
     p.info = error_code;
     p.header = constructed_packet_header;
