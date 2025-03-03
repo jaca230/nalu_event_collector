@@ -225,6 +225,23 @@ class NaluPacketParser {
                            size_t leftovers_size, const size_t packet_size,
                            const size_t start_marker_len,
                            const size_t stop_marker_len);
+
+    /**
+     * @brief Converts a hexadecimal string representation to a vector of bytes.
+     *
+     * This function takes a string of hexadecimal characters (e.g., "0E" or "FA5A") and converts
+     * it into a vector of bytes. Each pair of hexadecimal characters is treated as one byte. 
+     * The conversion assumes that the input string has an even number of characters, and each
+     * pair of characters represents one byte.
+     *
+     * @param hex The hexadecimal string to be converted, e.g., "0E", "FA5A".
+     * @return A vector of bytes represented by the hexadecimal string.
+     *
+     * @throws std::invalid_argument if the input string contains invalid characters or is not in valid
+     *         hexadecimal format.
+     */
+    std::vector<uint8_t> hexStringToBytes(const std::string& hex);
+
 };
 
 #endif  // NALU_PACKET_PARSER_H

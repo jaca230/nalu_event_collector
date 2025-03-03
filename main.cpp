@@ -28,8 +28,8 @@ uint16_t event_trailer = 0xEEEE; // Event trailer
 
 // Default Parsing Parameters
 size_t packet_size = 74;  // Packet size
-std::string start_marker = "\x0E";    //Byte sequence indicating start of packet
-std::string stop_marker = "\xFA\x5A";  //Byte sequence indicating stop of packet
+std::string start_marker = "0E";    //Byte sequence indicating start of packet
+std::string stop_marker = "FA5A";   //Byte sequence indicating stop of packet
 uint8_t chan_mask = 0x3F;  // Channel mask
 uint8_t chan_shift = 0;    // Channel shift
 uint8_t abs_wind_mask = 0x3F;  // Absolute window mask

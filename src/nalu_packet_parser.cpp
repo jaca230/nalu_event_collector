@@ -32,8 +32,8 @@ NaluPacketParser::NaluPacketParser(
 NaluPacketParser::NaluPacketParser(const NaluPacketParserParams& params)
     : NaluPacketParser(
           params.packet_size,
-          std::vector<uint8_t>(params.start_marker.begin(), params.start_marker.end()),  // Convert string to vector
-          std::vector<uint8_t>(params.stop_marker.begin(), params.stop_marker.end()),   // Convert string to vector
+          hexStringToBytes(params.start_marker),  // Convert hex string to vector of bytes
+          hexStringToBytes(params.stop_marker),   // Convert hex string to vector of bytes
           params.chan_mask, params.chan_shift, params.abs_wind_mask,
           params.evt_wind_mask, params.evt_wind_shift, params.timing_mask,
           params.timing_shift, params.check_packet_integrity,
@@ -256,4 +256,16 @@ void NaluPacketParser::process_leftovers(
                 "position.");
         }
     }
+}
+
+
+// Convert hex string to vector of bytes
+std::vector<uint8_t> NaluPacketParser::hexStringToBytes(const std::string& hex) {
+    std::vector<uint8_t> bytes;
+    for (size_t i = 0; i < hex.length(); i += 2) {
+        std::string byteString = hex.substr(i, 2);
+        uint8_t byte = static_cast<uint8_t>(std::stoi(byteString, nullptr, 16));
+        bytes.push_back(byte);
+    }
+    return bytes;
 }
