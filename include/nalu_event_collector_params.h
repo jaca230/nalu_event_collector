@@ -45,8 +45,8 @@ struct NaluUdpReceiverParams {
  */
 struct NaluPacketParserParams {
     size_t packet_size = 74;  ///< Default size of a single packet.
-    std::vector<uint8_t> start_marker = {0x0E};  ///< Default start marker to identify the beginning of a packet.
-    std::vector<uint8_t> stop_marker = {0xFA, 0x5A};         ///< Default stop marker to identify the end of a packet.
+    std::string start_marker = "\x0E";  ///< Default start marker to identify the beginning of a packet.
+    std::string stop_marker = "\xFA\x5A";         ///< Default stop marker to identify the end of a packet.
     uint8_t chan_mask = 0x3F;       ///< Default channel mask for packet extraction.
     uint8_t chan_shift = 0;      ///< Default shift value for channel extraction.
     uint8_t abs_wind_mask = 0x3F;   ///< Default absolute window mask for packet processing.

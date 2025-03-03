@@ -31,13 +31,16 @@ NaluPacketParser::NaluPacketParser(
 
 NaluPacketParser::NaluPacketParser(const NaluPacketParserParams& params)
     : NaluPacketParser(
-          params.packet_size, params.start_marker, params.stop_marker,
+          params.packet_size,
+          std::vector<uint8_t>(params.start_marker.begin(), params.start_marker.end()),  // Convert string to vector
+          std::vector<uint8_t>(params.stop_marker.begin(), params.stop_marker.end()),   // Convert string to vector
           params.chan_mask, params.chan_shift, params.abs_wind_mask,
           params.evt_wind_mask, params.evt_wind_shift, params.timing_mask,
           params.timing_shift, params.check_packet_integrity,
           params.constructed_packet_header, params.constructed_packet_footer) {
     // Additional setup logic if needed
 }
+
 
 std::vector<NaluPacket> NaluPacketParser::process_stream(
     const std::vector<uint8_t>& byte_stream) {
