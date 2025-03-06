@@ -62,6 +62,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="classNaluEvent-members.html">List of all members</a>  </div>
@@ -74,15 +75,29 @@ $(function() {
  <a href="classNaluEvent.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="nalu__event_8h_source.html">nalu_event.h</a>&gt;</code></p>
+<div class="dynheader">
+Collaboration diagram for NaluEvent:</div>
+<div class="dyncontent">
+<div class="center"><img src="classNaluEvent__coll__graph.png" border="0" usemap="#aNaluEvent_coll__map" alt="Collaboration graph"/></div>
+<center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEvent_1_1Footer.html">Footer</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structNaluEvent_1_1Footer.html" title="Footer of the event (2 bytes).">Footer</a> of the event (2 bytes).  <a href="structNaluEvent_1_1Footer.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluEvent_1_1Header.html">Header</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct representing the header information of the event.  <a href="structNaluEvent_1_1Header.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a38869356a6bfecbfe852f636cfa41bca"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a38869356a6bfecbfe852f636cfa41bca">NaluEvent</a> ()</td></tr>
 <tr class="memdesc:a38869356a6bfecbfe852f636cfa41bca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default constructor.  <a href="classNaluEvent.html#a38869356a6bfecbfe852f636cfa41bca">More...</a><br /></td></tr>
 <tr class="separator:a38869356a6bfecbfe852f636cfa41bca"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3eed21e3f15e61c0ce50b70a1760f242"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a3eed21e3f15e61c0ce50b70a1760f242">NaluEvent</a> (uint16_t hdr, uint16_t extra_info, uint32_t idx, uint32_t ref_time, uint16_t size, uint16_t num, uint16_t ftr, uint16_t max_num_packets)</td></tr>
-<tr class="memdesc:a3eed21e3f15e61c0ce50b70a1760f242"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that initializes the event with specific values.  <a href="classNaluEvent.html#a3eed21e3f15e61c0ce50b70a1760f242">More...</a><br /></td></tr>
-<tr class="separator:a3eed21e3f15e61c0ce50b70a1760f242"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9281f44ee96b326d0387dadf6bd17404"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a9281f44ee96b326d0387dadf6bd17404">NaluEvent</a> (uint16_t hdr, uint8_t extra_info, uint32_t idx, uint32_t ref_time, uint16_t size, uint16_t num, uint16_t ftr, uint16_t max_num_packets, uint64_t channel_mask_value, uint8_t num_windows_value)</td></tr>
+<tr class="memdesc:a9281f44ee96b326d0387dadf6bd17404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that initializes the event with specific values.  <a href="classNaluEvent.html#a9281f44ee96b326d0387dadf6bd17404">More...</a><br /></td></tr>
+<tr class="separator:a9281f44ee96b326d0387dadf6bd17404"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5c16fc2ee668eb1a709d28515fba4e9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#af5c16fc2ee668eb1a709d28515fba4e9">get_error_code</a> () const</td></tr>
 <tr class="memdesc:af5c16fc2ee668eb1a709d28515fba4e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the error code from the info field.  <a href="classNaluEvent.html#af5c16fc2ee668eb1a709d28515fba4e9">More...</a><br /></td></tr>
 <tr class="separator:af5c16fc2ee668eb1a709d28515fba4e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -98,36 +113,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:aae0e0350b00786d5b90aa09377f70fdc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#aae0e0350b00786d5b90aa09377f70fdc">is_event_complete</a> (int windows, const std::vector&lt; int &gt; &amp;channels) const</td></tr>
 <tr class="memdesc:aae0e0350b00786d5b90aa09377f70fdc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the event is complete based on the number of packets and available channels.  <a href="classNaluEvent.html#aae0e0350b00786d5b90aa09377f70fdc">More...</a><br /></td></tr>
 <tr class="separator:aae0e0350b00786d5b90aa09377f70fdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ff1f30c6994487a2287f42b4dc44a5c"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a4ff1f30c6994487a2287f42b4dc44a5c">is_event_complete</a> () const</td></tr>
+<tr class="memdesc:a4ff1f30c6994487a2287f42b4dc44a5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the event is complete based on the number of packets and available channels.  <a href="classNaluEvent.html#a4ff1f30c6994487a2287f42b4dc44a5c">More...</a><br /></td></tr>
+<tr class="separator:a4ff1f30c6994487a2287f42b4dc44a5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6783080ce1e63c778e8b4f4c78a4b23"><td class="memItemLeft" align="right" valign="top">std::chrono::steady_clock::time_point&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#af6783080ce1e63c778e8b4f4c78a4b23">get_creation_timestamp</a> () const</td></tr>
 <tr class="memdesc:af6783080ce1e63c778e8b4f4c78a4b23"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the creation timestamp of the event.  <a href="classNaluEvent.html#af6783080ce1e63c778e8b4f4c78a4b23">More...</a><br /></td></tr>
 <tr class="separator:af6783080ce1e63c778e8b4f4c78a4b23"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:af9e6008eccf376a8a340273f61f617c0"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#af9e6008eccf376a8a340273f61f617c0">header</a></td></tr>
-<tr class="memdesc:af9e6008eccf376a8a340273f61f617c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Header of the event (2 bytes).  <a href="classNaluEvent.html#af9e6008eccf376a8a340273f61f617c0">More...</a><br /></td></tr>
-<tr class="separator:af9e6008eccf376a8a340273f61f617c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a826aa146d849cbaff97002d93a990e19"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a826aa146d849cbaff97002d93a990e19">info</a></td></tr>
-<tr class="memdesc:a826aa146d849cbaff97002d93a990e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extra information about the event (2 bytes).  <a href="classNaluEvent.html#a826aa146d849cbaff97002d93a990e19">More...</a><br /></td></tr>
-<tr class="separator:a826aa146d849cbaff97002d93a990e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7784cd8a46a25557fbd40edb2973d5d7"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a7784cd8a46a25557fbd40edb2973d5d7">index</a></td></tr>
-<tr class="memdesc:a7784cd8a46a25557fbd40edb2973d5d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique index for the event (4 bytes).  <a href="classNaluEvent.html#a7784cd8a46a25557fbd40edb2973d5d7">More...</a><br /></td></tr>
-<tr class="separator:a7784cd8a46a25557fbd40edb2973d5d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0b1aba8d4603a53f5aa60fd1573c19f0"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a0b1aba8d4603a53f5aa60fd1573c19f0">reference_time</a></td></tr>
-<tr class="memdesc:a0b1aba8d4603a53f5aa60fd1573c19f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reference time for the event (4 bytes).  <a href="classNaluEvent.html#a0b1aba8d4603a53f5aa60fd1573c19f0">More...</a><br /></td></tr>
-<tr class="separator:a0b1aba8d4603a53f5aa60fd1573c19f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aba310afdc904fb8ba7ffa74138aa2de5"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#aba310afdc904fb8ba7ffa74138aa2de5">packet_size</a></td></tr>
-<tr class="memdesc:aba310afdc904fb8ba7ffa74138aa2de5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Packet size (2 bytes).  <a href="classNaluEvent.html#aba310afdc904fb8ba7ffa74138aa2de5">More...</a><br /></td></tr>
-<tr class="separator:aba310afdc904fb8ba7ffa74138aa2de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af04c39b0f7fb3761c00c4708f09b328a"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#af04c39b0f7fb3761c00c4708f09b328a">num_packets</a></td></tr>
-<tr class="memdesc:af04c39b0f7fb3761c00c4708f09b328a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of packets in the event (2 bytes).  <a href="classNaluEvent.html#af04c39b0f7fb3761c00c4708f09b328a">More...</a><br /></td></tr>
-<tr class="separator:af04c39b0f7fb3761c00c4708f09b328a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6c6014f3143a355ee2d45f24401242"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structNaluEvent_1_1Header.html">Header</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a9d6c6014f3143a355ee2d45f24401242">header</a></td></tr>
+<tr class="memdesc:a9d6c6014f3143a355ee2d45f24401242"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structNaluEvent_1_1Header.html" title="Struct representing the header information of the event.">Header</a> of the event (24 bytes).  <a href="classNaluEvent.html#a9d6c6014f3143a355ee2d45f24401242">More...</a><br /></td></tr>
+<tr class="separator:a9d6c6014f3143a355ee2d45f24401242"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a03741f36d073e16230b7467c0714a6c7"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classNaluPacket.html">NaluPacket</a>[]&gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a03741f36d073e16230b7467c0714a6c7">packets</a></td></tr>
 <tr class="memdesc:a03741f36d073e16230b7467c0714a6c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dynamically allocated array of <a class="el" href="classNaluPacket.html" title="This class represents a single Nalu packet, including fields such as header, info byte,...">NaluPacket</a> objects representing the packets in the event.  <a href="classNaluEvent.html#a03741f36d073e16230b7467c0714a6c7">More...</a><br /></td></tr>
 <tr class="separator:a03741f36d073e16230b7467c0714a6c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2967a16e5208d6506a7467b1895cbfdb"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a2967a16e5208d6506a7467b1895cbfdb">footer</a></td></tr>
-<tr class="memdesc:a2967a16e5208d6506a7467b1895cbfdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Footer of the event (2 bytes).  <a href="classNaluEvent.html#a2967a16e5208d6506a7467b1895cbfdb">More...</a><br /></td></tr>
-<tr class="separator:a2967a16e5208d6506a7467b1895cbfdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97353ad747d6f9ab2f9800589087892d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structNaluEvent_1_1Footer.html">Footer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a97353ad747d6f9ab2f9800589087892d">footer</a></td></tr>
+<tr class="memdesc:a97353ad747d6f9ab2f9800589087892d"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structNaluEvent_1_1Footer.html" title="Footer of the event (2 bytes).">Footer</a> of the event (2 bytes).  <a href="classNaluEvent.html#a97353ad747d6f9ab2f9800589087892d">More...</a><br /></td></tr>
+<tr class="separator:a97353ad747d6f9ab2f9800589087892d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f0fa0864dfea83c0f2ad282c0a3a463"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a6f0fa0864dfea83c0f2ad282c0a3a463">max_packets</a></td></tr>
 <tr class="memdesc:a6f0fa0864dfea83c0f2ad282c0a3a463"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of packets that can be stored in this event.  <a href="classNaluEvent.html#a6f0fa0864dfea83c0f2ad282c0a3a463">More...</a><br /></td></tr>
 <tr class="separator:a6f0fa0864dfea83c0f2ad282c0a3a463"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,8 +162,8 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3eed21e3f15e61c0ce50b70a1760f242"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3eed21e3f15e61c0ce50b70a1760f242">&#9670;&nbsp;</a></span>NaluEvent() <span class="overload">[2/2]</span></h2>
+<a id="a9281f44ee96b326d0387dadf6bd17404"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9281f44ee96b326d0387dadf6bd17404">&#9670;&nbsp;</a></span>NaluEvent() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -174,7 +177,7 @@ Public Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramtype">uint8_t&#160;</td>
           <td class="paramname"><em>extra_info</em>, </td>
         </tr>
         <tr>
@@ -211,7 +214,19 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>max_num_packets</em>&#160;</td>
+          <td class="paramname"><em>max_num_packets</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint64_t&#160;</td>
+          <td class="paramname"><em>channel_mask_value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>num_windows_value</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -333,8 +348,29 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a4ff1f30c6994487a2287f42b4dc44a5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ff1f30c6994487a2287f42b4dc44a5c">&#9670;&nbsp;</a></span>is_event_complete() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NaluEvent::is_event_complete </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Checks if the event is complete based on the number of packets and available channels. </p>
+<p>The event is considered complete if the number of packets is greater than or equal to the number of windows times the number of channels. A bit slower because it checks the channel mask to determine the number of channels.</p>
+<dl class="section return"><dt>Returns</dt><dd>True if the event is complete, false otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="aae0e0350b00786d5b90aa09377f70fdc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae0e0350b00786d5b90aa09377f70fdc">&#9670;&nbsp;</a></span>is_event_complete()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aae0e0350b00786d5b90aa09377f70fdc">&#9670;&nbsp;</a></span>is_event_complete() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -416,67 +452,35 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a2967a16e5208d6506a7467b1895cbfdb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2967a16e5208d6506a7467b1895cbfdb">&#9670;&nbsp;</a></span>footer</h2>
+<a id="a97353ad747d6f9ab2f9800589087892d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97353ad747d6f9ab2f9800589087892d">&#9670;&nbsp;</a></span>footer</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t NaluEvent::footer</td>
+          <td class="memname"><a class="el" href="structNaluEvent_1_1Footer.html">Footer</a> NaluEvent::footer</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Footer of the event (2 bytes). </p>
+<p><a class="el" href="structNaluEvent_1_1Footer.html" title="Footer of the event (2 bytes).">Footer</a> of the event (2 bytes). </p>
 
 </div>
 </div>
-<a id="af9e6008eccf376a8a340273f61f617c0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af9e6008eccf376a8a340273f61f617c0">&#9670;&nbsp;</a></span>header</h2>
+<a id="a9d6c6014f3143a355ee2d45f24401242"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d6c6014f3143a355ee2d45f24401242">&#9670;&nbsp;</a></span>header</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t NaluEvent::header</td>
+          <td class="memname"><a class="el" href="structNaluEvent_1_1Header.html">Header</a> NaluEvent::header</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Header of the event (2 bytes). </p>
-
-</div>
-</div>
-<a id="a7784cd8a46a25557fbd40edb2973d5d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7784cd8a46a25557fbd40edb2973d5d7">&#9670;&nbsp;</a></span>index</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t NaluEvent::index</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Unique index for the event (4 bytes). </p>
-
-</div>
-</div>
-<a id="a826aa146d849cbaff97002d93a990e19"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a826aa146d849cbaff97002d93a990e19">&#9670;&nbsp;</a></span>info</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t NaluEvent::info</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Extra information about the event (2 bytes). </p>
+<p><a class="el" href="structNaluEvent_1_1Header.html" title="Struct representing the header information of the event.">Header</a> of the event (24 bytes). </p>
 
 </div>
 </div>
@@ -496,38 +500,6 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af04c39b0f7fb3761c00c4708f09b328a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af04c39b0f7fb3761c00c4708f09b328a">&#9670;&nbsp;</a></span>num_packets</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t NaluEvent::num_packets</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The number of packets in the event (2 bytes). </p>
-
-</div>
-</div>
-<a id="aba310afdc904fb8ba7ffa74138aa2de5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba310afdc904fb8ba7ffa74138aa2de5">&#9670;&nbsp;</a></span>packet_size</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint16_t NaluEvent::packet_size</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Packet size (2 bytes). </p>
-
-</div>
-</div>
 <a id="a03741f36d073e16230b7467c0714a6c7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a03741f36d073e16230b7467c0714a6c7">&#9670;&nbsp;</a></span>packets</h2>
 
@@ -541,22 +513,6 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>A dynamically allocated array of <a class="el" href="classNaluPacket.html" title="This class represents a single Nalu packet, including fields such as header, info byte,...">NaluPacket</a> objects representing the packets in the event. </p>
-
-</div>
-</div>
-<a id="a0b1aba8d4603a53f5aa60fd1573c19f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0b1aba8d4603a53f5aa60fd1573c19f0">&#9670;&nbsp;</a></span>reference_time</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t NaluEvent::reference_time</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>The reference time for the event (4 bytes). </p>
 
 </div>
 </div>

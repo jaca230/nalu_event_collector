@@ -4,6 +4,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <iomanip>
 
 #include "nalu_event_collector.h"
 #include "nalu_event_collector_logger.h"
@@ -163,34 +164,57 @@ int main(int argc, char** argv) {
       if (!events.empty()) {
         int middle_index = events.size() / 2;  // Middle event index
         NaluEvent* middle_event = events[middle_index];
-
+    
         // Serialize the middle event to a buffer
         char buffer[middle_event->get_size()];
         middle_event->serialize_to_buffer(buffer);
-
-        // Print the serialized event as raw bytes in hexadecimal format
-        std::cout << "Serialized Event (Middle Event) Buffer: ";
-        for (size_t i = 0; i < middle_event->get_size(); ++i) {
-            std::cout << std::hex << static_cast<int>(buffer[i] & 0xFF) << " ";  // Print each byte in hex
+    
+        // Print the first 252 bytes of the serialized event in 4-byte chunks
+        size_t event_size = middle_event->get_size();
+        size_t bytes_to_print = std::min(event_size, size_t(252));
+        
+        std::cout << "Serialized Event (Middle Event) Buffer (First 252 bytes):\n";
+        for (size_t i = 0; i < bytes_to_print; i += 4) {
+            std::cout << std::hex;
+            for (size_t j = 0; j < 4 && i + j < bytes_to_print; ++j) {
+                std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i + j] & 0xFF) << " ";
+            }
+            std::cout << std::dec << std::endl;  // Reset to decimal for subsequent output
         }
-        std::cout << std::dec << std::endl;  // Reset to decimal for subsequent output
-
+    
+        // Print the last 50 bytes of the serialized event
+        size_t last_bytes_to_print = std::min(event_size, size_t(50));
+        std::cout << "Serialized Event (Middle Event) Buffer (Last " << last_bytes_to_print << " bytes):\n";
+        
+        size_t start_last_section = event_size - last_bytes_to_print;
+        for (size_t i = start_last_section; i < event_size; i += 4) {
+            std::cout << std::hex;
+            for (size_t j = 0; j < 4 && i + j < event_size; ++j) {
+                std::cout << std::setw(2) << std::setfill('0') << static_cast<int>(buffer[i + j] & 0xFF) << " ";
+            }
+            std::cout << std::dec << std::endl;  // Reset to decimal for subsequent output
+        }
+    
         // Print detailed information about the middle event
         std::cout << "Middle Event Details:\n";
-        std::cout << "Header: " << middle_event->header << std::endl;
-        std::cout << "Info: " << static_cast<int>(middle_event->info) << std::endl;
-        std::cout << "Index: " << middle_event->index << std::endl;
-        std::cout << "Reference Time: " << middle_event->reference_time << std::endl;
-        std::cout << "Packet Size: " << middle_event->packet_size << std::endl;
-        std::cout << "Number of Packets: " << middle_event->num_packets << std::endl;
-        std::cout << "Footer: " << middle_event->footer << std::endl;
-        std::cout << "Timestamp: " << std::chrono::duration_cast<std::chrono::milliseconds>(middle_event->creation_timestamp.time_since_epoch()).count() << "ms\n";
-      } else {
+        std::cout << "Header: " << middle_event->header.header << std::endl;
+        std::cout << "Info: " << static_cast<int>(middle_event->header.info) << std::endl;
+        std::cout << "Index: " << middle_event->header.index << std::endl;
+        std::cout << "Reference Time: " << middle_event->header.reference_time << std::endl;
+        std::cout << "Packet Size: " << middle_event->header.packet_size << std::endl;
+        std::cout << "Number of Packets: " << middle_event->header.num_packets << std::endl;
+        std::cout << "Footer: " << middle_event->footer.footer << std::endl;
+        std::cout << "Timestamp: " 
+                  << std::chrono::duration_cast<std::chrono::milliseconds>(
+                         middle_event->creation_timestamp.time_since_epoch()).count() 
+                  << "ms\n";
+    
+    } else {
         std::cout << "No events collected.\n";
-      }
-      */
+    }
+    */
+    
       
-
 
 
       // Clear events for the next cycle

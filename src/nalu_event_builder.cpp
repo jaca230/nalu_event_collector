@@ -14,12 +14,12 @@ NaluEventBuilder::NaluEventBuilder(std::vector<int> channels, int windows,
       windows(windows),
       time_diff_calculator(max_trigger_time, time_threshold),
       event_buffer(event_buffer_max_size, time_diff_calculator, max_lookback,
-                   this->channels.size() * windows + 5, event_header,
-                   event_trailer) {
+                   this->channels, static_cast<uint8_t>(windows),
+                   event_header, event_trailer) {
     // Calculate the post-event safety buffer size as 10% of the event size
     // (rounded up)
     post_event_safety_buffer_counter_max =
-        std::ceil(channels.size() * windows * 0.10);
+        std::ceil(this->channels.size() * windows * 0.10);
 }
 
 NaluEventBuilder::NaluEventBuilder(const NaluEventBuilderParams& params)

@@ -24,18 +24,20 @@ class NaluEventBuffer {
     /**
      * @brief Constructs a NaluEventBuffer with the specified parameters.
      * @param max_events The maximum number of events the buffer can hold.
-     * @param time_diff_calculator The calculator used to compute time
-     * differences.
-     * @param max_lookback The maximum number of past events to consider when
-     * adding a new packet.
-     * @param max_event_size The maximum size of an individual event.
+     * @param time_diff_calculator The calculator used to compute time differences.
+     * @param max_lookback The maximum number of past events to consider when adding a new packet.
+     * @param channels A vector of channel identifiers.
+     * @param windows The number of windows used for constructing events.
      * @param event_header The header used for constructing events.
      * @param event_trailer The trailer used for constructing events.
      */
     NaluEventBuffer(size_t max_events,
-                    NaluTimeDifferenceCalculator& time_diff_calculator,
-                    size_t max_lookback, size_t max_event_size,
-                    uint16_t event_header, uint16_t event_trailer);
+        NaluTimeDifferenceCalculator& time_diff_calculator,
+        size_t max_lookback,
+        const std::vector<int>& channels,
+        uint8_t windows,
+        uint16_t event_header,
+        uint16_t event_trailer);
 
     /** @brief Destructor */
     ~NaluEventBuffer();
@@ -162,6 +164,8 @@ class NaluEventBuffer {
         time_diff_calculator;  ///< The time difference calculator
     size_t max_lookback;     ///< The maximum number of past events to consider
     size_t max_event_size;   ///< The maximum size of a single event
+    uint8_t windows;         ///< The number of windows used for constructing events
+    uint64_t channel_mask;   ///< The mask of active channels
     uint16_t event_header;   ///< The header used to construct events
     uint16_t event_trailer;  ///< The trailer used to construct events
 };

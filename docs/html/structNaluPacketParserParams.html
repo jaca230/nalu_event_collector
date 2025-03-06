@@ -79,12 +79,12 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a30d09c986f15c2c479caa4d9f106d3c4"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a30d09c986f15c2c479caa4d9f106d3c4">packet_size</a> = 74</td></tr>
 <tr class="memdesc:a30d09c986f15c2c479caa4d9f106d3c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default size of a single packet.  <a href="structNaluPacketParserParams.html#a30d09c986f15c2c479caa4d9f106d3c4">More...</a><br /></td></tr>
 <tr class="separator:a30d09c986f15c2c479caa4d9f106d3c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aee3963040374779dced996780038f9fb"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb">start_marker</a> = {0x0E}</td></tr>
-<tr class="memdesc:aee3963040374779dced996780038f9fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default start marker to identify the beginning of a packet.  <a href="structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb">More...</a><br /></td></tr>
-<tr class="separator:aee3963040374779dced996780038f9fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="memItemLeft" align="right" valign="top">std::vector&lt; uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697">stop_marker</a> = {0xFA, 0x5A}</td></tr>
-<tr class="memdesc:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default stop marker to identify the end of a packet.  <a href="structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697">More...</a><br /></td></tr>
-<tr class="separator:a3a1a876b3d1131ab2a31c8fab8e74697"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3e53edabc4b9c7bfd2e86ce66105aab"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#aa3e53edabc4b9c7bfd2e86ce66105aab">start_marker</a> = &quot;0E&quot;</td></tr>
+<tr class="memdesc:aa3e53edabc4b9c7bfd2e86ce66105aab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default start marker in hex string format.  <a href="structNaluPacketParserParams.html#aa3e53edabc4b9c7bfd2e86ce66105aab">More...</a><br /></td></tr>
+<tr class="separator:aa3e53edabc4b9c7bfd2e86ce66105aab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8a3c9083d62530e2f2cf1e2569bd02c"><td class="memItemLeft" align="right" valign="top">std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#ae8a3c9083d62530e2f2cf1e2569bd02c">stop_marker</a> = &quot;FA5A&quot;</td></tr>
+<tr class="memdesc:ae8a3c9083d62530e2f2cf1e2569bd02c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default stop marker in hex string format.  <a href="structNaluPacketParserParams.html#ae8a3c9083d62530e2f2cf1e2569bd02c">More...</a><br /></td></tr>
+<tr class="separator:ae8a3c9083d62530e2f2cf1e2569bd02c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98030d10567fd890ae893c1de1c93847"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structNaluPacketParserParams.html#a98030d10567fd890ae893c1de1c93847">chan_mask</a> = 0x3F</td></tr>
 <tr class="memdesc:a98030d10567fd890ae893c1de1c93847"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default channel mask for packet extraction.  <a href="structNaluPacketParserParams.html#a98030d10567fd890ae893c1de1c93847">More...</a><br /></td></tr>
 <tr class="separator:a98030d10567fd890ae893c1de1c93847"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -264,35 +264,35 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aee3963040374779dced996780038f9fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aee3963040374779dced996780038f9fb">&#9670;&nbsp;</a></span>start_marker</h2>
+<a id="aa3e53edabc4b9c7bfd2e86ce66105aab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3e53edabc4b9c7bfd2e86ce66105aab">&#9670;&nbsp;</a></span>start_marker</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;uint8_t&gt; NaluPacketParserParams::start_marker = {0x0E}</td>
+          <td class="memname">std::string NaluPacketParserParams::start_marker = &quot;0E&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Default start marker to identify the beginning of a packet. </p>
+<p>Default start marker in hex string format. </p>
 
 </div>
 </div>
-<a id="a3a1a876b3d1131ab2a31c8fab8e74697"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a1a876b3d1131ab2a31c8fab8e74697">&#9670;&nbsp;</a></span>stop_marker</h2>
+<a id="ae8a3c9083d62530e2f2cf1e2569bd02c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8a3c9083d62530e2f2cf1e2569bd02c">&#9670;&nbsp;</a></span>stop_marker</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::vector&lt;uint8_t&gt; NaluPacketParserParams::stop_marker = {0xFA, 0x5A}</td>
+          <td class="memname">std::string NaluPacketParserParams::stop_marker = &quot;FA5A&quot;</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Default stop marker to identify the end of a packet. </p>
+<p>Default stop marker in hex string format. </p>
 
 </div>
 </div>

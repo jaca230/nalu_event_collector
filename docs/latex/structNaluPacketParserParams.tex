@@ -14,10 +14,10 @@ Struct for \mbox{\hyperlink{classNaluPacketParser}{Nalu\+Packet\+Parser}} parame
 \item 
 size\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a30d09c986f15c2c479caa4d9f106d3c4}{packet\+\_\+size}} = 74
 \begin{DoxyCompactList}\small\item\em Default size of a single packet. \end{DoxyCompactList}\item 
-std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{structNaluPacketParserParams_aee3963040374779dced996780038f9fb}{start\+\_\+marker}} = \{0x0E\}
-\begin{DoxyCompactList}\small\item\em Default start marker to identify the beginning of a packet. \end{DoxyCompactList}\item 
-std\+::vector$<$ uint8\+\_\+t $>$ \mbox{\hyperlink{structNaluPacketParserParams_a3a1a876b3d1131ab2a31c8fab8e74697}{stop\+\_\+marker}} = \{0x\+FA, 0x5A\}
-\begin{DoxyCompactList}\small\item\em Default stop marker to identify the end of a packet. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{structNaluPacketParserParams_aa3e53edabc4b9c7bfd2e86ce66105aab}{start\+\_\+marker}} = \char`\"{}0E\char`\"{}
+\begin{DoxyCompactList}\small\item\em Default start marker in hex string format. \end{DoxyCompactList}\item 
+std\+::string \mbox{\hyperlink{structNaluPacketParserParams_ae8a3c9083d62530e2f2cf1e2569bd02c}{stop\+\_\+marker}} = \char`\"{}FA5A\char`\"{}
+\begin{DoxyCompactList}\small\item\em Default stop marker in hex string format. \end{DoxyCompactList}\item 
 uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a98030d10567fd890ae893c1de1c93847}{chan\+\_\+mask}} = 0x3F
 \begin{DoxyCompactList}\small\item\em Default channel mask for packet extraction. \end{DoxyCompactList}\item 
 uint8\+\_\+t \mbox{\hyperlink{structNaluPacketParserParams_a990e9f9832e12ca88daed137590927df}{chan\+\_\+shift}} = 0
@@ -136,25 +136,25 @@ Default event window shift value.
 
 Default size of a single packet. 
 
-\mbox{\Hypertarget{structNaluPacketParserParams_aee3963040374779dced996780038f9fb}\label{structNaluPacketParserParams_aee3963040374779dced996780038f9fb}} 
+\mbox{\Hypertarget{structNaluPacketParserParams_aa3e53edabc4b9c7bfd2e86ce66105aab}\label{structNaluPacketParserParams_aa3e53edabc4b9c7bfd2e86ce66105aab}} 
 \index{NaluPacketParserParams@{NaluPacketParserParams}!start\_marker@{start\_marker}}
 \index{start\_marker@{start\_marker}!NaluPacketParserParams@{NaluPacketParserParams}}
 \doxysubsubsection{\texorpdfstring{start\_marker}{start\_marker}}
-{\footnotesize\ttfamily std\+::vector$<$uint8\+\_\+t$>$ Nalu\+Packet\+Parser\+Params\+::start\+\_\+marker = \{0x0E\}}
+{\footnotesize\ttfamily std\+::string Nalu\+Packet\+Parser\+Params\+::start\+\_\+marker = \char`\"{}0E\char`\"{}}
 
 
 
-Default start marker to identify the beginning of a packet. 
+Default start marker in hex string format. 
 
-\mbox{\Hypertarget{structNaluPacketParserParams_a3a1a876b3d1131ab2a31c8fab8e74697}\label{structNaluPacketParserParams_a3a1a876b3d1131ab2a31c8fab8e74697}} 
+\mbox{\Hypertarget{structNaluPacketParserParams_ae8a3c9083d62530e2f2cf1e2569bd02c}\label{structNaluPacketParserParams_ae8a3c9083d62530e2f2cf1e2569bd02c}} 
 \index{NaluPacketParserParams@{NaluPacketParserParams}!stop\_marker@{stop\_marker}}
 \index{stop\_marker@{stop\_marker}!NaluPacketParserParams@{NaluPacketParserParams}}
 \doxysubsubsection{\texorpdfstring{stop\_marker}{stop\_marker}}
-{\footnotesize\ttfamily std\+::vector$<$uint8\+\_\+t$>$ Nalu\+Packet\+Parser\+Params\+::stop\+\_\+marker = \{0x\+FA, 0x5A\}}
+{\footnotesize\ttfamily std\+::string Nalu\+Packet\+Parser\+Params\+::stop\+\_\+marker = \char`\"{}FA5A\char`\"{}}
 
 
 
-Default stop marker to identify the end of a packet. 
+Default stop marker in hex string format. 
 
 \mbox{\Hypertarget{structNaluPacketParserParams_a4a8363f3b6c9680eb4e558be14b8727e}\label{structNaluPacketParserParams_a4a8363f3b6c9680eb4e558be14b8727e}} 
 \index{NaluPacketParserParams@{NaluPacketParserParams}!timing\_mask@{timing\_mask}}

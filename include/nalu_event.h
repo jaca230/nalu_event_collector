@@ -19,30 +19,55 @@
  */
 class NaluEvent {
    public:
-    /** @brief Header of the event (2 bytes). */
-    uint16_t header;
+       /// @brief Struct representing the header information of the event.
+       #pragma pack(push, 1)
+       struct Header {
+            /** @brief Header of the event (2 bytes). */
+            uint16_t header;
 
-    /** @brief Extra information about the event (2 bytes). */
-    uint16_t info;
+            /** @brief Extra information about the event (1 bytes). */
+            uint8_t info;
 
-    /** @brief Unique index for the event (4 bytes). */
-    uint32_t index;
+            /** @brief Unique index for the event (4 bytes). */
+            uint32_t index;
 
-    /** @brief The reference time for the event (4 bytes). */
-    uint32_t reference_time;
+            /** @brief The reference time for the event (4 bytes). */
+            uint32_t reference_time;
 
-    /** @brief Packet size (2 bytes). */
-    uint16_t packet_size;
+            /** @brief Packet size (2 bytes). */
+            uint16_t packet_size;
 
-    /** @brief The number of packets in the event (2 bytes). */
-    uint16_t num_packets;
+            /** @brief Packet size (8 bytes). */
+            uint64_t channel_mask;
+
+            /** @brief Number of digitized windows (1 bytes). */
+            uint8_t num_windows;
+
+            /** @brief The number of packets in the event (2 bytes). */
+            uint16_t num_packets;
+
+        };
+        #pragma pack(pop)
+
+    /// @brief Footer of the event (2 bytes).
+    #pragma pack(push, 1)
+    struct Footer {
+        /** @brief Footer of the event (2 bytes). */
+        uint16_t footer;
+    };
+    #pragma pack(pop)
+    
+    
+    /** @brief Header of the event (24 bytes). */
+    Header header;
 
     /** @brief A dynamically allocated array of NaluPacket objects representing
      * the packets in the event. */
     std::unique_ptr<NaluPacket[]> packets;
 
     /** @brief Footer of the event (2 bytes). */
-    uint16_t footer;
+    Footer footer;
+    
 
     /** @brief Maximum number of packets that can be stored in this event. */
     size_t max_packets;
@@ -71,9 +96,9 @@ class NaluEvent {
      * @param max_num_packets The maximum number of packets that the event can
      * store.
      */
-    NaluEvent(uint16_t hdr, uint16_t extra_info, uint32_t idx,
+    NaluEvent(uint16_t hdr, uint8_t extra_info, uint32_t idx,
               uint32_t ref_time, uint16_t size, uint16_t num, uint16_t ftr,
-              uint16_t max_num_packets);
+              uint16_t max_num_packets, uint64_t channel_mask_value, uint8_t num_windows_value);
 
     /**
      * @brief Gets the error code from the info field.
@@ -127,6 +152,20 @@ class NaluEvent {
      */
     bool is_event_complete(int windows, const std::vector<int>& channels) const;
 
+
+        /**
+     * @brief Checks if the event is complete based on the number of packets and
+     * available channels.
+     *
+     * The event is considered complete if the number of packets is greater than
+     * or equal to the number of windows times the number of channels. A bit slower because it
+     * checks the channel mask to determine the number of channels.
+     *
+     * @return True if the event is complete, false otherwise.
+     */
+    bool is_event_complete() const;
+
+
     /**
      * @brief Gets the creation timestamp of the event.
      *
@@ -135,6 +174,9 @@ class NaluEvent {
     std::chrono::steady_clock::time_point get_creation_timestamp() const;
 
    private:
+   // Helper function to count the number of active channels in the channel mask
+    int count_active_channels(uint64_t channel_mask) const;
+
     // Prevent copying and assignment
     NaluEvent(const NaluEvent&) = delete;
     NaluEvent& operator=(const NaluEvent&) = delete;

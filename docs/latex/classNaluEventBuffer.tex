@@ -12,7 +12,7 @@ Class for managing a buffer of Nalu\+Events, including adding, retrieving, and r
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\hyperlink{classNaluEventBuffer_a9b2dbd4b4264bb89086ab7574fda2d24}{Nalu\+Event\+Buffer}} (size\+\_\+t max\+\_\+events, \mbox{\hyperlink{classNaluTimeDifferenceCalculator}{Nalu\+Time\+Difference\+Calculator}} \&time\+\_\+diff\+\_\+calculator, size\+\_\+t max\+\_\+lookback, size\+\_\+t max\+\_\+event\+\_\+size, uint16\+\_\+t event\+\_\+header, uint16\+\_\+t event\+\_\+trailer)
+\mbox{\hyperlink{classNaluEventBuffer_ae27eb91beaa56dcdff5e81a7412993f9}{Nalu\+Event\+Buffer}} (size\+\_\+t max\+\_\+events, \mbox{\hyperlink{classNaluTimeDifferenceCalculator}{Nalu\+Time\+Difference\+Calculator}} \&time\+\_\+diff\+\_\+calculator, size\+\_\+t max\+\_\+lookback, const std\+::vector$<$ int $>$ \&channels, uint8\+\_\+t windows, uint16\+\_\+t event\+\_\+header, uint16\+\_\+t event\+\_\+trailer)
 \begin{DoxyCompactList}\small\item\em Constructs a \mbox{\hyperlink{classNaluEventBuffer}{Nalu\+Event\+Buffer}} with the specified parameters. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classNaluEventBuffer_a5997f089f24254cea9f59e1a6b2ffcee}{$\sim$\+Nalu\+Event\+Buffer}} ()
 \begin{DoxyCompactList}\small\item\em Destructor. \end{DoxyCompactList}\item 
@@ -37,7 +37,9 @@ std\+::vector$<$ \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}} $\ast$ $>$ \mbox
 size\+\_\+t \mbox{\hyperlink{classNaluEventBuffer_a505bba9047fac531b70b7c72b7b83cf7}{remove\+\_\+events\+\_\+before\+\_\+index\+\_\+exclusive}} (size\+\_\+t index)
 \begin{DoxyCompactList}\small\item\em Removes events before a specified index (exclusive). \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classNaluEventBuffer_a82aa4d84d603731c094565fd5f2f3d1f}{add\+\_\+packet}} (const \mbox{\hyperlink{classNaluPacket}{Nalu\+Packet}} \&packet, bool \&in\+\_\+safety\+\_\+buffer\+\_\+zone, uint32\+\_\+t \&event\+\_\+index)
-\begin{DoxyCompactList}\small\item\em Adds a packet to the event buffer, creating or updating events as needed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Adds a packet to the event buffer, creating or updating events as needed. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEventBuffer_aebb22c5b961ca9a3c2b109755e0a5954}{clear}} ()
+\begin{DoxyCompactList}\small\item\em Clears all events in the buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \doxysubsection{Detailed Description}
@@ -46,11 +48,11 @@ Class for managing a buffer of Nalu\+Events, including adding, retrieving, and r
 This class is responsible for holding and managing a collection of {\ttfamily \mbox{\hyperlink{classNaluEvent}{Nalu\+Event}}} objects. It includes methods to add new events, retrieve events, and remove events based on various criteria. The class is thread-\/safe, with synchronization ensured using a mutex. 
 
 \doxysubsection{Constructor \& Destructor Documentation}
-\mbox{\Hypertarget{classNaluEventBuffer_a9b2dbd4b4264bb89086ab7574fda2d24}\label{classNaluEventBuffer_a9b2dbd4b4264bb89086ab7574fda2d24}} 
+\mbox{\Hypertarget{classNaluEventBuffer_ae27eb91beaa56dcdff5e81a7412993f9}\label{classNaluEventBuffer_ae27eb91beaa56dcdff5e81a7412993f9}} 
 \index{NaluEventBuffer@{NaluEventBuffer}!NaluEventBuffer@{NaluEventBuffer}}
 \index{NaluEventBuffer@{NaluEventBuffer}!NaluEventBuffer@{NaluEventBuffer}}
 \doxysubsubsection{\texorpdfstring{NaluEventBuffer()}{NaluEventBuffer()}}
-{\footnotesize\ttfamily Nalu\+Event\+Buffer\+::\+Nalu\+Event\+Buffer (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{max\+\_\+events,  }\item[{\mbox{\hyperlink{classNaluTimeDifferenceCalculator}{Nalu\+Time\+Difference\+Calculator}} \&}]{time\+\_\+diff\+\_\+calculator,  }\item[{size\+\_\+t}]{max\+\_\+lookback,  }\item[{size\+\_\+t}]{max\+\_\+event\+\_\+size,  }\item[{uint16\+\_\+t}]{event\+\_\+header,  }\item[{uint16\+\_\+t}]{event\+\_\+trailer }\end{DoxyParamCaption})}
+{\footnotesize\ttfamily Nalu\+Event\+Buffer\+::\+Nalu\+Event\+Buffer (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{max\+\_\+events,  }\item[{\mbox{\hyperlink{classNaluTimeDifferenceCalculator}{Nalu\+Time\+Difference\+Calculator}} \&}]{time\+\_\+diff\+\_\+calculator,  }\item[{size\+\_\+t}]{max\+\_\+lookback,  }\item[{const std\+::vector$<$ int $>$ \&}]{channels,  }\item[{uint8\+\_\+t}]{windows,  }\item[{uint16\+\_\+t}]{event\+\_\+header,  }\item[{uint16\+\_\+t}]{event\+\_\+trailer }\end{DoxyParamCaption})}
 
 
 
@@ -64,7 +66,9 @@ Constructs a \mbox{\hyperlink{classNaluEventBuffer}{Nalu\+Event\+Buffer}} with t
 \hline
 {\em max\+\_\+lookback} & The maximum number of past events to consider when adding a new packet. \\
 \hline
-{\em max\+\_\+event\+\_\+size} & The maximum size of an individual event. \\
+{\em channels} & A vector of channel identifiers. \\
+\hline
+{\em windows} & The number of windows used for constructing events. \\
 \hline
 {\em event\+\_\+header} & The header used for constructing events. \\
 \hline
@@ -118,7 +122,17 @@ Adds a packet to the event buffer, creating or updating events as needed.
 {\em event\+\_\+index} & A reference to the event index, incremented for each new event. \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}\label{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}} 
+\mbox{\Hypertarget{classNaluEventBuffer_aebb22c5b961ca9a3c2b109755e0a5954}\label{classNaluEventBuffer_aebb22c5b961ca9a3c2b109755e0a5954}} 
+\index{NaluEventBuffer@{NaluEventBuffer}!clear@{clear}}
+\index{clear@{clear}!NaluEventBuffer@{NaluEventBuffer}}
+\doxysubsubsection{\texorpdfstring{clear()}{clear()}}
+{\footnotesize\ttfamily void Nalu\+Event\+Buffer\+::clear (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Clears all events in the buffer. 
+
+This method removes all events from the buffer, effectively resetting it. \mbox{\Hypertarget{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}\label{classNaluEventBuffer_aae59c06cde51147b716c9ba92bb6a9b4}} 
 \index{NaluEventBuffer@{NaluEventBuffer}!get\_event\_by\_index@{get\_event\_by\_index}}
 \index{get\_event\_by\_index@{get\_event\_by\_index}!NaluEventBuffer@{NaluEventBuffer}}
 \doxysubsubsection{\texorpdfstring{get\_event\_by\_index()}{get\_event\_by\_index()}}

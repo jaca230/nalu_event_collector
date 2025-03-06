@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['sleep_5ftime_5fus_327',['sleep_time_us',['../structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c',1,'NaluEventCollectorParams']]],
-  ['start_5fmarker_328',['start_marker',['../structNaluPacketParserParams.html#aee3963040374779dced996780038f9fb',1,'NaluPacketParserParams']]],
-  ['stop_5fmarker_329',['stop_marker',['../structNaluPacketParserParams.html#a3a1a876b3d1131ab2a31c8fab8e74697',1,'NaluPacketParserParams']]]
+  ['sleep_5ftime_5fus_337',['sleep_time_us',['../structNaluEventCollectorParams.html#a886978382d59009aef5f450db13eac5c',1,'NaluEventCollectorParams']]],
+  ['start_5fmarker_338',['start_marker',['../structNaluPacketParserParams.html#aa3e53edabc4b9c7bfd2e86ce66105aab',1,'NaluPacketParserParams']]],
+  ['stop_5fmarker_339',['stop_marker',['../structNaluPacketParserParams.html#ae8a3c9083d62530e2f2cf1e2569bd02c',1,'NaluPacketParserParams']]]
 ];

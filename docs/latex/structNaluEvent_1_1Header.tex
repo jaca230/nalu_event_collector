@@ -1,0 +1,121 @@
+\hypertarget{structNaluEvent_1_1Header}{}\doxysection{Nalu\+Event\+::Header Struct Reference}
+\label{structNaluEvent_1_1Header}\index{NaluEvent::Header@{NaluEvent::Header}}
+
+
+Struct representing the header information of the event.  
+
+
+
+
+{\ttfamily \#include $<$nalu\+\_\+event.\+h$>$}
+
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a0ef32b0c3572178ec80f14aae5253064}{header}}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{structNaluEvent_1_1Header}{Header}} of the event (2 bytes). \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_aa57d8425b6b156c03bee5cace5c75264}{info}}
+\begin{DoxyCompactList}\small\item\em Extra information about the event (1 bytes). \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a8f06c47d6d14350cff8cf7867f42b700}{index}}
+\begin{DoxyCompactList}\small\item\em Unique index for the event (4 bytes). \end{DoxyCompactList}\item 
+uint32\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a805cf149b0bb26ce6cc820aee04d4192}{reference\+\_\+time}}
+\begin{DoxyCompactList}\small\item\em The reference time for the event (4 bytes). \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a2cd675b8228c25f018692d034bdadcda}{packet\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em Packet size (2 bytes). \end{DoxyCompactList}\item 
+uint64\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a1b1ce6103b040c295198387d48086b87}{channel\+\_\+mask}}
+\begin{DoxyCompactList}\small\item\em Packet size (8 bytes). \end{DoxyCompactList}\item 
+uint8\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a3332c8519d79274368ed331bf79cf7cb}{num\+\_\+windows}}
+\begin{DoxyCompactList}\small\item\em Number of digitized windows (1 bytes). \end{DoxyCompactList}\item 
+uint16\+\_\+t \mbox{\hyperlink{structNaluEvent_1_1Header_a7d8ea13bd57151c071f2a24eab6160f9}{num\+\_\+packets}}
+\begin{DoxyCompactList}\small\item\em The number of packets in the event (2 bytes). \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Struct representing the header information of the event. 
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a1b1ce6103b040c295198387d48086b87}\label{structNaluEvent_1_1Header_a1b1ce6103b040c295198387d48086b87}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!channel\_mask@{channel\_mask}}
+\index{channel\_mask@{channel\_mask}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{channel\_mask}{channel\_mask}}
+{\footnotesize\ttfamily uint64\+\_\+t Nalu\+Event\+::\+Header\+::channel\+\_\+mask}
+
+
+
+Packet size (8 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a0ef32b0c3572178ec80f14aae5253064}\label{structNaluEvent_1_1Header_a0ef32b0c3572178ec80f14aae5253064}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!header@{header}}
+\index{header@{header}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{header}{header}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::\+Header\+::header}
+
+
+
+\mbox{\hyperlink{structNaluEvent_1_1Header}{Header}} of the event (2 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a8f06c47d6d14350cff8cf7867f42b700}\label{structNaluEvent_1_1Header_a8f06c47d6d14350cff8cf7867f42b700}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!index@{index}}
+\index{index@{index}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{index}{index}}
+{\footnotesize\ttfamily uint32\+\_\+t Nalu\+Event\+::\+Header\+::index}
+
+
+
+Unique index for the event (4 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_aa57d8425b6b156c03bee5cace5c75264}\label{structNaluEvent_1_1Header_aa57d8425b6b156c03bee5cace5c75264}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!info@{info}}
+\index{info@{info}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{info}{info}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Event\+::\+Header\+::info}
+
+
+
+Extra information about the event (1 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a7d8ea13bd57151c071f2a24eab6160f9}\label{structNaluEvent_1_1Header_a7d8ea13bd57151c071f2a24eab6160f9}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!num\_packets@{num\_packets}}
+\index{num\_packets@{num\_packets}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{num\_packets}{num\_packets}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::\+Header\+::num\+\_\+packets}
+
+
+
+The number of packets in the event (2 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a3332c8519d79274368ed331bf79cf7cb}\label{structNaluEvent_1_1Header_a3332c8519d79274368ed331bf79cf7cb}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!num\_windows@{num\_windows}}
+\index{num\_windows@{num\_windows}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{num\_windows}{num\_windows}}
+{\footnotesize\ttfamily uint8\+\_\+t Nalu\+Event\+::\+Header\+::num\+\_\+windows}
+
+
+
+Number of digitized windows (1 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a2cd675b8228c25f018692d034bdadcda}\label{structNaluEvent_1_1Header_a2cd675b8228c25f018692d034bdadcda}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!packet\_size@{packet\_size}}
+\index{packet\_size@{packet\_size}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{packet\_size}{packet\_size}}
+{\footnotesize\ttfamily uint16\+\_\+t Nalu\+Event\+::\+Header\+::packet\+\_\+size}
+
+
+
+Packet size (2 bytes). 
+
+\mbox{\Hypertarget{structNaluEvent_1_1Header_a805cf149b0bb26ce6cc820aee04d4192}\label{structNaluEvent_1_1Header_a805cf149b0bb26ce6cc820aee04d4192}} 
+\index{NaluEvent::Header@{NaluEvent::Header}!reference\_time@{reference\_time}}
+\index{reference\_time@{reference\_time}!NaluEvent::Header@{NaluEvent::Header}}
+\doxysubsubsection{\texorpdfstring{reference\_time}{reference\_time}}
+{\footnotesize\ttfamily uint32\+\_\+t Nalu\+Event\+::\+Header\+::reference\+\_\+time}
+
+
+
+The reference time for the event (4 bytes). 
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{nalu__event_8h}{nalu\+\_\+event.\+h}}\end{DoxyCompactItemize}

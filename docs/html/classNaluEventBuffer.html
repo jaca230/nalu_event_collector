@@ -76,9 +76,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a9b2dbd4b4264bb89086ab7574fda2d24"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuffer.html#a9b2dbd4b4264bb89086ab7574fda2d24">NaluEventBuffer</a> (size_t max_events, <a class="el" href="classNaluTimeDifferenceCalculator.html">NaluTimeDifferenceCalculator</a> &amp;time_diff_calculator, size_t max_lookback, size_t max_event_size, uint16_t event_header, uint16_t event_trailer)</td></tr>
-<tr class="memdesc:a9b2dbd4b4264bb89086ab7574fda2d24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classNaluEventBuffer.html" title="Class for managing a buffer of NaluEvents, including adding, retrieving, and removing events.">NaluEventBuffer</a> with the specified parameters.  <a href="classNaluEventBuffer.html#a9b2dbd4b4264bb89086ab7574fda2d24">More...</a><br /></td></tr>
-<tr class="separator:a9b2dbd4b4264bb89086ab7574fda2d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae27eb91beaa56dcdff5e81a7412993f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuffer.html#ae27eb91beaa56dcdff5e81a7412993f9">NaluEventBuffer</a> (size_t max_events, <a class="el" href="classNaluTimeDifferenceCalculator.html">NaluTimeDifferenceCalculator</a> &amp;time_diff_calculator, size_t max_lookback, const std::vector&lt; int &gt; &amp;channels, uint8_t windows, uint16_t event_header, uint16_t event_trailer)</td></tr>
+<tr class="memdesc:ae27eb91beaa56dcdff5e81a7412993f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="classNaluEventBuffer.html" title="Class for managing a buffer of NaluEvents, including adding, retrieving, and removing events.">NaluEventBuffer</a> with the specified parameters.  <a href="classNaluEventBuffer.html#ae27eb91beaa56dcdff5e81a7412993f9">More...</a><br /></td></tr>
+<tr class="separator:ae27eb91beaa56dcdff5e81a7412993f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5997f089f24254cea9f59e1a6b2ffcee"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuffer.html#a5997f089f24254cea9f59e1a6b2ffcee">~NaluEventBuffer</a> ()</td></tr>
 <tr class="memdesc:a5997f089f24254cea9f59e1a6b2ffcee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destructor.  <a href="classNaluEventBuffer.html#a5997f089f24254cea9f59e1a6b2ffcee">More...</a><br /></td></tr>
 <tr class="separator:a5997f089f24254cea9f59e1a6b2ffcee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,13 +115,16 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a82aa4d84d603731c094565fd5f2f3d1f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuffer.html#a82aa4d84d603731c094565fd5f2f3d1f">add_packet</a> (const <a class="el" href="classNaluPacket.html">NaluPacket</a> &amp;packet, bool &amp;in_safety_buffer_zone, uint32_t &amp;event_index)</td></tr>
 <tr class="memdesc:a82aa4d84d603731c094565fd5f2f3d1f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a packet to the event buffer, creating or updating events as needed.  <a href="classNaluEventBuffer.html#a82aa4d84d603731c094565fd5f2f3d1f">More...</a><br /></td></tr>
 <tr class="separator:a82aa4d84d603731c094565fd5f2f3d1f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebb22c5b961ca9a3c2b109755e0a5954"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventBuffer.html#aebb22c5b961ca9a3c2b109755e0a5954">clear</a> ()</td></tr>
+<tr class="memdesc:aebb22c5b961ca9a3c2b109755e0a5954"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears all events in the buffer.  <a href="classNaluEventBuffer.html#aebb22c5b961ca9a3c2b109755e0a5954">More...</a><br /></td></tr>
+<tr class="separator:aebb22c5b961ca9a3c2b109755e0a5954"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class for managing a buffer of NaluEvents, including adding, retrieving, and removing events. </p>
 <p>This class is responsible for holding and managing a collection of <code><a class="el" href="classNaluEvent.html" title="Represents a single NALU event consisting of multiple NALU packets.">NaluEvent</a></code> objects. It includes methods to add new events, retrieve events, and remove events based on various criteria. The class is thread-safe, with synchronization ensured using a mutex. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a9b2dbd4b4264bb89086ab7574fda2d24"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b2dbd4b4264bb89086ab7574fda2d24">&#9670;&nbsp;</a></span>NaluEventBuffer()</h2>
+<a id="ae27eb91beaa56dcdff5e81a7412993f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae27eb91beaa56dcdff5e81a7412993f9">&#9670;&nbsp;</a></span>NaluEventBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -147,8 +150,14 @@ Public Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>max_event_size</em>, </td>
+          <td class="paramtype">const std::vector&lt; int &gt; &amp;&#160;</td>
+          <td class="paramname"><em>channels</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>windows</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -176,7 +185,8 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">max_events</td><td>The maximum number of events the buffer can hold. </td></tr>
     <tr><td class="paramname">time_diff_calculator</td><td>The calculator used to compute time differences. </td></tr>
     <tr><td class="paramname">max_lookback</td><td>The maximum number of past events to consider when adding a new packet. </td></tr>
-    <tr><td class="paramname">max_event_size</td><td>The maximum size of an individual event. </td></tr>
+    <tr><td class="paramname">channels</td><td>A vector of channel identifiers. </td></tr>
+    <tr><td class="paramname">windows</td><td>The number of windows used for constructing events. </td></tr>
     <tr><td class="paramname">event_header</td><td>The header used for constructing events. </td></tr>
     <tr><td class="paramname">event_trailer</td><td>The trailer used for constructing events. </td></tr>
   </table>
@@ -273,6 +283,26 @@ Public Member Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="aebb22c5b961ca9a3c2b109755e0a5954"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aebb22c5b961ca9a3c2b109755e0a5954">&#9670;&nbsp;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NaluEventBuffer::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Clears all events in the buffer. </p>
+<p>This method removes all events from the buffer, effectively resetting it. </p>
 
 </div>
 </div>

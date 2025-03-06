@@ -6,16 +6,30 @@
 #include "nalu_event_collector_logger.h"
 
 // Constructor
-NaluEventBuffer::NaluEventBuffer(
-    size_t max_events, NaluTimeDifferenceCalculator& time_diff_calculator,
-    size_t max_lookback, size_t max_event_size, uint16_t event_header,
-    uint16_t event_trailer)
+NaluEventBuffer::NaluEventBuffer(size_t max_events,
+                                 NaluTimeDifferenceCalculator& time_diff_calculator,
+                                 size_t max_lookback,
+                                 const std::vector<int>& channels,
+                                 uint8_t windows,
+                                 uint16_t event_header,
+                                 uint16_t event_trailer)
     : max_events(max_events),
       time_diff_calculator(time_diff_calculator),
       max_lookback(max_lookback),
-      max_event_size(max_event_size),
+      windows(windows),
       event_header(event_header),
-      event_trailer(event_trailer) {}
+      event_trailer(event_trailer)
+{
+    // Calculate the channel mask based on the channels vector.
+    // Set channel_mask to 64-bit value.
+    channel_mask = 0;
+    for (size_t i = 0; i < channels.size() && i < 64; ++i) {
+        channel_mask |= (1ULL << i);  // Set the corresponding bit for each channel
+    }
+
+    // Calculate max_event_size based on the number of channels and windows
+    max_event_size = (windows * channels.size()) + 5;  // 5 is the additional overhead for event headers/footers
+}
 
 // Destructor
 NaluEventBuffer::~NaluEventBuffer() {}
@@ -183,7 +197,7 @@ void NaluEventBuffer::add_packet(const NaluPacket& packet,
         for (size_t i = 0; i < lookback_limit; ++i) {
             if (time_diff_calculator.is_within_threshold(
                     trigger_time,
-                    events[events_size - 1 - i]->reference_time)) {
+                    events[events_size - 1 - i]->header.reference_time)) {
                 matched_event = events[events_size - 1 - i].get();
                 break;
             }
@@ -193,7 +207,7 @@ void NaluEventBuffer::add_packet(const NaluPacket& packet,
     if (!matched_event) {
         auto new_event = std::make_unique<NaluEvent>(
             event_header, 0, event_index++, trigger_time, packet.get_size(), 0,
-            event_trailer, max_event_size);
+            event_trailer, max_event_size, channel_mask, windows);
         new_event->add_packet(packet);
         events.push_back(std::move(new_event));
         in_safety_buffer_zone = true;
