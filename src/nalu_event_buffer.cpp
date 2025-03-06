@@ -23,8 +23,11 @@ NaluEventBuffer::NaluEventBuffer(size_t max_events,
     // Calculate the channel mask based on the channels vector.
     // Set channel_mask to 64-bit value.
     channel_mask = 0;
-    for (size_t i = 0; i < channels.size() && i < 64; ++i) {
-        channel_mask |= (1ULL << i);  // Set the corresponding bit for each channel
+    // Set only the bits corresponding to channel numbers in the array
+    for (int channel : channels) {
+        if (channel >= 0 && channel < 64) { // Ensure channel is within valid range
+            channel_mask |= (1ULL << channel);
+        }
     }
 
     // Calculate max_event_size based on the number of channels and windows

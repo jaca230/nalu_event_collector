@@ -160,7 +160,7 @@ int main(int argc, char** argv) {
       std::cout << "-------------------------------------------\n";
 
       // Check if there are events in the middle
-      /*
+      
       if (!events.empty()) {
         int middle_index = events.size() / 2;  // Middle event index
         NaluEvent* middle_event = events[middle_index];
@@ -212,7 +212,7 @@ int main(int argc, char** argv) {
     } else {
         std::cout << "No events collected.\n";
     }
-    */
+    
     
       
 
