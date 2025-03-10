@@ -44,3 +44,22 @@ uint16_t NaluPacket::get_size() const {
            sizeof(raw_samples) + sizeof(footer) + sizeof(info) +
            sizeof(parser_index);
 }
+
+// Method to print the details of the Nalu packet
+void NaluPacket::printout() const {
+  std::cout << "Nalu Packet Details:" << std::endl;
+  std::cout << "Header: 0x" << std::hex << header << std::dec << std::endl;
+  std::cout << "Info Byte: 0x" << std::hex << (int)info << std::dec << std::endl;
+  std::cout << "Channel: " << (int)channel << std::endl;
+  std::cout << "Trigger Time: " << trigger_time << std::endl;
+  std::cout << "Logical Position: " << logical_position << std::endl;
+  std::cout << "Physical Position: " << physical_position << std::endl;
+  std::cout << "Parser Index: " << parser_index << std::endl;
+  std::cout << "Footer: 0x" << std::hex << footer << std::dec << std::endl;
+  std::cout << "Error Code: 0x" << std::hex << (int)get_error_code() << std::dec << std::endl;
+  std::cout << "Raw Samples (first 10 bytes): ";
+  for (int i = 0; i < 10; ++i) {  // Just printing the first 10 bytes of raw samples
+      std::cout << std::hex << (int)raw_samples[i] << " ";
+  }
+  std::cout << std::dec << std::endl;
+}

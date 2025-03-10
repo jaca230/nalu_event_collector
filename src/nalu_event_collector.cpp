@@ -16,6 +16,10 @@ NaluEventCollector::NaluEventCollector(const NaluEventCollectorParams& params)
       sleep_time_us(params.sleep_time_us)  // Use the sleep time directly
 {
     NaluEventCollectorLogger::debug("NaluEventCollector created.");
+    // Set overflow callback to throw an error when overflow occurs
+    receiver.getDataBuffer().setOverflowCallback([]() {
+        throw std::runtime_error("NaluUdpDataBuffer overflow detected!");
+    });
 }
 
 NaluEventCollector::~NaluEventCollector() {
@@ -148,16 +152,26 @@ NaluEventCollector::get_data() {
     std::vector<int> channels = event_builder.get_channels();
     int windows = event_builder.get_windows();
 
+    // Initialize a variable to hold the running total of event sizes in bytes
+    size_t total_size = 0;
+
     // Check each event for completion
     for (auto* event : new_events) {
         bool is_complete = event->is_event_complete(windows, channels);
+        
+        // Output event details
+        //std::cout << "Event index: " << event->header.index << std::endl;
         //std::cout << "Event is complete: " << is_complete << std::endl;
-        //std::cout << "Event num packets: " << event->num_packets << std::endl;
-        //std::cout << "Event reference time: " << event->reference_time << std::endl;
+        //std::cout << "Event num packets: " << event->header.num_packets << std::endl;
+        //std::cout << "Event reference time: " << event->header.reference_time << std::endl;
         if (is_complete) {
             complete_events.push_back(event);
         }
     }
+    //std::cout << "Allocated size of new events: ~" << new_events.size()*((channels.size()*windows+5)*80 / (1024.0*1024.0)) << " MB" << std::endl;
+    
+    //std::cout << std::endl;
+
 
     // Update last_event_index by counting the complete events
     last_event_index += complete_events.size();

@@ -3,6 +3,7 @@
 
 #include <cstddef>  // For size_t
 #include <cstdint>
+#include <iostream> // For std::cout
 
 /// @class NaluPacket
 /// @brief This class represents a single Nalu packet, including fields such as
@@ -65,8 +66,8 @@ class NaluPacket {
     /// @return The total size of the packet (should always be 80 bytes).
     uint16_t get_size() const;
 
-   private:
-    // No private members, all fields are publicly accessible
+    /// @brief Prints out the details of the Nalu packet.
+    void printout() const;
 };
 
 #endif  // NALU_PACKET_H

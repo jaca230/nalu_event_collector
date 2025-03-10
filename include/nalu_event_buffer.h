@@ -168,6 +168,14 @@ class NaluEventBuffer {
     uint64_t channel_mask;   ///< The mask of active channels
     uint16_t event_header;   ///< The header used to construct events
     uint16_t event_trailer;  ///< The trailer used to construct events
+
+    /**
+     * @brief adds an event to the buffer (not threadsafe).
+     *
+     * This methods add a singular event to the buffer in a not threadsafe manner.
+     * It's pupose is just to consolidate code.
+     */
+    void add_event_helper(std::unique_ptr<NaluEvent>& event);
 };
 
 #endif  // NALU_EVENT_BUFFER_H

@@ -40,18 +40,7 @@ NaluEventBuffer::~NaluEventBuffer() {}
 // Add event (thread-safe)
 void NaluEventBuffer::add_event(std::unique_ptr<NaluEvent> event) {
     std::lock_guard<std::mutex> lock(buffer_mutex);
-
-    if (events.size() >= max_events) {
-        if (overflow_callback) {
-            overflow_callback();
-        }
-        NaluEventCollectorLogger::error(
-            "Buffer overflow! Max events reached: " +
-            std::to_string(max_events) + ". Throwing exception.");
-        throw std::overflow_error("Buffer is full. Cannot add more events.");
-    }
-
-    events.push_back(std::move(event));
+    add_event_helper(event);
 }
 
 // Get events (thread-safe)
@@ -212,9 +201,23 @@ void NaluEventBuffer::add_packet(const NaluPacket& packet,
             event_header, 0, event_index++, trigger_time, packet.get_size(), 0,
             event_trailer, max_event_size, channel_mask, windows);
         new_event->add_packet(packet);
-        events.push_back(std::move(new_event));
+        add_event_helper(new_event);
         in_safety_buffer_zone = true;
     } else {
         matched_event->add_packet(packet);
     }
+}
+
+void NaluEventBuffer::add_event_helper(std::unique_ptr<NaluEvent>& event) {
+    if (events.size() >= max_events) {
+        if (overflow_callback) {
+            overflow_callback();
+        }
+        NaluEventCollectorLogger::error(
+            "Buffer overflow! Max events reached: " +
+            std::to_string(max_events) + ". Throwing exception.");
+        throw std::overflow_error("Buffer is full. Cannot add more events.");
+    }
+
+    events.push_back(std::move(event));
 }

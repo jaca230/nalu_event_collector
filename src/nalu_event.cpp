@@ -30,6 +30,22 @@ NaluEvent::NaluEvent(uint16_t hdr, uint8_t extra_info, uint32_t idx,
     creation_timestamp = std::chrono::steady_clock::now();
 }
 
+// Print event information (header and footer)
+void NaluEvent::print_event_info() const {
+    std::cout << "Event Header: " << std::endl;
+    std::cout << "Header: " << header.header << std::endl;
+    std::cout << "Info: " << static_cast<int>(header.info) << std::endl;
+    std::cout << "Index: " << header.index << std::endl;
+    std::cout << "Reference Time: " << header.reference_time << std::endl;
+    std::cout << "Packet Size: " << header.packet_size << std::endl;
+    std::cout << "Channel Mask: " << header.channel_mask << std::endl;
+    std::cout << "Number of Windows: " << static_cast<int>(header.num_windows) << std::endl;
+    std::cout << "Number of Packets: " << header.num_packets << std::endl;
+
+    std::cout << "Event Footer: " << std::endl;
+    std::cout << "Footer: " << footer.footer << std::endl;
+}
+
 // Calculate the size of the entire NaluEvent for serialization
 size_t NaluEvent::get_size() const {
     size_t total_size = sizeof(header) + sizeof(footer); // header + footer size

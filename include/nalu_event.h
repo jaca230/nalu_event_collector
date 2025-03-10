@@ -101,6 +101,11 @@ class NaluEvent {
               uint16_t max_num_packets, uint64_t channel_mask_value, uint8_t num_windows_value);
 
     /**
+     * @brief Prints out the event information (header and footer).
+     */
+    void print_event_info() const;
+
+    /**
      * @brief Gets the error code from the info field.
      *
      * The last 4 bits of the `info` field represent the error code.
