@@ -8,6 +8,8 @@ var searchData=
   ['physical_5fposition_125',['physical_position',['../classNaluPacket.html#ae82b63012728f27527ece872e793e190',1,'NaluPacket']]],
   ['pop_126',['pop',['../classNaluUdpDataBuffer.html#a07f029ba6cee04820a705d0e9ce96ad2',1,'NaluUdpDataBuffer']]],
   ['port_127',['port',['../structNaluUdpReceiverParams.html#ad6eb2fc5cbcc24b9bb7d50764ffc69ba',1,'NaluUdpReceiverParams']]],
-  ['printperformancestats_128',['printPerformanceStats',['../classNaluEventCollector.html#a865b8c11f5917ad376069b416e8b3915',1,'NaluEventCollector']]],
-  ['process_5fstream_129',['process_stream',['../classNaluPacketParser.html#abceb2643ed8d37ac89f66fa9f9b3b02a',1,'NaluPacketParser']]]
+  ['print_5fevent_5finfo_128',['print_event_info',['../classNaluEvent.html#a28fc2572c96b8ef6c38773f87e7eb10c',1,'NaluEvent']]],
+  ['printout_129',['printout',['../classNaluPacket.html#a3f71669567ad83868d583d89bd0b2d1b',1,'NaluPacket']]],
+  ['printperformancestats_130',['printPerformanceStats',['../classNaluEventCollector.html#a865b8c11f5917ad376069b416e8b3915',1,'NaluEventCollector']]],
+  ['process_5fstream_131',['process_stream',['../classNaluPacketParser.html#abceb2643ed8d37ac89f66fa9f9b3b02a',1,'NaluPacketParser']]]
 ];

@@ -50,6 +50,7 @@ digraph "src/nalu_event_collector.cpp"
   Node19 -> Node20 [color="midnightblue",fontsize="10",style="solid"];
   Node20 [label="cstddef",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node19 -> Node18 [color="midnightblue",fontsize="10",style="solid"];
+  Node19 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
   Node14 -> Node21 [color="midnightblue",fontsize="10",style="solid"];
   Node21 [label="nalu_time_difference\l_calculator.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__time__difference__calculator_8h.html",tooltip=" "];
   Node21 -> Node18 [color="midnightblue",fontsize="10",style="solid"];

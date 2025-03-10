@@ -19,18 +19,19 @@ digraph "src/nalu_event.cpp"
   Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
   Node8 [label="cstddef",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node7 -> Node4 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="iostream",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node1 -> Node3 [color="midnightblue",fontsize="10",style="solid"];
-  Node1 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
-  Node9 [label="cstring",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node1 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
-  Node10 [label="iostream",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node10 [label="cstring",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
   Node1 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
   Node11 [label="stdexcept",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node1 -> Node12 [color="midnightblue",fontsize="10",style="solid"];
   Node12 [label="nalu_event_collector\l_logger.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$nalu__event__collector__logger_8h.html",tooltip=" "];
   Node12 -> Node13 [color="midnightblue",fontsize="10",style="solid"];
   Node13 [label="fstream",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
-  Node12 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node12 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
   Node12 -> Node14 [color="midnightblue",fontsize="10",style="solid"];
   Node14 [label="string",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
 }

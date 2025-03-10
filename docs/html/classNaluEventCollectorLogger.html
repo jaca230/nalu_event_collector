@@ -90,6 +90,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a30f02fd376ffa02eab3eb31401a81202"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventCollectorLogger.html#a30f02fd376ffa02eab3eb31401a81202">set_level</a> (<a class="el" href="classNaluEventCollectorLogger.html#ae6c605ff4dc739764e366273603b6b28">LogLevel</a> level)</td></tr>
 <tr class="memdesc:a30f02fd376ffa02eab3eb31401a81202"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the minimum log level for the logger.  <a href="classNaluEventCollectorLogger.html#a30f02fd376ffa02eab3eb31401a81202">More...</a><br /></td></tr>
 <tr class="separator:a30f02fd376ffa02eab3eb31401a81202"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a437f8db8b54178c33b2ab65dbe00053b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventCollectorLogger.html#a437f8db8b54178c33b2ab65dbe00053b">set_level</a> (const std::string &amp;level)</td></tr>
+<tr class="memdesc:a437f8db8b54178c33b2ab65dbe00053b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the minimum log level for the logger.  <a href="classNaluEventCollectorLogger.html#a437f8db8b54178c33b2ab65dbe00053b">More...</a><br /></td></tr>
+<tr class="separator:a437f8db8b54178c33b2ab65dbe00053b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec10f53f0caea7848987452e3923c60b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEventCollectorLogger.html#aec10f53f0caea7848987452e3923c60b">enable_file_logging</a> (const std::string &amp;filename)</td></tr>
 <tr class="memdesc:aec10f53f0caea7848987452e3923c60b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enables logging to a file.  <a href="classNaluEventCollectorLogger.html#aec10f53f0caea7848987452e3923c60b">More...</a><br /></td></tr>
 <tr class="separator:aec10f53f0caea7848987452e3923c60b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -318,8 +321,43 @@ Static Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="a437f8db8b54178c33b2ab65dbe00053b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a437f8db8b54178c33b2ab65dbe00053b">&#9670;&nbsp;</a></span>set_level() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NaluEventCollectorLogger::set_level </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>level</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the minimum log level for the logger. </p>
+<p>Only log messages with a level greater than or equal to the specified level will be logged.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">level</td><td>The minimum log level (DEBUG, INFO, WARNING, ERROR). </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a30f02fd376ffa02eab3eb31401a81202"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30f02fd376ffa02eab3eb31401a81202">&#9670;&nbsp;</a></span>set_level()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a30f02fd376ffa02eab3eb31401a81202">&#9670;&nbsp;</a></span>set_level() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

@@ -19,7 +19,9 @@ This class represents a single Nalu packet, including fields such as header, inf
 uint8\+\_\+t \mbox{\hyperlink{classNaluPacket_a53efcba8ff7ac4fc593c8d1326e28736}{get\+\_\+error\+\_\+code}} () const
 \begin{DoxyCompactList}\small\item\em Extracts and returns the error code from the info byte (lower 4 bits). \end{DoxyCompactList}\item 
 uint16\+\_\+t \mbox{\hyperlink{classNaluPacket_a83cdfac88920294b30a5801a8677e98b}{get\+\_\+size}} () const
-\begin{DoxyCompactList}\small\item\em Calculates and returns the size of the Nalu packet in bytes. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Calculates and returns the size of the Nalu packet in bytes. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluPacket_a3f71669567ad83868d583d89bd0b2d1b}{printout}} () const
+\begin{DoxyCompactList}\small\item\em Prints out the details of the Nalu packet. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -117,6 +119,16 @@ Calculates and returns the size of the Nalu packet in bytes.
 \begin{DoxyReturn}{Returns}
 The total size of the packet (should always be 80 bytes). 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classNaluPacket_a3f71669567ad83868d583d89bd0b2d1b}\label{classNaluPacket_a3f71669567ad83868d583d89bd0b2d1b}} 
+\index{NaluPacket@{NaluPacket}!printout@{printout}}
+\index{printout@{printout}!NaluPacket@{NaluPacket}}
+\doxysubsubsection{\texorpdfstring{printout()}{printout()}}
+{\footnotesize\ttfamily void Nalu\+Packet\+::printout (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Prints out the details of the Nalu packet. 
+
 
 
 \doxysubsection{Member Data Documentation}

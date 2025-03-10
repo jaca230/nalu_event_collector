@@ -27,6 +27,8 @@ struct \mbox{\hyperlink{structNaluEvent_1_1Header}{Header}}
 \begin{DoxyCompactList}\small\item\em Default constructor. \end{DoxyCompactList}\item 
 \mbox{\hyperlink{classNaluEvent_a9281f44ee96b326d0387dadf6bd17404}{Nalu\+Event}} (uint16\+\_\+t hdr, uint8\+\_\+t extra\+\_\+info, uint32\+\_\+t idx, uint32\+\_\+t ref\+\_\+time, uint16\+\_\+t size, uint16\+\_\+t num, uint16\+\_\+t ftr, uint16\+\_\+t max\+\_\+num\+\_\+packets, uint64\+\_\+t channel\+\_\+mask\+\_\+value, uint8\+\_\+t num\+\_\+windows\+\_\+value)
 \begin{DoxyCompactList}\small\item\em Constructor that initializes the event with specific values. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classNaluEvent_a28fc2572c96b8ef6c38773f87e7eb10c}{print\+\_\+event\+\_\+info}} () const
+\begin{DoxyCompactList}\small\item\em Prints out the event information (header and footer). \end{DoxyCompactList}\item 
 uint8\+\_\+t \mbox{\hyperlink{classNaluEvent_af5c16fc2ee668eb1a709d28515fba4e9}{get\+\_\+error\+\_\+code}} () const
 \begin{DoxyCompactList}\small\item\em Gets the error code from the info field. \end{DoxyCompactList}\item 
 size\+\_\+t \mbox{\hyperlink{classNaluEvent_a2377b59e1e0cfde75134047cea653e07}{get\+\_\+size}} () const
@@ -204,6 +206,16 @@ The event is considered complete if the number of packets is greater than or equ
 \begin{DoxyReturn}{Returns}
 True if the event is complete, false otherwise. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{classNaluEvent_a28fc2572c96b8ef6c38773f87e7eb10c}\label{classNaluEvent_a28fc2572c96b8ef6c38773f87e7eb10c}} 
+\index{NaluEvent@{NaluEvent}!print\_event\_info@{print\_event\_info}}
+\index{print\_event\_info@{print\_event\_info}!NaluEvent@{NaluEvent}}
+\doxysubsubsection{\texorpdfstring{print\_event\_info()}{print\_event\_info()}}
+{\footnotesize\ttfamily void Nalu\+Event\+::print\+\_\+event\+\_\+info (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Prints out the event information (header and footer). 
+
 \mbox{\Hypertarget{classNaluEvent_a063195e789fe3cfab3022cf7e12bec50}\label{classNaluEvent_a063195e789fe3cfab3022cf7e12bec50}} 
 \index{NaluEvent@{NaluEvent}!serialize\_to\_buffer@{serialize\_to\_buffer}}
 \index{serialize\_to\_buffer@{serialize\_to\_buffer}!NaluEvent@{NaluEvent}}

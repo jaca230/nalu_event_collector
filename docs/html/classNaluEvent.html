@@ -98,6 +98,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9281f44ee96b326d0387dadf6bd17404"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a9281f44ee96b326d0387dadf6bd17404">NaluEvent</a> (uint16_t hdr, uint8_t extra_info, uint32_t idx, uint32_t ref_time, uint16_t size, uint16_t num, uint16_t ftr, uint16_t max_num_packets, uint64_t channel_mask_value, uint8_t num_windows_value)</td></tr>
 <tr class="memdesc:a9281f44ee96b326d0387dadf6bd17404"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor that initializes the event with specific values.  <a href="classNaluEvent.html#a9281f44ee96b326d0387dadf6bd17404">More...</a><br /></td></tr>
 <tr class="separator:a9281f44ee96b326d0387dadf6bd17404"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28fc2572c96b8ef6c38773f87e7eb10c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#a28fc2572c96b8ef6c38773f87e7eb10c">print_event_info</a> () const</td></tr>
+<tr class="memdesc:a28fc2572c96b8ef6c38773f87e7eb10c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints out the event information (header and footer).  <a href="classNaluEvent.html#a28fc2572c96b8ef6c38773f87e7eb10c">More...</a><br /></td></tr>
+<tr class="separator:a28fc2572c96b8ef6c38773f87e7eb10c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af5c16fc2ee668eb1a709d28515fba4e9"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classNaluEvent.html#af5c16fc2ee668eb1a709d28515fba4e9">get_error_code</a> () const</td></tr>
 <tr class="memdesc:af5c16fc2ee668eb1a709d28515fba4e9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the error code from the info field.  <a href="classNaluEvent.html#af5c16fc2ee668eb1a709d28515fba4e9">More...</a><br /></td></tr>
 <tr class="separator:af5c16fc2ee668eb1a709d28515fba4e9"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -405,6 +408,25 @@ Public Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the event is complete, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a28fc2572c96b8ef6c38773f87e7eb10c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28fc2572c96b8ef6c38773f87e7eb10c">&#9670;&nbsp;</a></span>print_event_info()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void NaluEvent::print_event_info </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Prints out the event information (header and footer). </p>
 
 </div>
 </div>

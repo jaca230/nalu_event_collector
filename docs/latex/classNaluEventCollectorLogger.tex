@@ -23,6 +23,8 @@ enum class \mbox{\hyperlink{classNaluEventCollectorLogger_ae6c605ff4dc739764e366
 \item 
 static void \mbox{\hyperlink{classNaluEventCollectorLogger_a30f02fd376ffa02eab3eb31401a81202}{set\+\_\+level}} (\mbox{\hyperlink{classNaluEventCollectorLogger_ae6c605ff4dc739764e366273603b6b28}{Log\+Level}} level)
 \begin{DoxyCompactList}\small\item\em Sets the minimum log level for the logger. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classNaluEventCollectorLogger_a437f8db8b54178c33b2ab65dbe00053b}{set\+\_\+level}} (const std\+::string \&level)
+\begin{DoxyCompactList}\small\item\em Sets the minimum log level for the logger. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{classNaluEventCollectorLogger_aec10f53f0caea7848987452e3923c60b}{enable\+\_\+file\+\_\+logging}} (const std\+::string \&filename)
 \begin{DoxyCompactList}\small\item\em Enables logging to a file. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{classNaluEventCollectorLogger_a3d098ea5917a7a6aeb6c03c88e7c19af}{disable\+\_\+file\+\_\+logging}} ()
@@ -154,10 +156,27 @@ Logs an info-\/level message.
 {\em message} & The message to be logged. \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classNaluEventCollectorLogger_a437f8db8b54178c33b2ab65dbe00053b}\label{classNaluEventCollectorLogger_a437f8db8b54178c33b2ab65dbe00053b}} 
+\index{NaluEventCollectorLogger@{NaluEventCollectorLogger}!set\_level@{set\_level}}
+\index{set\_level@{set\_level}!NaluEventCollectorLogger@{NaluEventCollectorLogger}}
+\doxysubsubsection{\texorpdfstring{set\_level()}{set\_level()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void Nalu\+Event\+Collector\+Logger\+::set\+\_\+level (\begin{DoxyParamCaption}\item[{const std\+::string \&}]{level }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Sets the minimum log level for the logger. 
+
+Only log messages with a level greater than or equal to the specified level will be logged.
+
+
+\begin{DoxyParams}{Parameters}
+{\em level} & The minimum log level (DEBUG, INFO, WARNING, ERROR). \\
+\hline
+\end{DoxyParams}
 \mbox{\Hypertarget{classNaluEventCollectorLogger_a30f02fd376ffa02eab3eb31401a81202}\label{classNaluEventCollectorLogger_a30f02fd376ffa02eab3eb31401a81202}} 
 \index{NaluEventCollectorLogger@{NaluEventCollectorLogger}!set\_level@{set\_level}}
 \index{set\_level@{set\_level}!NaluEventCollectorLogger@{NaluEventCollectorLogger}}
-\doxysubsubsection{\texorpdfstring{set\_level()}{set\_level()}}
+\doxysubsubsection{\texorpdfstring{set\_level()}{set\_level()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
 {\footnotesize\ttfamily void Nalu\+Event\+Collector\+Logger\+::set\+\_\+level (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classNaluEventCollectorLogger_ae6c605ff4dc739764e366273603b6b28}{Log\+Level}}}]{level }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
 
 

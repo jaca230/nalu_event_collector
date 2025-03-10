@@ -1,4 +1,5 @@
 #include "nalu_event_collector_logger.h"
+#include <map>
 
 NaluEventCollectorLogger::LogLevel NaluEventCollectorLogger::log_level =
     NaluEventCollectorLogger::LogLevel::INFO;
@@ -10,6 +11,22 @@ std::string NaluEventCollectorLogger::warning_color = "\033[1;33m";  // Yellow
 std::string NaluEventCollectorLogger::error_color = "\033[1;31m";    // Red
 
 void NaluEventCollectorLogger::set_level(LogLevel level) { log_level = level; }
+
+void NaluEventCollectorLogger::set_level(const std::string& level) {
+    static std::map<std::string, LogLevel> level_map = {
+        {"debug", LogLevel::DEBUG},
+        {"info", LogLevel::INFO},
+        {"warning", LogLevel::WARNING},
+        {"error", LogLevel::ERROR},
+    };
+
+    auto it = level_map.find(level);
+    if (it != level_map.end()) {
+        log_level = it->second;
+    } else {
+        throw std::invalid_argument("Invalid log level string: " + level);
+    }
+}
 
 void NaluEventCollectorLogger::enable_file_logging(
     const std::string& filename) {

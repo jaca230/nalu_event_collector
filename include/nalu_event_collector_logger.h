@@ -38,6 +38,16 @@ class NaluEventCollectorLogger {
     static void set_level(LogLevel level);
 
     /**
+     * @brief Sets the minimum log level for the logger.
+     *
+     * Only log messages with a level greater than or equal to the specified
+     * level will be logged.
+     *
+     * @param level The minimum log level (DEBUG, INFO, WARNING, ERROR).
+     */
+    static void set_level(const std::string& level);
+
+    /**
      * @brief Enables logging to a file.
      *
      * Log messages will be appended to the specified file.
