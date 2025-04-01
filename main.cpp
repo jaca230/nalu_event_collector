@@ -19,12 +19,12 @@ int timeout_sec = 10;                     // Timeout in seconds
 // Default Event Builder parameters
 
 std::vector<int> channels = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                             11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-                             22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
+                             11, 12, 13, 14, 15};//, 16, 17, 18, 19, 20, 21,
+                             //22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
                                              
 int windows = 62;  // Number of windows
-int time_threshold = 5000;//95373/2;  // Time threshold in clock cycles
-size_t max_events_in_buffer = 1000000;  // Max events in buffer
+int time_threshold = 34750;//95373/2;  // Time threshold in clock cycles
+size_t max_events_in_buffer = 10000;  // Max events in buffer
 uint32_t max_trigger_time = 16777216;   // Max trigger time
 size_t max_lookback = 2;  // Max lookback
 uint16_t event_header = 0xBBBB;  // Event header
@@ -139,8 +139,8 @@ int main(int argc, char** argv) {
     collector.get_receiver().start();
 
     // Run for a number of cycles (10 cycles in this case)
-    for (int i = 0; i < 10; ++i) {
-      // Sleep for 10 milliseconds between cycles
+    for (int i = 0; i < 1; ++i) {
+      // Sleep for 10 milliseconds between cycle
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
       // Call collect manually

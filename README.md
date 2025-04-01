@@ -79,8 +79,8 @@ uint16_t event_trailer = 0xEEEE;                          // Event trailer
 
 // Parsing Parameters (for Nalu HDSoc v1 board)
 size_t packet_size = 74;                          // Packet size
-std::vector<uint8_t> start_marker = {0x0E};       // Start marker
-std::vector<uint8_t> stop_marker = {0xFA, 0x5A};  // Stop marker
+std::string start_marker = "0E";                  //Byte sequence indicating start of packet
+std::string stop_marker = "FA5A";                 //Byte sequence indicating stop of packet
 uint8_t chan_mask = 0x3F;                         // Channel mask
 uint8_t chan_shift = 0;                           // Channel shift
 uint8_t abs_wind_mask = 0x3F;                     // Absolute window mask
@@ -368,8 +368,8 @@ Defines the parameters used to configure the packet parser, which processes inco
 ```cpp
 struct NaluPacketParserParams {
     size_t packet_size;         // Size of a single packet
-    std::vector<uint8_t> start_marker;  // Start marker to identify the beginning of a packet
-    std::vector<uint8_t> stop_marker;   // Stop marker to identify the end of a packet
+    std::string start_marker = "0E";    //Byte sequence indicating start of packet
+    std::string stop_marker = "FA5A";   //Byte sequence indicating stop of packet
     uint8_t chan_mask;          // Channel mask for packet extraction
     uint8_t chan_shift;         // Shift value for channel extraction
     uint8_t abs_wind_mask;      // Absolute window mask for packet processing
@@ -384,8 +384,8 @@ struct NaluPacketParserParams {
 ```
 
 - **`packet_size`**: The size of a single packet (default is `74`).
-- **`start_marker`**: The start marker used to identify the beginning of a packet (default is `{0x0E}`).
-- **`stop_marker`**: The stop marker used to identify the end of a packet (default is `{0xFA, 0x5A}`).
+- **`start_marker`**: The start marker used to identify the beginning of a packet (default is `0E`).
+- **`stop_marker`**: The stop marker used to identify the end of a packet (default is `FA5A`).
 - **`chan_mask`**: The channel mask for extracting channel data from the packet (default is `0x3F`).
 - **`chan_shift`**: The shift value used for channel extraction (default is `0`).
 - **`abs_wind_mask`**: The absolute window mask used for packet processing (default is `0x3F`).
