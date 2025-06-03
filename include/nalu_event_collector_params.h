@@ -14,10 +14,12 @@
 struct NaluEventBuilderParams {
     std::vector<int> channels = 
         {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};    ///< Default list of channels.
+    std::string trigger_type = "self";  ///< Default trigger type (self, ext, or imm).
     int windows = 4;                  ///< Default number of windows.
     int time_threshold = 5000;        ///< Default time threshold for event triggering.
     size_t max_events_in_buffer = 10000;  ///< Default maximum number of events in the buffer.
     uint32_t max_trigger_time = 16777216;   ///< Default maximum trigger time in clock cycles.
+    uint32_t clock_frequency = 23843000;  ///< Default clock frequency in Hz.
     size_t max_lookback = 2;          ///< Default maximum lookback period for events.
     uint16_t event_header = 0xBBBB;        ///< Default header value for event.
     uint16_t event_trailer = 0xEEEE;       ///< Default trailer value for event.

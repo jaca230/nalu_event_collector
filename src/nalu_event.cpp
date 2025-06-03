@@ -58,6 +58,16 @@ uint8_t NaluEvent::get_error_code() const {
     return header.info & 0x0F;  // Mask the last 4 bits
 }
 
+NaluEvent::TriggerType NaluEvent::get_trigger_type() const {
+    uint8_t trigger_bits = (header.info & 0x30) >> 4; // bits 4 and 5
+    switch (trigger_bits) {
+        case 1: return TriggerType::External;
+        case 2: return TriggerType::Internal;
+        case 3: return TriggerType::Immediate;
+        default: return TriggerType::Unknown;
+    }
+}
+
 // Serialize the event into a buffer
 void NaluEvent::serialize_to_buffer(char* buffer) const {
     if (!buffer) return;
@@ -93,16 +103,51 @@ void NaluEvent::add_packet(const NaluPacket& packet) {
 }
 
 // Check if the event is complete based on internal information (overloaded)
+// Currently broken. Need to add the time_threshold to the event information in the future.
 bool NaluEvent::is_event_complete() const {
     int active_channels = count_active_channels(header.channel_mask);
-    return header.num_packets >= header.num_windows * active_channels;
+    TriggerType trigger_type = get_trigger_type();
+
+    switch (trigger_type) {
+        case TriggerType::Internal:
+            return true;
+
+        case TriggerType::External:
+        case TriggerType::Immediate:
+        case TriggerType::Unknown:
+        default:
+            // All others: 1 packet per channel per window
+            return header.num_packets >= header.num_windows * active_channels;
+    }
 }
 
 // Check if the event is complete based on windows and channels
 bool NaluEvent::is_event_complete(int windows,
-    const std::vector<int>& channels) const {
-    return header.num_packets >= windows * channels.size();
+                                  const std::vector<int>& channels,
+                                  std::string trigger_type_str,
+                                  std::chrono::steady_clock::duration max_time_between_events) const
+{
+    // Convert string to TriggerType
+    TriggerType trigger_type = TriggerType::Unknown;
+    if (trigger_type_str == "ext") trigger_type = TriggerType::External;
+    else if (trigger_type_str == "self") trigger_type = TriggerType::Internal;
+    else if (trigger_type_str == "imm") trigger_type = TriggerType::Immediate;
+
+    switch (trigger_type) {
+        case TriggerType::Internal: {
+            auto elapsed = std::chrono::steady_clock::now() - creation_timestamp;
+            return elapsed >= max_time_between_events;
+        }
+        case TriggerType::External:
+        case TriggerType::Immediate:
+        case TriggerType::Unknown:
+        default:
+            return header.num_packets >= windows * channels.size();
+    }
+
+    return false;
 }
+
 
 // Getter for the creation timestamp
 std::chrono::steady_clock::time_point NaluEvent::get_creation_timestamp() const {

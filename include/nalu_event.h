@@ -25,7 +25,7 @@ class NaluEvent {
             /** @brief Header of the event (2 bytes). */
             uint16_t header;
 
-            /** @brief Extra information about the event (1 bytes). */
+            /** @brief Extra information about the event (1 bytes). The last 2 bits contains the trigger type */
             uint8_t info;
 
             /** @brief Unique index for the event (4 bytes). */
@@ -76,6 +76,23 @@ class NaluEvent {
     std::chrono::steady_clock::time_point creation_timestamp;
 
     /**
+     * @enum TriggerType
+     * @brief Represents the trigger type encoded in bits 4 and 5 of the header.info field.
+     *
+     * Bits 4 and 5 of the info byte specify the trigger source for the event:
+     * - Unknown (0)
+     * - External (1)
+     * - Internal (2)
+     * - Immediate (3)
+     */
+    enum class TriggerType : uint8_t {
+        Unknown = 0,
+        External = 1,
+        Internal = 2,
+        Immediate = 3
+    };
+
+    /**
      * @brief Default constructor.
      *
      * Initializes all members to zero or null, and sets the creation timestamp
@@ -115,6 +132,16 @@ class NaluEvent {
     uint8_t get_error_code() const;
 
     /**
+     * @brief Retrieves the trigger type encoded in bits 4 and 5 of the header.info field.
+     *
+     * Extracts and returns the trigger type stored in bits 4 and 5 (0-based) of the
+     * info byte in the event header.
+     *
+     * @return The trigger type as a `TriggerType` enum value.
+     */
+    TriggerType get_trigger_type() const;
+
+    /**
      * @brief Calculates the size of the entire event in bytes.
      *
      * @return The size of the event (header, data, and all packets).
@@ -145,26 +172,30 @@ class NaluEvent {
     void add_packet(const NaluPacket& packet);
 
     /**
-     * @brief Checks if the event is complete based on the number of packets and
-     * available channels.
+     * @brief Determines whether the event is complete.alignof
      *
-     * The event is considered complete if the number of packets is greater than
-     * or equal to the number of windows times the number of channels.
+     * The event is considered complete if the number of added packets matches the 
+     * expected number (based on the number of windows and active channels), or if the 
+     * elapsed time since event creation exceeds a provided threshold. Behavior can vary 
+     * depending on the specified trigger type.
      *
-     * @param windows The number of windows to check.
-     * @param channels A list of channel identifiers.
-     * @return True if the event is complete, false otherwise.
+     * @param windows Number of expected digitizer windows per channel.
+     * @param channels List of expected channel identifiers.
+     * @param trigger_type_str The trigger type as a lowercase string ("ext", "self", or "imm").
+     * @param max_time_between_events The maximum allowable duration to wait before forcing event completion.
+     * @return True if the event is considered complete, false otherwise.
      */
-    bool is_event_complete(int windows, const std::vector<int>& channels) const;
+    bool is_event_complete(int windows, 
+        const std::vector<int>& channels, 
+        std::string trigger_type_str,
+        std::chrono::steady_clock::duration max_time_between_events) const;
 
 
         /**
      * @brief Checks if the event is complete based on the number of packets and
      * available channels.
      *
-     * The event is considered complete if the number of packets is greater than
-     * or equal to the number of windows times the number of channels. A bit slower because it
-     * checks the channel mask to determine the number of channels.
+     * CURRENTLY BROKEN. NEEDS TO ADD THE TIME_THRESHOLD TO THE EVENT INFORMATION
      *
      * @return True if the event is complete, false otherwise.
      */

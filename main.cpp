@@ -14,18 +14,19 @@ std::string udp_address = "192.168.1.1";  // UDP address
 uint16_t udp_port = 12345;                // UDP port
 size_t buffer_size = 1024 * 1024 * 100;   // Buffer size in bytes
 size_t max_packet_size = 1040;            // Max packet size
-int timeout_sec = 10;                     // Timeout in seconds
+int timeout_sec = 2;                     // Timeout in seconds
 
 // Default Event Builder parameters
 
-std::vector<int> channels = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-                             11, 12, 13, 14, 15};//, 16, 17, 18, 19, 20, 21,
-                             //22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
-                                             
-int windows = 62;  // Number of windows
-int time_threshold = 34750;//95373/2;  // Time threshold in clock cycles
+std::vector<int> channels = {0 , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+                             11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                             22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
+std::string trigger_type = "self";  // Trigger type (self, ext, or imm)                                             
+int windows = 1;  // Number of windows
+int time_threshold = 1500;//34750;//95373/2;  // Time threshold in clock cycles
 size_t max_events_in_buffer = 10000;  // Max events in buffer
 uint32_t max_trigger_time = 16777216;   // Max trigger time
+uint32_t clock_frequency = 23843000;  // Clock frequency in Hz
 size_t max_lookback = 2;  // Max lookback
 uint16_t event_header = 0xBBBB;  // Event header
 uint16_t event_trailer = 0xEEEE; // Event trailer
@@ -81,10 +82,12 @@ int main(int argc, char** argv) {
   // Manually set up the parameters for NaluEventBuilderParams
   NaluEventBuilderParams event_builder_params;
   event_builder_params.channels = channels;
+  event_builder_params.trigger_type = trigger_type;
   event_builder_params.windows = windows;
   event_builder_params.time_threshold = time_threshold;
   event_builder_params.max_events_in_buffer = max_events_in_buffer;
   event_builder_params.max_trigger_time = max_trigger_time;
+  event_builder_params.clock_frequency = clock_frequency;
   event_builder_params.max_lookback = max_lookback;
   event_builder_params.event_header = event_header;
   event_builder_params.event_trailer = event_trailer;
@@ -139,9 +142,9 @@ int main(int argc, char** argv) {
     collector.get_receiver().start();
 
     // Run for a number of cycles (10 cycles in this case)
-    for (int i = 0; i < 1; ++i) {
-      // Sleep for 10 milliseconds between cycle
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    for (int i = 0; i < 10; ++i) {
+      // Sleep for 100 milliseconds between cycle
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
       // Call collect manually
       collector.collect();
