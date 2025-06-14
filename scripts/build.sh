@@ -1,39 +1,88 @@
 #!/bin/bash
 
-# Get the absolute path of the script directory
+# Resolve absolute paths
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
+BASE_DIR=$(realpath "$SCRIPT_DIR/..")
+BUILD_DIR="$BASE_DIR/build"
+SUBMODULE_BUILD_SCRIPT="$BASE_DIR/scripts/submodules/build_submodules.sh"
+CLEANUP_SCRIPT="$SCRIPT_DIR/cleanup.sh"
 
-# Default overwrite flag is false
+# Default flags
 OVERWRITE=false
+RECURSIVE_OVERWRITE=false
+JOBS_ARG="-j"  # Use all processors
+
+# Help message
+show_help() {
+    echo "Usage: ./build.sh [OPTIONS]"
+    echo
+    echo "Options:"
+    echo "  -o, --overwrite              Remove existing build directory before building"
+    echo "  -r, --recursive-overwrite    Also clean and rebuild all submodules recursively"
+    echo "  -j, --jobs <number>          Specify number of processors to use (default: all available)"
+    echo "  -h, --help                   Display this help message"
+}
 
 # Parse arguments
+SUBMODULE_ARGS=()
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -o|--overwrite) OVERWRITE=true; shift ;;
-        *) echo "Unknown option: $1"; exit 1 ;;
+        -o|--overwrite)
+            OVERWRITE=true
+            shift
+            ;;
+        -r|--recursive-overwrite)
+            RECURSIVE_OVERWRITE=true
+            SUBMODULE_ARGS+=("--recursive-overwrite")
+            shift
+            ;;
+        -j|--jobs)
+            if [[ -n "$2" && "$2" != -* ]]; then
+                JOBS_ARG="-j$2"
+                SUBMODULE_ARGS+=("--jobs" "$2")
+                shift 2
+            else
+                JOBS_ARG="-j"
+                SUBMODULE_ARGS+=("--jobs")
+                shift
+            fi
+            ;;
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        *)
+            echo "[build.sh, ERROR] Unknown option: $1"
+            show_help
+            exit 1
+            ;;
     esac
 done
 
-# Build directory (relative to the script directory)
-BUILD_DIR="$SCRIPT_DIR/../build"
-
-# If overwrite flag is set, remove the build directory
-if [ "$OVERWRITE" = true ]; then
-    echo "Overwrite flag set: Cleaning previous build..."
-    rm -rf "$BUILD_DIR"
+# If recursive overwrite is enabled, we also clean the current build
+if [ "$RECURSIVE_OVERWRITE" = true ]; then
+    OVERWRITE=true
 fi
 
-# Create the build directory if it doesn't exist
+# Build submodules
+echo "[build.sh] Invoking submodule build script: $SUBMODULE_BUILD_SCRIPT"
+"$SUBMODULE_BUILD_SCRIPT" "${SUBMODULE_ARGS[@]}"
+
+# Optionally clean current project build
+if [ "$OVERWRITE" = true ]; then
+    echo "[build.sh] Cleaning previous build with: $CLEANUP_SCRIPT"
+    "$CLEANUP_SCRIPT"
+fi
+
+# Create and enter build directory
 mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
+cd "$BUILD_DIR" || exit 1
 
-# Run CMake to configure the project
-echo "Configuring the project with CMake..."
-cmake "$SCRIPT_DIR/.."
+# Run CMake and Make
+echo "[build.sh] Running cmake in: $BUILD_DIR"
+cmake "$BASE_DIR"
 
-# Build the project
-echo "Building the project..."
-make
+echo "[build.sh] Building with make $JOBS_ARG"
+make $JOBS_ARG
 
-# Show the final binary and library
-echo "Build finished! Executable and libraries are in the bin/ and lib/ directories."
+echo "[build.sh] Build complete. Executables are in: $BUILD_DIR/bin/"
