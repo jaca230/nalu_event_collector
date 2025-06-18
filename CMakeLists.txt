@@ -6,60 +6,57 @@ project(nalu_event_collector VERSION 0.1 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Output directories (optional, useful for local builds)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+# Find threads package
+find_package(Threads REQUIRED)
+
+# Do NOT override global output directories here to avoid conflicts in superprojects
 
 # Collect source files
 file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 
 # Create static library target
 add_library(nalu_event_collector STATIC ${SOURCES})
+set_target_properties(nalu_event_collector PROPERTIES
+  POSITION_INDEPENDENT_CODE ON
+)
 
-# Specify include directories for the library (public so dependents get it)
+# Specify include directories (public for downstream usage)
 target_include_directories(nalu_event_collector PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include/nalu_event_collector>
 )
 
-# Set compile options or warnings if needed (optional)
-# target_compile_options(nalu_event_collector PRIVATE -Wall -Wextra -Wpedantic)
+# Add executable target for testing/demo purposes
+add_executable(nalu_event_collector_main ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
 
-# Add executable target
-add_executable(nalu_event_collector_main main.cpp)
+# Link executable to library and pthread (via Threads::Threads target)
+target_link_libraries(nalu_event_collector_main PRIVATE nalu_event_collector Threads::Threads)
 
-# Link executable to library and pthread
-target_link_libraries(nalu_event_collector_main PRIVATE nalu_event_collector pthread)
-
-# Make sure executable also includes headers
+# Include headers for executable target as well
 target_include_directories(nalu_event_collector_main PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # Installation rules
+include(GNUInstallDirs)
 
-# Install library target and export config for downstream usage
 install(TARGETS nalu_event_collector
   EXPORT nalu_event_collectorTargets
-  ARCHIVE DESTINATION lib
-  LIBRARY DESTINATION lib
-  INCLUDES DESTINATION include/nalu_event_collector
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nalu_event_collector
 )
 
-# Install executable (optional)
 install(TARGETS nalu_event_collector_main
-  RUNTIME DESTINATION bin
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
-# Install headers
-install(DIRECTORY include/ DESTINATION include/nalu_event_collector)
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nalu_event_collector
+)
 
-# Export config files for find_package() support (optional, advanced)
 install(EXPORT nalu_event_collectorTargets
   FILE nalu_event_collectorTargets.cmake
   NAMESPACE nalu_event_collector::
-  DESTINATION lib/cmake/nalu_event_collector
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/nalu_event_collector
 )
-
-# Optionally create a ConfigVersion.cmake and Config.cmake to support find_package() - can be added later

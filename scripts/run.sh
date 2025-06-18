@@ -36,7 +36,7 @@ done
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 # Path to the executable
-EXECUTABLE="$SCRIPT_DIR/../build/bin/main"
+EXECUTABLE="$SCRIPT_DIR/../build/nalu_event_collector_main"
 
 # Check if the executable exists
 if [ ! -f "$EXECUTABLE" ]; then
