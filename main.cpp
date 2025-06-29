@@ -23,7 +23,7 @@ std::vector<int> channels = {0 , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                              22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
 std::string trigger_type = "self";  // Trigger type (self, ext, or imm)                                             
 int windows = 1;  // Number of windows
-int time_threshold = 1500;//34750;//95373/2;  // Time threshold in clock cycles
+uint32_t time_threshold = 1500;//34750;//95373/2;  // Time threshold in clock cycles
 size_t max_events_in_buffer = 10000;  // Max events in buffer
 uint32_t max_trigger_time = 16777216;   // Max trigger time
 uint32_t clock_frequency = 23843000;  // Clock frequency in Hz

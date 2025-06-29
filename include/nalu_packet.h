@@ -1,14 +1,14 @@
 #ifndef NALU_PACKET_H
 #define NALU_PACKET_H
 
-#include <cstddef>  // For size_t
+#include <cstddef>   // For size_t
 #include <cstdint>
-#include <iostream> // For std::cout
+#include <iostream>  // For std::cout
 
 /// @class NaluPacket
 /// @brief This class represents a single Nalu packet, including fields such as
 /// header, info byte, channel, trigger time, logical/physical positions, raw
-/// samples, and footer. The packet's structure is fixed at 80 bytes in total.
+/// samples, parser index, UDP packet range, and footer. The structure size is 84 bytes.
 class NaluPacket {
    public:
     /// @brief 2-byte header for the Nalu packet.
@@ -36,14 +36,19 @@ class NaluPacket {
     /// @brief 2-byte index used to track the order of parsed packets.
     uint16_t parser_index;
 
+    /// @brief 2-byte index of the starting UDP packet this NaluPacket came from.
+    uint16_t start_udp_packet_index;
+
+    /// @brief 2-byte index of the ending UDP packet this NaluPacket came from.
+    uint16_t end_udp_packet_index;
+
     /// @brief 2-byte footer marking the end of the Nalu packet.
     uint16_t footer;
 
     /// @brief Default constructor initializes all member variables to zero.
     NaluPacket();
 
-    /// @brief Constructor for initialization with full info byte and other Nalu
-    /// packet fields.
+    /// @brief Constructor for full initialization.
     /// @param hdr The header value (2 bytes).
     /// @param ch The channel value (1 byte).
     /// @param trig_time The trigger time value (4 bytes).
@@ -51,22 +56,22 @@ class NaluPacket {
     /// @param phys_pos The physical position (2 bytes).
     /// @param samples The raw samples (64 bytes).
     /// @param ftr The footer value (2 bytes).
-    /// @param full_info The full info byte (1 byte).
-    /// @param index The parser index value (2 bytes, default value is 0).
+    /// @param full_info The info byte (1 byte).
+    /// @param index The parser index value.
+    /// @param start_idx The starting UDP packet index.
+    /// @param end_idx The ending UDP packet index.
     NaluPacket(uint16_t hdr, uint8_t ch, uint32_t trig_time, uint16_t log_pos,
                uint16_t phys_pos, uint8_t samples[64], uint16_t ftr,
-               uint8_t full_info, uint16_t index = 0);
+               uint8_t full_info, uint16_t index = 0,
+               uint16_t start_idx = 0, uint16_t end_idx = 0);
 
-    /// @brief Extracts and returns the error code from the info byte (lower 4
-    /// bits).
-    /// @return The error code (4 bits) from the info byte.
+    /// @brief Extracts and returns the error code from the info byte (lower 4 bits).
     uint8_t get_error_code() const;
 
-    /// @brief Calculates and returns the size of the Nalu packet in bytes.
-    /// @return The total size of the packet (should always be 80 bytes).
+    /// @brief Returns the total size of the packet in bytes (should be 84).
     uint16_t get_size() const;
 
-    /// @brief Prints out the details of the Nalu packet.
+    /// @brief Prints the contents of the packet to stdout.
     void printout() const;
 };
 

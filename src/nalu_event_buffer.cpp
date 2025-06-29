@@ -13,44 +13,33 @@ NaluEventBuffer::NaluEventBuffer(size_t max_events,
                                  uint8_t windows,
                                  uint16_t event_header,
                                  uint16_t event_trailer,
-                                 std::string trigger_type)  
+                                 std::string trigger_type,
+                                 uint32_t time_threshold,
+                                 uint32_t clock_frequency)
     : max_events(max_events),
       time_diff_calculator(time_diff_calculator),
       max_lookback(max_lookback),
       windows(windows),
       event_header(event_header),
-      event_trailer(event_trailer)
+      event_trailer(event_trailer),
+      time_threshold(time_threshold),
+      clock_frequency(clock_frequency)
 {
-    // Calculate the channel mask based on the channels vector.
-    // Set channel_mask to 64-bit value.
     channel_mask = 0;
-    // Set only the bits corresponding to channel numbers in the array
     for (int channel : channels) {
-        if (channel >= 0 && channel < 64) { // Ensure channel is within valid range
+        if (channel >= 0 && channel < 64) {
             channel_mask |= (1ULL << channel);
         }
     }
 
-    // Determine the "extra info" byte based on the trigger type
-    // I'd use enums, but it's hardcoded like this in naludaq anyways so
-    // adding enums would kind of be like beating a dead horse.
     uint8_t trigger_bits = 0;
+    if (trigger_type == "ext") trigger_bits = 0x1;
+    else if (trigger_type == "self") trigger_bits = 0x2;
+    else if (trigger_type == "imm") trigger_bits = 0x3;
+    else trigger_bits = 0x0;
 
-    if (trigger_type == "ext") {
-        trigger_bits = 0x1; // 01 binary
-    } else if (trigger_type == "self") {
-        trigger_bits = 0x2; // 10 binary
-    } else if (trigger_type == "imm") {
-        trigger_bits = 0x3; // 11 binary
-    } else {
-        trigger_bits = 0x0; // 00 binary
-    }
-
-    // Shift left by 4 to set bits 4 and 5 (zero-based)
-    extra_info = (trigger_bits << 4); // This leaves 4 bits for "error codes"
-
-    // Calculate max_event_size based on the number of channels and windows
-    max_event_size = (windows * channels.size()) + 5;  // 5 is the additional overhead for event headers/footers
+    extra_info = (trigger_bits << 4);
+    max_event_size = (windows * channels.size()) + 5;
 }
 
 // Destructor
@@ -217,7 +206,9 @@ void NaluEventBuffer::add_packet(const NaluPacket& packet,
 
     if (!matched_event) {
         auto new_event = std::make_unique<NaluEvent>(
-            event_header, extra_info, event_index++, trigger_time, packet.get_size(), 0,
+            event_header, extra_info, event_index++,         // Event info
+            trigger_time, time_threshold, clock_frequency,   // Timing info        
+            packet.get_size(), 0,                            // Start with 0 packets
             event_trailer, max_event_size, channel_mask, windows);
         new_event->add_packet(packet);
         add_event_helper(new_event);

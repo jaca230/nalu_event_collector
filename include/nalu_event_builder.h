@@ -33,7 +33,7 @@ class NaluEventBuilder {
      * @param clock_frequency Clock frequency used for timing calculations (default: 23843000).
      */
     NaluEventBuilder(std::vector<int> channels, int windows, std::string trigger_type,
-                    int time_threshold = 5000,
+                    uint32_t time_threshold = 5000,
                     uint32_t max_trigger_time = 16777216,
                     size_t max_lookback = 2, size_t event_max_size = 1024,
                     uint16_t event_header = 0xBBBB,

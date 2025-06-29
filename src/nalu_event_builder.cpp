@@ -5,7 +5,7 @@
 // Constructor
 NaluEventBuilder::NaluEventBuilder(std::vector<int> channels, int windows,
                                    std::string trigger_type,
-                                   int time_threshold /*= 5000*/,
+                                   uint32_t time_threshold /*= 5000*/,
                                    uint32_t max_trigger_time /*= 16777216*/,
                                    size_t max_lookback /*= 2*/,
                                    size_t event_buffer_max_size /*= 1024*/,
@@ -17,8 +17,9 @@ NaluEventBuilder::NaluEventBuilder(std::vector<int> channels, int windows,
       trigger_type(trigger_type),
       time_diff_calculator(max_trigger_time, time_threshold),
       event_buffer(event_buffer_max_size, time_diff_calculator, max_lookback,
-                   this->channels, static_cast<uint8_t>(windows),
-                   event_header, event_trailer, trigger_type) {
+                this->channels, static_cast<uint8_t>(windows),
+                event_header, event_trailer, trigger_type,
+                time_threshold, clock_frequency) {
     // Calculate the post-event safety buffer size as 10% of the event size (rounded up)
     post_event_safety_buffer_counter_max =
         std::ceil(this->channels.size() * windows * 0.10);

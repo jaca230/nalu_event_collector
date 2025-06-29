@@ -18,36 +18,41 @@
  * based on predefined windows and channels.
  */
 class NaluEvent {
-   public:
-       /// @brief Struct representing the header information of the event.
-       #pragma pack(push, 1)
-       struct Header {
-            /** @brief Header of the event (2 bytes). */
-            uint16_t header;
+public:
+    /// @brief Struct representing the header information of the event.
+    #pragma pack(push, 1)
+    struct Header {
+        /** @brief Header of the event (2 bytes). */
+        uint16_t header;
 
-            /** @brief Extra information about the event (1 bytes). The last 2 bits contains the trigger type */
-            uint8_t info;
+        /** @brief Extra information about the event (1 byte). The last 2 bits contain the trigger type */
+        uint8_t info;
 
-            /** @brief Unique index for the event (4 bytes). */
-            uint32_t index;
+        /** @brief Unique index for the event (4 bytes). */
+        uint32_t index;
 
-            /** @brief The reference time for the event (4 bytes). */
-            uint32_t reference_time;
+        /** @brief The reference time for the event (4 bytes). */
+        uint32_t reference_time;
 
-            /** @brief Packet size (2 bytes). */
-            uint16_t packet_size;
+        /** @brief The time threshold for the event (in ticks, 4 bytes). */
+        uint32_t time_threshold;
 
-            /** @brief Packet size (8 bytes). */
-            uint64_t channel_mask;
+        /** @brief Clock frequency used to convert ticks to duration (in Hz, 4 bytes). */
+        uint32_t clock_frequency;
 
-            /** @brief Number of digitized windows (1 bytes). */
-            uint8_t num_windows;
+        /** @brief Packet size (2 bytes). */
+        uint16_t packet_size;
 
-            /** @brief The number of packets in the event (2 bytes). */
-            uint16_t num_packets;
+        /** @brief Channel mask (8 bytes). */
+        uint64_t channel_mask;
 
-        };
-        #pragma pack(pop)
+        /** @brief Number of digitized windows (1 byte). */
+        uint8_t num_windows;
+
+        /** @brief The number of packets in the event (2 bytes). */
+        uint16_t num_packets;
+    };
+    #pragma pack(pop)
 
     /// @brief Footer of the event (2 bytes).
     #pragma pack(push, 1)
@@ -56,18 +61,16 @@ class NaluEvent {
         uint16_t footer;
     };
     #pragma pack(pop)
-    
-    
-    /** @brief Header of the event (24 bytes). */
+
+    /** @brief Header of the event. */
     Header header;
 
     /** @brief A dynamically allocated array of NaluPacket objects representing
      * the packets in the event. */
     std::unique_ptr<NaluPacket[]> packets;
 
-    /** @brief Footer of the event (2 bytes). */
+    /** @brief Footer of the event. */
     Footer footer;
-    
 
     /** @brief Maximum number of packets that can be stored in this event. */
     size_t max_packets;
@@ -92,125 +95,70 @@ class NaluEvent {
         Immediate = 3
     };
 
-    /**
-     * @brief Default constructor.
-     *
-     * Initializes all members to zero or null, and sets the creation timestamp
-     * to the current time.
-     */
+    /** Default constructor */
     NaluEvent();
 
     /**
-     * @brief Constructor that initializes the event with specific values.
+     * Constructor that initializes the event with specific values.
      *
      * @param hdr The header of the event.
      * @param extra_info Extra information about the event.
      * @param idx The unique index of the event.
      * @param ref_time The reference time for the event.
+     * @param time_thresh The time threshold for the event (in ticks).
+     * @param clk_freq The clock frequency in Hz.
      * @param size The size of each packet in the event.
      * @param num The number of packets in the event.
      * @param ftr The footer of the event.
-     * @param max_num_packets The maximum number of packets that the event can
-     * store.
+     * @param max_num_packets The maximum number of packets that the event can store.
+     * @param channel_mask_value Channel mask value.
+     * @param num_windows_value Number of digitized windows.
      */
     NaluEvent(uint16_t hdr, uint8_t extra_info, uint32_t idx,
-              uint32_t ref_time, uint16_t size, uint16_t num, uint16_t ftr,
-              uint16_t max_num_packets, uint64_t channel_mask_value, uint8_t num_windows_value);
+              uint32_t ref_time, uint32_t time_thresh, uint32_t clk_freq,
+              uint16_t size, uint16_t num,
+              uint16_t ftr, uint16_t max_num_packets,
+              uint64_t channel_mask_value, uint8_t num_windows_value);
 
-    /**
-     * @brief Prints out the event information (header and footer).
-     */
+    /** Prints out the event information (header and footer). */
     void print_event_info() const;
 
-    /**
-     * @brief Gets the error code from the info field.
-     *
-     * The last 4 bits of the `info` field represent the error code.
-     *
-     * @return The error code (last 4 bits of `info`).
-     */
+    /** Gets the error code from the info field (last 4 bits). */
     uint8_t get_error_code() const;
 
-    /**
-     * @brief Retrieves the trigger type encoded in bits 4 and 5 of the header.info field.
-     *
-     * Extracts and returns the trigger type stored in bits 4 and 5 (0-based) of the
-     * info byte in the event header.
-     *
-     * @return The trigger type as a `TriggerType` enum value.
-     */
+    /** Retrieves the trigger type encoded in bits 4 and 5 of the header.info field. */
     TriggerType get_trigger_type() const;
 
-    /**
-     * @brief Calculates the size of the entire event in bytes.
-     *
-     * @return The size of the event (header, data, and all packets).
-     */
+    /** Calculates the size of the entire event in bytes. */
     size_t get_size() const;
 
-    /**
-     * @brief Serializes the event into a buffer.
-     *
-     * The event is serialized into the provided buffer, which includes the
-     * header, packets, and footer.
-     *
-     * @param buffer The buffer to serialize the event into.
-     */
+    /** Serializes the event into a buffer. */
     void serialize_to_buffer(char* buffer) const;
 
-    /**
-     * @brief Adds a packet to the event.
-     *
-     * If there is space for more packets (based on `max_packets`), the packet
-     * is added to the event. If the event has reached the maximum packet count,
-     * an exception is thrown.
-     *
-     * @param packet The packet to add to the event.
-     * @throws std::overflow_error if the number of packets exceeds the maximum
-     * allowed.
-     */
+    /** Adds a packet to the event (throws if max packets exceeded). */
     void add_packet(const NaluPacket& packet);
 
     /**
-     * @brief Determines whether the event is complete.alignof
+     * Checks if the event is complete using embedded info.
      *
-     * The event is considered complete if the number of added packets matches the 
-     * expected number (based on the number of windows and active channels), or if the 
-     * elapsed time since event creation exceeds a provided threshold. Behavior can vary 
-     * depending on the specified trigger type.
-     *
-     * @param windows Number of expected digitizer windows per channel.
-     * @param channels List of expected channel identifiers.
-     * @param trigger_type_str The trigger type as a lowercase string ("ext", "self", or "imm").
-     * @param max_time_between_events The maximum allowable duration to wait before forcing event completion.
-     * @return True if the event is considered complete, false otherwise.
-     */
-    bool is_event_complete(int windows, 
-        const std::vector<int>& channels, 
-        std::string trigger_type_str,
-        std::chrono::steady_clock::duration max_time_between_events) const;
-
-
-        /**
-     * @brief Checks if the event is complete based on the number of packets and
-     * available channels.
-     *
-     * CURRENTLY BROKEN. NEEDS TO ADD THE TIME_THRESHOLD TO THE EVENT INFORMATION
-     *
-     * @return True if the event is complete, false otherwise.
+     * @return True if event is complete, false otherwise.
      */
     bool is_event_complete() const;
 
-
     /**
-     * @brief Gets the creation timestamp of the event.
-     *
-     * @return The time point when the event was created.
+     * Checks if the event is complete based on windows, channels, trigger type string,
+     * and external max time duration.
      */
+    bool is_event_complete(int windows,
+                           const std::vector<int>& channels,
+                           std::string trigger_type_str,
+                           std::chrono::steady_clock::duration max_time_between_events) const;
+
+    /** Gets the creation timestamp of the event. */
     std::chrono::steady_clock::time_point get_creation_timestamp() const;
 
-   private:
-   // Helper function to count the number of active channels in the channel mask
+private:
+    /** Helper function to count the number of active channels in the channel mask */
     int count_active_channels(uint64_t channel_mask) const;
 
     // Prevent copying and assignment

@@ -2,10 +2,10 @@
 
 #include <cstring>
 #include <iostream>
+#include <stdexcept>
 
 #include "nalu_event_collector_logger.h"
 
-// Constructor
 NaluPacketParser::NaluPacketParser(
     size_t packet_size, const std::vector<uint8_t>& start_marker,
     const std::vector<uint8_t>& stop_marker, uint8_t chan_mask,
@@ -26,105 +26,104 @@ NaluPacketParser::NaluPacketParser(
       check_packet_integrity(check_packet_integrity),
       constructed_packet_header(constructed_packet_header),
       constructed_packet_footer(constructed_packet_footer) {
-    leftovers.reserve(packet_size);  // pre-allocated space for leftovers
+    leftovers.reserve(packet_size);
 }
 
 NaluPacketParser::NaluPacketParser(const NaluPacketParserParams& params)
     : NaluPacketParser(
           params.packet_size,
-          hexStringToBytes(params.start_marker),  // Convert hex string to vector of bytes
-          hexStringToBytes(params.stop_marker),   // Convert hex string to vector of bytes
-          params.chan_mask, params.chan_shift, params.abs_wind_mask,
-          params.evt_wind_mask, params.evt_wind_shift, params.timing_mask,
-          params.timing_shift, params.check_packet_integrity,
-          params.constructed_packet_header, params.constructed_packet_footer) {
-    // Additional setup logic if needed
-}
-
+          hexStringToBytes(params.start_marker),
+          hexStringToBytes(params.stop_marker),
+          params.chan_mask,
+          params.chan_shift,
+          params.abs_wind_mask,
+          params.evt_wind_mask,
+          params.evt_wind_shift,
+          params.timing_mask,
+          params.timing_shift,
+          params.check_packet_integrity,
+          params.constructed_packet_header,
+          params.constructed_packet_footer) {}
 
 std::vector<NaluPacket> NaluPacketParser::process_stream(
-    const std::vector<uint8_t>& byte_stream) {
+    const std::vector<UdpPacket>& udp_packets) {
     std::vector<NaluPacket> data_list;
-    size_t stream_size = byte_stream.size();
 
-    const uint8_t* data_ptr =
-        byte_stream.data();  // Use a raw pointer to access the byte stream
-    size_t last_processed_byte = 0;
-    uint8_t error_code = 0;  // Initialize with no errors (0b00)
+    for (const auto& udp_packet : udp_packets) {
+        const uint8_t* data_ptr = udp_packet.data.data();
+        size_t byte_stream_size = udp_packet.data.size();
+        size_t i = 0;
+        uint8_t error_code = 0;
 
-    size_t stop_marker_len = stop_marker.size();
-    size_t start_marker_len = start_marker.size();
-    size_t leftovers_size = leftovers.size();
-    size_t byte_stream_size = byte_stream.size();
+        size_t start_marker_len = start_marker.size();
+        size_t stop_marker_len = stop_marker.size();
+        size_t leftovers_size = leftovers.size();
 
-    size_t i = 0;
-
-    // Handle creating first packet from leftovers and byte stream
-    if (leftovers_size > 0) {
-        process_leftovers(data_list, data_ptr, byte_stream_size, leftovers_size,
-                          packet_size, start_marker_len, stop_marker_len);
-        i = packet_size -
-            (leftovers_size);  // Move index to be start of first packet fully
-                               // contained in byte_stream
-    }
-
-    // Always process first packets with checks. This handles if we're initially
-    // misaligned (i.e. started while reciever running) Under normal operation
-    // this shouldn't be necessary, but it's a small overhead anyways
-    size_t data_list_size = data_list.size();
-    while (i + packet_size <= byte_stream.size()) {
-        process_byte_stream_segment_with_checks(data_list, data_ptr, i,
-                                                error_code, start_marker_len,
-                                                stop_marker_len);
-
-        // If the size of data_list has increased, break out of the loop
-        if (data_list.size() > data_list_size) {
-            break;
+        // Process leftovers for this UDP packet (if any)
+        if (leftovers_size > 0) {
+            process_leftovers(data_list, data_ptr, byte_stream_size, leftovers_size,
+                              packet_size, start_marker_len, stop_marker_len,
+                              udp_packet.index);
+            i = packet_size - leftovers_size;
         }
-    }
 
-    // Define function pointer based on the check_packet_integrity flag
-    void (NaluPacketParser::*process_segment)(std::vector<NaluPacket>&,
-                                              const uint8_t*, size_t&, uint8_t&,
-                                              size_t, size_t);
+        // First, process initial packets with integrity checks (to realign if needed)
+        size_t prev_size = data_list.size();
+        while (i + packet_size <= byte_stream_size) {
+            process_byte_stream_segment_with_checks(data_list, data_ptr, i,
+                                                    error_code, start_marker_len,
+                                                    stop_marker_len,
+                                                    udp_packet.index);
+            if (data_list.size() > prev_size) {
+                break;  // If we parsed one, break to normal processing
+            }
+        }
 
-    // Assign the function pointer
-    if (check_packet_integrity) {
-        process_segment =
-            &NaluPacketParser::process_byte_stream_segment_with_checks;
-    } else {
-        process_segment =
-            &NaluPacketParser::process_byte_stream_segment_without_checks;
-    }
+        // Choose processing method pointer based on integrity flag
+        void (NaluPacketParser::*process_segment)(std::vector<NaluPacket>&,
+                                                  const uint8_t*, size_t&, uint8_t&,
+                                                  size_t, size_t, uint16_t);
 
-    // Process the byte stream in segments
-    while (i + packet_size <= byte_stream.size()) {
-        (this->*process_segment)(data_list, data_ptr, i, error_code,
-                                 start_marker_len, stop_marker_len);
-    }
+        if (check_packet_integrity) {
+            process_segment = &NaluPacketParser::process_byte_stream_segment_with_checks;
+        } else {
+            process_segment = &NaluPacketParser::process_byte_stream_segment_without_checks;
+        }
 
-    // Store leftovers if any
-    leftovers.clear();
-    if (i < byte_stream.size()) {
-        leftovers.assign(byte_stream.begin() + i, byte_stream.end());
+        // Process remaining packets
+        while (i + packet_size <= byte_stream_size) {
+            (this->*process_segment)(data_list, data_ptr, i, error_code,
+                                     start_marker_len, stop_marker_len,
+                                     udp_packet.index);
+        }
+
+        // Store leftovers for next batch
+        leftovers.clear();
+        if (i < byte_stream_size) {
+            leftovers.assign(data_ptr + i, data_ptr + byte_stream_size);
+            leftovers_udp_packet_index = udp_packet.index;
+        }
     }
 
     return data_list;
 }
 
-// Optimized packet processing without copying unnecessary data
 void NaluPacketParser::process_packet(std::vector<NaluPacket>& packets,
                                       const uint8_t* byte_stream,
-                                      size_t start_index, uint8_t error_code) {
-
-    
+                                      size_t start_index,
+                                      uint8_t error_code,
+                                      uint16_t start_udp_packet_index,
+                                      uint16_t end_udp_packet_index) {
     NaluPacket p;
     p.info = error_code;
     p.header = constructed_packet_header;
     p.parser_index = packet_index++;
     packet_index %= UINT16_MAX;
 
-    size_t j = start_index + start_marker.size();  // Start at the channel info
+    p.start_udp_packet_index = start_udp_packet_index;
+    p.end_udp_packet_index = end_udp_packet_index;
+
+    size_t j = start_index + start_marker.size();
 
     p.channel = byte_stream[j] & chan_mask;
     j++;
@@ -151,117 +150,80 @@ bool NaluPacketParser::check_marker(const uint8_t* byte_stream, size_t index,
                                     const uint8_t* marker, size_t marker_len) {
     for (size_t j = 0; j < marker_len; ++j) {
         if (byte_stream[index + j] != marker[j]) {
-            return false;  // Marker mismatch
+            return false;
         }
     }
-    return true;  // Marker found
+    return true;
 }
 
-// Private helper method: processes the byte stream segment with marker checks
 void NaluPacketParser::process_byte_stream_segment_with_checks(
     std::vector<NaluPacket>& packets, const uint8_t* byte_stream, size_t& i,
-    uint8_t& error_code, size_t start_marker_len, size_t stop_marker_len) {
-    size_t end_marker_position = i + packet_size - stop_marker_len;
-    if (check_marker(byte_stream, end_marker_position, stop_marker.data(),
+    uint8_t& error_code, size_t start_marker_len, size_t stop_marker_len,
+    uint16_t udp_packet_index) {
+    size_t end_marker_pos = i + packet_size - stop_marker_len;
+    if (check_marker(byte_stream, end_marker_pos, stop_marker.data(),
                      stop_marker_len)) {
-        size_t start_marker_position = i;
-
-        // Check for start_marker at the calculated position
-        if (check_marker(byte_stream, start_marker_position,
-                         start_marker.data(), start_marker_len)) {
-            // Create the packet from the byte stream (only the relevant part)
-            process_packet(packets, byte_stream, start_marker_position,
-                           error_code);
-
-            // Reset error code (no error)
-            error_code = 0;    // 0b00
-            i += packet_size;  // Move to the next packet position
-        } else {
-            error_code |= 0b10;  // 0b10 indicates start marker error
-            process_packet(packets, byte_stream, i, error_code);
+        if (check_marker(byte_stream, i, start_marker.data(), start_marker_len)) {
+            process_packet(packets, byte_stream, i, error_code,
+                           udp_packet_index, udp_packet_index);
+            error_code = 0;
             i += packet_size;
-            NaluEventCollectorLogger::warning(
-                "Start marker not found at expected position.");
+        } else {
+            error_code |= 0b10;
+            process_packet(packets, byte_stream, i, error_code,
+                           udp_packet_index, udp_packet_index);
+            i += packet_size;
+            NaluEventCollectorLogger::warning("Start marker not found at expected position.");
         }
     } else {
-        error_code |= 0b01;  // 0b01 indicates stop marker error
-        i++;                 // Move to the next byte
+        error_code |= 0b01;
+        i++;
     }
 }
 
-// Private helper method: processes the byte stream segment without marker
-// checks
 void NaluPacketParser::process_byte_stream_segment_without_checks(
     std::vector<NaluPacket>& packets, const uint8_t* byte_stream, size_t& i,
-    uint8_t& error_code,       // Unused
-    size_t start_marker_len,   // Unused
-    size_t stop_marker_len) {  // Unused
-    size_t start_marker_position = i;
-
-    // Create the packet from the byte stream (only the relevant part)
-    process_packet(packets, byte_stream, start_marker_position, 0);
-
-    // No marker checks needed, simply move to the next packet position
-    i += packet_size;  // Move to the next packet position
+    uint8_t& error_code, size_t /*start_marker_len*/, size_t /*stop_marker_len*/,
+    uint16_t udp_packet_index) {
+    process_packet(packets, byte_stream, i, 0, udp_packet_index, udp_packet_index);
+    i += packet_size;
 }
 
-// Private helper method: processes the leftovers and byte stream
-// Private helper method: processes the leftovers and byte stream
 void NaluPacketParser::process_leftovers(
     std::vector<NaluPacket>& data_list, const uint8_t* byte_stream,
     size_t byte_stream_len, size_t leftovers_size, const size_t packet_size,
-    const size_t start_marker_len, const size_t stop_marker_len) {
+    const size_t start_marker_len, const size_t stop_marker_len,
+    uint16_t udp_packet_index) {
     if (leftovers_size >= packet_size) {
         NaluEventCollectorLogger::warning(
             "Leftovers size (" + std::to_string(leftovers_size) +
-            ") is greater than or equal to the packet size (" +
-            std::to_string(packet_size) + ").");
+            ") is >= packet size (" + std::to_string(packet_size) + ")");
     } else {
-        // Calculate how many bytes from byte_stream are needed to complete the
-        // packet
         size_t remaining_bytes = packet_size - leftovers_size;
 
-        // Resize leftovers to ensure it has enough space for a full packet
         leftovers.resize(packet_size);
 
-        // Step 1: Copy the remaining bytes from byte_stream into the leftover
-        // space
-        std::memcpy(leftovers.data() + leftovers_size, byte_stream,
-                    remaining_bytes);
+        std::memcpy(leftovers.data() + leftovers_size, byte_stream, remaining_bytes);
 
-        // Now leftovers contains the full packet data (or as much as is
-        // available)
         const uint8_t* combined_ptr = leftovers.data();
 
-        // Check for start_marker at the beginning of the combined data
-        if (!check_marker(combined_ptr, 0, start_marker.data(),
-                          start_marker_len)) {
-            NaluEventCollectorLogger::warning(
-                "Combined data does not start with the start marker.");
+        if (!check_marker(combined_ptr, 0, start_marker.data(), start_marker_len)) {
+            NaluEventCollectorLogger::warning("Combined data does not start with the start marker.");
         }
 
-        // Check if the byte stream has the stop marker in the correct position
-        size_t end_marker_position = packet_size - stop_marker_len;
-        if (end_marker_position <= byte_stream_len) {
-            if (check_marker(combined_ptr, end_marker_position,
-                             stop_marker.data(), stop_marker_len)) {
-                process_packet(data_list, combined_ptr, 0,
-                               0);  // Process the full packet
+        size_t end_marker_pos = packet_size - stop_marker_len;
+        if (end_marker_pos <= byte_stream_len) {
+            if (check_marker(combined_ptr, end_marker_pos, stop_marker.data(), stop_marker_len)) {
+                process_packet(data_list, combined_ptr, 0, 0, leftovers_udp_packet_index, udp_packet_index);
             } else {
-                NaluEventCollectorLogger::warning(
-                    "Byte stream does not have stop marker at expected "
-                    "position.");
+                NaluEventCollectorLogger::warning("Byte stream does not have stop marker at expected position.");
             }
         } else {
-            NaluEventCollectorLogger::warning(
-                "Byte stream is too short to check stop marker at expected "
-                "position.");
+            NaluEventCollectorLogger::warning("Byte stream too short to check stop marker at expected position.");
         }
     }
 }
 
-
-// Convert hex string to vector of bytes
 std::vector<uint8_t> NaluPacketParser::hexStringToBytes(const std::string& hex) {
     std::vector<uint8_t> bytes;
     for (size_t i = 0; i < hex.length(); i += 2) {

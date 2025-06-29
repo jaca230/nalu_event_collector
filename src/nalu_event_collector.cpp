@@ -57,17 +57,28 @@ void NaluEventCollector::collect() {
 
     // Avoid debug output here as it may be performance-critical
     auto udp_start = std::chrono::steady_clock::now();
-    std::vector<uint8_t> data = receiver.getDataBuffer().getAllBytes();
+
+    // Get UDP packets with their indices
+    std::vector<UdpPacket> udp_packets = receiver.getDataBuffer().getAllPackets();
+
     auto udp_end = std::chrono::steady_clock::now();
 
     double udp_time =
         std::chrono::duration<double>(udp_end - udp_start).count();
-    size_t data_size = data.size();
+
+    size_t data_size = 0;
+    for (const auto& pkt : udp_packets) {
+        data_size += pkt.data.size();
+    }
+
     double total_data_processed_kb = data_size / 1024.0;
 
-    if (!data.empty()) {
+    if (!udp_packets.empty()) {
         auto parse_start = std::chrono::steady_clock::now();
-        std::vector<NaluPacket> packets = parser.process_stream(data);
+
+        // Pass vector of UdpPacket to parser
+        std::vector<NaluPacket> packets = parser.process_stream(udp_packets);
+
         auto parse_end = std::chrono::steady_clock::now();
 
         if (!packets.empty()) {
@@ -87,7 +98,7 @@ void NaluEventCollector::collect() {
             // Lock mutex to update shared data
             std::lock_guard<std::mutex> lock(data_mutex_);
 
-            // Update the NaluCollectorTimingData for this cycle
+            // Update timing data for this cycle
             timing_data.collection_cycle_index = cycle_count;
             timing_data.collection_cycle_timestamp_ns =
                 std::chrono::duration_cast<std::chrono::nanoseconds>(
@@ -100,21 +111,21 @@ void NaluEventCollector::collect() {
             timing_data.data_processed = data_size;
             timing_data.data_rate = data_rate;
 
-            // Compute rolling averages
+            // Update rolling averages
             cycle_count++;
 
             avg_data_rate += (data_rate - avg_data_rate) / cycle_count;
             avg_parse_time += (parse_time - avg_parse_time) / cycle_count;
             avg_event_time += (event_time - avg_event_time) / cycle_count;
             avg_total_time += (total_time - avg_total_time) / cycle_count;
-            avg_data_processed +=
-                (data_size - avg_data_processed) / cycle_count;
+            avg_data_processed += (data_size - avg_data_processed) / cycle_count;
             avg_udp_time += (udp_time - avg_udp_time) / cycle_count;
         }
     } else {
         NaluEventCollectorLogger::debug("No data received from receiver.");
     }
 }
+
 
 void NaluEventCollector::collectionLoop() {
     while (running) {

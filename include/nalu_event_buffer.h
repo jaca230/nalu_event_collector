@@ -31,6 +31,8 @@ class NaluEventBuffer {
      * @param event_header The header used for constructing events.
      * @param event_trailer The trailer used for constructing events.
      * @param trigger_type The type of trigger to use ("self", "ext", etc.).
+     * @param time_threshold The time threshold in ticks.
+     * @param clock_frequency The clock frequency in Hz.
      */
     NaluEventBuffer(size_t max_events,
         NaluTimeDifferenceCalculator& time_diff_calculator,
@@ -39,7 +41,9 @@ class NaluEventBuffer {
         uint8_t windows,
         uint16_t event_header,
         uint16_t event_trailer,
-        std::string trigger_type);
+        std::string trigger_type,
+        uint32_t time_threshold,
+        uint32_t clock_frequency);
 
     /** @brief Destructor */
     ~NaluEventBuffer();
@@ -171,6 +175,8 @@ class NaluEventBuffer {
     uint16_t event_header;   ///< The header used to construct events
     uint16_t event_trailer;  ///< The trailer used to construct events
     uint8_t extra_info;  ///< Extra information about the event (e.g., trigger type)
+    uint32_t time_threshold;    ///< The time threshold in ticks
+    uint32_t clock_frequency;   ///< Clock frequency in Hz
 
     /**
      * @brief adds an event to the buffer (not threadsafe).

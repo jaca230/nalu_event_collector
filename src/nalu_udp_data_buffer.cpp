@@ -1,70 +1,77 @@
 #include "nalu_udp_data_buffer.h"
-
-#include <cstring>
-#include <iostream>
-
 #include "nalu_event_collector_logger.h"
 
-NaluUdpDataBuffer::NaluUdpDataBuffer(size_t size) : capacity_(size) {}
+NaluUdpDataBuffer::NaluUdpDataBuffer(size_t capacity)
+    : capacity_(capacity) {}
 
 void NaluUdpDataBuffer::append(const uint8_t* data, size_t size) {
     std::lock_guard<std::mutex> lock(mutex_);
 
-    if (data == nullptr) {
-        NaluEventCollectorLogger::error("Null pointer passed to append method.");
-        throw std::invalid_argument("Null pointer passed to append method.");
+    if (!data) {
+        NaluEventCollectorLogger::error("Null data passed to append.");
+        throw std::invalid_argument("Null data pointer");
     }
 
-    if (buffer_.size() + size > capacity_) {
-        if (overflow_callback_) {
-            overflow_callback_();
-        }
-        NaluEventCollectorLogger::error(
-            "Buffer overflow: attempting to append " + std::to_string(size) +
-            " bytes to a buffer of capacity " + std::to_string(capacity_) +
-            " with " + std::to_string(buffer_.size()) +
-            " bytes already stored.");
+    if (packet_buffer_.size() >= capacity_) {
+        if (overflow_callback_) overflow_callback_();
+        NaluEventCollectorLogger::error("Buffer overflow (packet count)");
         throw std::overflow_error("Buffer overflow");
     }
 
-    // Insert data into the buffer all at once
-    buffer_.insert(buffer_.end(), data, data + size);
+    UdpPacket packet;
+    packet.index = next_index_++;
+    packet.data.assign(data, data + size);
+    packet_buffer_.push_back(std::move(packet));
+
+    cv_.notify_all();
 }
 
-
-bool NaluUdpDataBuffer::pop(uint8_t& byte) {
+bool NaluUdpDataBuffer::popPacket(UdpPacket& packet) {
     std::lock_guard<std::mutex> lock(mutex_);
+    if (packet_buffer_.empty()) return false;
 
-    if (buffer_.empty()) {
-        return false;  // Buffer is empty
-    }
-
-    byte = buffer_.front();
-    buffer_.pop_front();
-
+    packet = std::move(packet_buffer_.front());
+    packet_buffer_.pop_front();
     return true;
 }
 
-std::vector<uint8_t> NaluUdpDataBuffer::getAllBytes() {
+std::vector<UdpPacket> NaluUdpDataBuffer::getAllPackets() {
     std::lock_guard<std::mutex> lock(mutex_);
-
-    std::vector<uint8_t> result(buffer_.begin(), buffer_.end());
-    buffer_.clear();  // Clear the buffer after retrieving all bytes
+    std::vector<UdpPacket> result(packet_buffer_.begin(), packet_buffer_.end());
+    packet_buffer_.clear();
     return result;
 }
 
-size_t NaluUdpDataBuffer::size() const { return buffer_.size(); }
-
-void NaluUdpDataBuffer::waitForBytes(size_t min_count) {
+void NaluUdpDataBuffer::waitForPackets(size_t min_count) {
     std::unique_lock<std::mutex> lock(mutex_);
-    cv_.wait(lock, [this, min_count] { return buffer_.size() >= min_count; });
+    cv_.wait(lock, [this, min_count] { return packet_buffer_.size() >= min_count; });
 }
 
 void NaluUdpDataBuffer::setOverflowCallback(std::function<void()> callback) {
     std::lock_guard<std::mutex> lock(mutex_);
-    overflow_callback_ = callback;
+    overflow_callback_ = std::move(callback);
 }
 
-bool NaluUdpDataBuffer::isEmpty() const { return buffer_.empty(); }
+size_t NaluUdpDataBuffer::size() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return packet_buffer_.size();
+}
 
-bool NaluUdpDataBuffer::isFull() const { return buffer_.size() == capacity_; }
+size_t NaluUdpDataBuffer::sizeInBytes() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    size_t total_bytes = 0;
+    for (const auto& packet : packet_buffer_) {
+        total_bytes += packet.data.size();
+    }
+    return total_bytes;
+}
+
+bool NaluUdpDataBuffer::isEmpty() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return packet_buffer_.empty();
+}
+
+bool NaluUdpDataBuffer::isFull() const {
+    std::lock_guard<std::mutex> lock(mutex_);
+    return packet_buffer_.size() >= capacity_;
+}
