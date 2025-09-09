@@ -149,18 +149,19 @@ NaluEventCollector::get_data() {
 
     // Filter and return only complete events
     std::vector<NaluEvent*> complete_events;
-    std::vector<int> channels = event_builder.get_channels();
-    int windows = event_builder.get_windows();
-    std::string trigger_type = event_builder.get_trigger_type();
-    std::chrono::steady_clock::duration max_time_between_events = event_builder.get_time_threshold_duration();
+    //std::vector<int> channels = event_builder.get_channels();
+    //int windows = event_builder.get_windows();
+    //std::string trigger_type = event_builder.get_trigger_type();
+    //std::chrono::steady_clock::duration max_time_between_events = event_builder.get_time_threshold_duration();
 
     // Initialize a variable to hold the running total of event sizes in bytes
     size_t total_size = 0;
 
     // Check each event for completion
     for (auto* event : new_events) {
-        bool is_complete = event->is_event_complete(windows, channels, trigger_type, max_time_between_events);
-        
+        //bool is_complete = event->is_event_complete(windows, channels, trigger_type, max_time_between_events);
+        bool is_complete = event->is_event_complete();
+
         // Output event details
         // std::cout << "Event index: " << event->header.index << std::endl;
         // std::cout << "Event is complete: " << is_complete << std::endl;

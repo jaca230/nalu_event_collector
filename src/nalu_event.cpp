@@ -115,9 +115,7 @@ bool NaluEvent::is_event_complete() const {
         case TriggerType::Internal: {
             auto elapsed = std::chrono::steady_clock::now() - creation_timestamp;
 
-            // Convert ticks to duration using embedded clock frequency
-            double ns = static_cast<double>(header.time_threshold) * (1e9 / header.clock_frequency);
-            auto threshold_duration = std::chrono::nanoseconds(static_cast<int64_t>(ns));
+            auto threshold_duration = std::chrono::microseconds(header.event_completion_time_us);
             return elapsed >= threshold_duration;
         }
         case TriggerType::External:
