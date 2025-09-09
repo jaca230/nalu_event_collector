@@ -64,6 +64,7 @@ void NaluUdpReceiver::start() {
 
     NaluEventCollectorLogger::debug("Starting NaluUdpReceiver...");
     running_ = true;
+    initSocket();
     receiver_thread_ = std::thread(&NaluUdpReceiver::receiveLoop, this);
     NaluEventCollectorLogger::debug("Receiver started.");
 }
@@ -93,7 +94,6 @@ void NaluUdpReceiver::stop() {
 
 void NaluUdpReceiver::receiveLoop() {
     try {
-        initSocket();
         uint8_t* UDP_packet_buffer = new uint8_t[max_packet_size_];
 
         while (running_) {

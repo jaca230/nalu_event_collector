@@ -22,8 +22,9 @@ std::vector<int> channels = {0 , 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
                              11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
                              22, 23, 24, 25, 26, 27, 28, 29, 30, 31};  // Channels to collect
 std::string trigger_type = "self";  // Trigger type (self, ext, or imm)                                             
-int windows = 1;  // Number of windows
-int time_threshold = 1500;//34750;//95373/2;  // Time threshold in clock cycles
+int windows = 8;  // Number of windows
+uint32_t time_threshold = 1500;//34750;//95373/2;  // Time threshold in clock cycles
+uint32_t event_completion_time_us = 10000;
 size_t max_events_in_buffer = 10000;  // Max events in buffer
 uint32_t max_trigger_time = 16777216;   // Max trigger time
 uint32_t clock_frequency = 23843000;  // Clock frequency in Hz
@@ -85,6 +86,7 @@ int main(int argc, char** argv) {
   event_builder_params.trigger_type = trigger_type;
   event_builder_params.windows = windows;
   event_builder_params.time_threshold = time_threshold;
+  event_builder_params.event_completion_time_us = event_completion_time_us;
   event_builder_params.max_events_in_buffer = max_events_in_buffer;
   event_builder_params.max_trigger_time = max_trigger_time;
   event_builder_params.clock_frequency = clock_frequency;
@@ -204,6 +206,9 @@ int main(int argc, char** argv) {
         std::cout << "Info: " << static_cast<int>(middle_event->header.info) << std::endl;
         std::cout << "Index: " << middle_event->header.index << std::endl;
         std::cout << "Reference Time: " << middle_event->header.reference_time << std::endl;
+        std::cout << "Time Threshold (ticks): " << middle_event->header.time_threshold << std::endl;
+        std::cout << "Event Completion Time (us): " << middle_event->header.event_completion_time_us << std::endl;
+        std::cout << "Clock Frequency (Hz): " << middle_event->header.clock_frequency << std::endl;
         std::cout << "Packet Size: " << middle_event->header.packet_size << std::endl;
         std::cout << "Number of Packets: " << middle_event->header.num_packets << std::endl;
         std::cout << "Footer: " << middle_event->footer.footer << std::endl;

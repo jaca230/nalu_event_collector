@@ -31,14 +31,16 @@ class NaluEventBuilder {
      * @param event_header The header to be added to the event (default: 0xBBBB).
      * @param event_trailer The trailer to be added to the event (default: 0xEEEE).
      * @param clock_frequency Clock frequency used for timing calculations (default: 23843000).
+     * @param event_completion_time_us The time in microseconds to wait after the last packet before marking an event as complete (default: 10000).
      */
     NaluEventBuilder(std::vector<int> channels, int windows, std::string trigger_type,
-                    int time_threshold = 5000,
+                    uint32_t time_threshold = 5000,
                     uint32_t max_trigger_time = 16777216,
                     size_t max_lookback = 2, size_t event_max_size = 1024,
                     uint16_t event_header = 0xBBBB,
                     uint16_t event_trailer = 0xEEEE,
-                    uint32_t clock_frequency = 23843000);
+                    uint32_t clock_frequency = 23843000,
+                    uint32_t event_completion_time_us = 10000);
 
 
     /**
