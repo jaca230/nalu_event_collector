@@ -175,6 +175,8 @@ std::vector<NaluEvent*> NaluEventBuffer::get_events_after_index_inclusive(
         return {};  // Return empty if no events after the given index
     }
 
+    result.reserve(events.size() - index);
+
     for (size_t i = index; i < events.size(); ++i) {
         result.push_back(events[i].get());
     }

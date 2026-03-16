@@ -1,6 +1,8 @@
 #include "nalu_event_collector.h"
 
+#include <algorithm>
 #include <iomanip>
+#include <sstream>
 
 #include "nalu_event_collector_logger.h"
 
@@ -10,8 +12,7 @@ NaluEventCollector::NaluEventCollector(const NaluEventCollectorParams& params)
       event_builder(
           params.event_builder_params),  // Unpack parameters for event_builder
       running(false),
-      last_event_index(
-          0),  // Initialize to -1, meaning no events have been processed yet
+      last_event_index(0),
       cycle_count(0),
       sleep_time_us(params.sleep_time_us)  // Use the sleep time directly
 {
@@ -129,12 +130,54 @@ void NaluEventCollector::collectionLoop() {
     }
 }
 
+void NaluEventCollector::log_skipped_incomplete_events(
+    const std::vector<NaluEvent*>& new_events,
+    size_t complete_event_count) const {
+    size_t skipped_incomplete_events = 0;
+    size_t prefix_len = std::min(new_events.size(), complete_event_count);
+    for (size_t i = 0; i < prefix_len; ++i) {
+        auto* event = new_events[i];
+        if (event->is_event_complete()) {
+            continue;
+        }
+
+        skipped_incomplete_events++;
+        int active_channels = __builtin_popcountll(event->header.channel_mask);
+        int expected_packets =
+            static_cast<int>(event->header.num_windows) * active_channels;
+        auto age_us = std::chrono::duration_cast<std::chrono::microseconds>(
+                          std::chrono::steady_clock::now() -
+                          event->get_creation_timestamp())
+                          .count();
+        std::ostringstream channel_mask_stream;
+        channel_mask_stream << std::hex << event->header.channel_mask;
+        NaluEventCollectorLogger::warning(
+            "Skipped incomplete event index " +
+            std::to_string(event->header.index) + ": packets=" +
+            std::to_string(event->header.num_packets) + "/" +
+            std::to_string(expected_packets) + ", windows=" +
+            std::to_string(event->header.num_windows) +
+            ", active_channels=" + std::to_string(active_channels) +
+            ", reference_time=" + std::to_string(event->header.reference_time) +
+            ", age_us=" + std::to_string(age_us) + ", channel_mask=0x" +
+            channel_mask_stream.str());
+    }
+
+    if (skipped_incomplete_events > 0) {
+        NaluEventCollectorLogger::warning(
+            "Advancing past " + std::to_string(skipped_incomplete_events) +
+            " incomplete event(s) while returning " +
+            std::to_string(complete_event_count) + " complete event(s).");
+    }
+}
+
 std::vector<NaluEvent*> NaluEventCollector::get_events() {
     return get_data().second;
 }
 
 NaluCollectorTimingData NaluEventCollector::get_timing_data() {
-    return get_data().first;
+    std::lock_guard<std::mutex> lock(data_mutex_);
+    return timing_data;
 }
 
 std::pair<NaluCollectorTimingData, std::vector<NaluEvent*>>
@@ -142,41 +185,30 @@ NaluEventCollector::get_data() {
     // Get timing data and event data in same mutex
     std::lock_guard<std::mutex> lock(data_mutex_);
 
-    // Fetch events after the last processed index
+    // Fetch events beginning at the current buffer-relative cursor.
     std::vector<NaluEvent*> new_events =
         event_builder.get_event_buffer().get_events_after_index_inclusive(
             last_event_index);
 
     // Filter and return only complete events
     std::vector<NaluEvent*> complete_events;
-    //std::vector<int> channels = event_builder.get_channels();
-    //int windows = event_builder.get_windows();
-    //std::string trigger_type = event_builder.get_trigger_type();
-    //std::chrono::steady_clock::duration max_time_between_events = event_builder.get_time_threshold_duration();
+    complete_events.reserve(new_events.size());
 
     // Initialize a variable to hold the running total of event sizes in bytes
     size_t total_size = 0;
 
-    // Check each event for completion
+    // Intentionally scan every unread event and return all complete ones.
+    // The cursor still advances only by the number of complete events returned,
+    // which can skip older incomplete events; warn when that happens.
     for (auto* event : new_events) {
-        //bool is_complete = event->is_event_complete(windows, channels, trigger_type, max_time_between_events);
         bool is_complete = event->is_event_complete();
-
-        // Output event details
-        // std::cout << "Event index: " << event->header.index << std::endl;
-        // std::cout << "Event is complete: " << is_complete << std::endl;
-        // std::cout << "Event num packets: " << event->header.num_packets << std::endl;
-        // std::cout << "Event reference time: " << event->header.reference_time << std::endl;
         if (is_complete) {
             complete_events.push_back(event);
         }
     }
-    //std::cout << "Allocated size of new events: ~" << new_events.size()*((channels.size()*windows+5)*80 / (1024.0*1024.0)) << " MB" << std::endl;
-    
-    //std::cout << std::endl;
 
+    log_skipped_incomplete_events(new_events, complete_events.size());
 
-    // Update last_event_index by counting the complete events
     last_event_index += complete_events.size();
 
     return {timing_data, complete_events};

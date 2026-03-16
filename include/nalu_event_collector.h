@@ -79,7 +79,8 @@ class NaluEventCollector {
      * @brief Retrieves the events that have been collected.
      *
      * This method returns a list of events that are considered complete, based
-     * on the configured windows and channels.
+     * on the configured windows and channels. Calling this method advances the
+     * internal event cursor in the same way as get_data().
      *
      * @return A vector of pointers to complete events.
      */
@@ -89,7 +90,8 @@ class NaluEventCollector {
      * @brief Retrieves the current timing data for the collector.
      *
      * This method provides the timing data that tracks the performance metrics
-     * for the most recent collection cycle.
+     * for the most recent collection cycle. It does not advance the internal
+     * event cursor.
      *
      * @return The current timing data.
      */
@@ -99,7 +101,8 @@ class NaluEventCollector {
      * @brief Retrieves both timing data and events.
      *
      * This method provides a pair consisting of the current timing data and the
-     * events collected in the most recent cycle.
+     * newly available complete events. Unlike get_timing_data(), this method
+     * advances the internal event cursor.
      *
      * @return A pair containing the timing data and the events.
      */
@@ -109,7 +112,7 @@ class NaluEventCollector {
      * @brief Clears the collected events that have already been processed.
      *
      * This method clears events from the buffer that have already been
-     * processed up to the last event index.
+     * returned to the caller.
      */
     void clear_events();
 
@@ -143,13 +146,18 @@ class NaluEventCollector {
      */
     void collectionLoop();
 
+    void log_skipped_incomplete_events(
+        const std::vector<NaluEvent*>& new_events,
+        size_t complete_event_count) const;
+
     NaluUdpReceiver receiver; /**< The UDP receiver that fetches the data. */
     NaluPacketParser parser;  /**< The parser used to process packets. */
     NaluEventBuilder event_builder; /**< The event builder used to build events
                                        from packets. */
     std::atomic<bool>
         running;             /**< Indicates whether the collector is running. */
-    size_t last_event_index; /**< The index of the last processed event. */
+    size_t last_event_index; /**< Buffer-relative cursor advanced by the
+                                number of complete events returned by get_data(). */
     size_t
         cycle_count; /**< The number of cycles the collector has completed. */
 

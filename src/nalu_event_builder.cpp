@@ -40,7 +40,8 @@ NaluEventBuilder::NaluEventBuilder(const NaluEventBuilderParams& params)
                        params.max_events_in_buffer,
                        params.event_header,
                        params.event_trailer,
-                       params.clock_frequency) {}
+                       params.clock_frequency,
+                       params.event_completion_time_us) {}
 
 
 // Setter to adjust the post_event_safety_buffer_counter_max
