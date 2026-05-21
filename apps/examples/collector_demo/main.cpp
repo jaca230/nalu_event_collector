@@ -68,6 +68,7 @@ CollectorConfig parse_collector_config(const nlohmann::json& json) {
         assign_if_present(event_builder, "channels", config.event_builder.channels);
         assign_if_present(event_builder, "trigger_type", config.event_builder.trigger_type);
         assign_if_present(event_builder, "windows", config.event_builder.windows);
+        assign_if_present(event_builder, "wlc_mode", config.event_builder.wlc_mode);
         assign_if_present(event_builder, "time_threshold", config.event_builder.time_threshold);
         assign_if_present(event_builder,
                           "event_completion_time_us",

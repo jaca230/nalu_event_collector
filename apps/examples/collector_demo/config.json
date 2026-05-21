@@ -21,6 +21,7 @@
       ],
       "trigger_type": "self",
       "windows": 2,
+      "wlc_mode": false,
       "time_threshold": 1500,
       "event_completion_time_us": 10000,
       "max_events_in_buffer": 10000,

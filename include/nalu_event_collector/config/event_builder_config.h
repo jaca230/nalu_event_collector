@@ -37,6 +37,9 @@ struct EventBuilderConfig {
     /** @brief Number of windows expected per channel for complete events. */
     int windows = 4;
 
+    /** @brief Use time-based completion for WLC-style external-trigger grouping. */
+    bool wlc_mode = false;
+
     /** @brief Trigger-time threshold in device ticks for packet matching. */
     uint32_t time_threshold = 5000;
 

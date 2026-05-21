@@ -90,7 +90,8 @@ class Event {
           uint16_t ftr,
           uint16_t max_num_packets,
           uint64_t channel_mask_value,
-          uint8_t num_windows_value);
+          uint8_t num_windows_value,
+          bool use_time_based_completion = false);
 
     /** @brief Print a readable event summary to stdout. */
     void print_event_info() const;
@@ -117,6 +118,7 @@ class Event {
     bool is_event_complete(int windows,
                            const std::vector<int>& channels,
                            std::string trigger_type_str,
+                           bool use_time_based_completion,
                            std::chrono::steady_clock::duration max_time_between_events) const;
 
     /** @brief Return the event creation timestamp. */
@@ -124,6 +126,8 @@ class Event {
 
   private:
     int count_active_channels(uint64_t channel_mask) const;
+
+    bool use_time_based_completion_ = false;
 
     Event(const Event&) = delete;
     Event& operator=(const Event&) = delete;

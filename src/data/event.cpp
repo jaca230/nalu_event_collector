@@ -18,6 +18,7 @@ Event::Event()
       footer{0},
       max_packets(0),
       packets(nullptr),
+      use_time_based_completion_(false),
       creation_timestamp(std::chrono::steady_clock::now()) {}
 
 Event::Event(uint16_t hdr,
@@ -32,7 +33,8 @@ Event::Event(uint16_t hdr,
              uint16_t ftr,
              uint16_t max_num_packets,
              uint64_t channel_mask_value,
-             uint8_t num_windows_value)
+             uint8_t num_windows_value,
+             bool use_time_based_completion)
     : header{hdr,
              extra_info,
              idx,
@@ -47,6 +49,7 @@ Event::Event(uint16_t hdr,
       packets(std::make_unique<Packet[]>(max_num_packets)),
       footer{ftr},
       max_packets(max_num_packets),
+      use_time_based_completion_(use_time_based_completion),
       creation_timestamp(std::chrono::steady_clock::now()) {}
 
 void Event::print_event_info() const {
@@ -120,6 +123,11 @@ int Event::count_active_channels(uint64_t channel_mask) const {
 }
 
 bool Event::is_event_complete() const {
+    if (use_time_based_completion_) {
+        const auto elapsed = std::chrono::steady_clock::now() - creation_timestamp;
+        return elapsed >= std::chrono::microseconds(header.event_completion_time_us);
+    }
+
     const int active_channels = count_active_channels(header.channel_mask);
 
     switch (get_trigger_type()) {
@@ -138,7 +146,12 @@ bool Event::is_event_complete() const {
 bool Event::is_event_complete(int windows,
                               const std::vector<int>& channels,
                               std::string trigger_type_str,
+                              bool use_time_based_completion,
                               std::chrono::steady_clock::duration max_time_between_events) const {
+    if (use_time_based_completion) {
+        return (std::chrono::steady_clock::now() - creation_timestamp) >= max_time_between_events;
+    }
+
     TriggerType trigger_type = TriggerType::Unknown;
     if (trigger_type_str == "ext") {
         trigger_type = TriggerType::External;

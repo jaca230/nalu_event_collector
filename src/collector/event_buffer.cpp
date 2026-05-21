@@ -20,6 +20,7 @@ EventBuffer::EventBuffer(size_t max_events,
                          uint16_t event_header,
                          uint16_t event_trailer,
                          std::string trigger_type,
+                         bool wlc_mode,
                          uint32_t time_threshold,
                          uint32_t clock_frequency,
                          uint32_t event_completion_time_us)
@@ -32,6 +33,7 @@ EventBuffer::EventBuffer(size_t max_events,
       event_header_(event_header),
       event_trailer_(event_trailer),
       extra_info_(0),
+      use_time_based_completion_(trigger_type == "self" || (trigger_type == "ext" && wlc_mode)),
       time_threshold_(time_threshold),
       clock_frequency_(clock_frequency),
       event_completion_time_us_(event_completion_time_us) {
@@ -199,7 +201,8 @@ void EventBuffer::add_packet(const Packet& packet,
                                                  event_trailer_,
                                                  static_cast<uint16_t>(max_event_size_),
                                                  channel_mask_,
-                                                 windows_);
+                                                 windows_,
+                                                 use_time_based_completion_);
         new_event->add_packet(packet);
         add_event_helper(new_event);
         in_safety_buffer_zone = true;

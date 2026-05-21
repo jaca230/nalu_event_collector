@@ -38,6 +38,7 @@ class EventBuffer {
                 uint16_t event_header,
                 uint16_t event_trailer,
                 std::string trigger_type,
+                bool wlc_mode,
                 uint32_t time_threshold,
                 uint32_t clock_frequency,
                 uint32_t event_completion_time_us);
@@ -100,6 +101,7 @@ class EventBuffer {
     uint16_t event_header_;
     uint16_t event_trailer_;
     uint8_t extra_info_;
+    bool use_time_based_completion_;
     uint32_t time_threshold_;
     uint32_t clock_frequency_;
     uint32_t event_completion_time_us_;

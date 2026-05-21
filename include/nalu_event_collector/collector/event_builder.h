@@ -31,6 +31,7 @@ class EventBuilder {
     EventBuilder(std::vector<int> channels,
                  int windows,
                  std::string trigger_type,
+                 bool wlc_mode = false,
                  uint32_t time_threshold = 5000,
                  uint32_t max_trigger_time = 16777216,
                  size_t max_lookback = 2,
