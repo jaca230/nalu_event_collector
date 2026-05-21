@@ -34,7 +34,9 @@ Event::Event(uint16_t hdr,
              uint16_t max_num_packets,
              uint64_t channel_mask_value,
              uint8_t num_windows_value,
-             bool use_time_based_completion)
+             bool use_time_based_completion,
+             uint16_t expected_packet_count,
+             bool warn_on_expected_overrun)
     : header{hdr,
              extra_info,
              idx,
@@ -50,6 +52,8 @@ Event::Event(uint16_t hdr,
       footer{ftr},
       max_packets(max_num_packets),
       use_time_based_completion_(use_time_based_completion),
+      expected_packet_count_(expected_packet_count),
+      warn_on_expected_overrun_(warn_on_expected_overrun),
       creation_timestamp(std::chrono::steady_clock::now()) {}
 
 void Event::print_event_info() const {
@@ -103,6 +107,8 @@ void Event::serialize_to_buffer(char* buffer) const {
 
 void Event::add_packet(const Packet& packet) {
     if (header.num_packets >= max_packets) {
+        // This will basically never fire since we set max packets to a numeric limit
+        // Kept here as legacy/defensive code in case of future changes to max_packets handling
         spdlog::error("Attempt to add packet exceeds max packet limit. max={}, current={}",
                       max_packets,
                       header.num_packets);
@@ -111,6 +117,20 @@ void Event::add_packet(const Packet& packet) {
 
     packets[header.num_packets] = packet;
     ++header.num_packets;
+
+    if (warn_on_expected_overrun_ && !warned_on_expected_overrun_ &&
+        expected_packet_count_ > 0 && header.num_packets > expected_packet_count_) {
+        warned_on_expected_overrun_ = true;
+        spdlog::warn(
+            "External-trigger event index {} exceeded expected packet count: expected={}, actual={}, "
+            "reference_time={}, channel_mask=0x{:x}, windows={}",
+            header.index,
+            expected_packet_count_,
+            header.num_packets,
+            header.reference_time,
+            header.channel_mask,
+            header.num_windows);
+    }
 }
 
 int Event::count_active_channels(uint64_t channel_mask) const {

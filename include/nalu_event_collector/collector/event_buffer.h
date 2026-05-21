@@ -101,6 +101,8 @@ class EventBuffer {
     uint16_t event_header_;
     uint16_t event_trailer_;
     uint8_t extra_info_;
+    uint16_t expected_packet_count_;
+    bool warn_on_expected_overrun_;
     bool use_time_based_completion_;
     uint32_t time_threshold_;
     uint32_t clock_frequency_;

@@ -6,6 +6,7 @@
 #include "nalu_event_collector/collector/event_buffer.h"
 
 #include <algorithm>
+#include <limits>
 #include <stdexcept>
 
 #include <spdlog/spdlog.h>
@@ -27,12 +28,14 @@ EventBuffer::EventBuffer(size_t max_events,
     : max_events_(max_events),
       time_diff_calculator_(time_diff_calculator),
       max_lookback_(max_lookback),
-      max_event_size_(windows * channels.size() + 5),
+      max_event_size_(std::numeric_limits<uint16_t>::max()),
       windows_(windows),
       channel_mask_(0),
       event_header_(event_header),
       event_trailer_(event_trailer),
       extra_info_(0),
+      expected_packet_count_(static_cast<uint16_t>(windows * channels.size())),
+      warn_on_expected_overrun_(trigger_type == "ext" && !wlc_mode),
       use_time_based_completion_(trigger_type == "self" || (trigger_type == "ext" && wlc_mode)),
       time_threshold_(time_threshold),
       clock_frequency_(clock_frequency),
@@ -202,7 +205,9 @@ void EventBuffer::add_packet(const Packet& packet,
                                                  static_cast<uint16_t>(max_event_size_),
                                                  channel_mask_,
                                                  windows_,
-                                                 use_time_based_completion_);
+                                                 use_time_based_completion_,
+                                                 expected_packet_count_,
+                                                 warn_on_expected_overrun_);
         new_event->add_packet(packet);
         add_event_helper(new_event);
         in_safety_buffer_zone = true;

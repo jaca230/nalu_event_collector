@@ -91,7 +91,9 @@ class Event {
           uint16_t max_num_packets,
           uint64_t channel_mask_value,
           uint8_t num_windows_value,
-          bool use_time_based_completion = false);
+          bool use_time_based_completion = false,
+          uint16_t expected_packet_count = 0,
+          bool warn_on_expected_overrun = false);
 
     /** @brief Print a readable event summary to stdout. */
     void print_event_info() const;
@@ -128,6 +130,9 @@ class Event {
     int count_active_channels(uint64_t channel_mask) const;
 
     bool use_time_based_completion_ = false;
+    uint16_t expected_packet_count_ = 0;
+    bool warn_on_expected_overrun_ = false;
+    bool warned_on_expected_overrun_ = false;
 
     Event(const Event&) = delete;
     Event& operator=(const Event&) = delete;
