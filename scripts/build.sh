@@ -1,68 +1,43 @@
 #!/bin/bash
 
-# Resolve absolute paths
+set -euo pipefail
+
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
-BASE_DIR=$(realpath "$SCRIPT_DIR/..")
-BUILD_DIR="$BASE_DIR/build"
-CLEANUP_SCRIPT="$SCRIPT_DIR/cleanup.sh"
-
-# Default flags
+PROJECT_DIR=$(realpath "$SCRIPT_DIR/..")
+BUILD_DIR="$PROJECT_DIR/build"
 OVERWRITE=false
-JOBS_ARG="-j"  # Use all processors
 
-# Help message
-show_help() {
-    echo "Usage: ./build.sh [OPTIONS]"
-    echo
-    echo "Options:"
-    echo "  -o, --overwrite           Remove existing build directory before building"
-    echo "  -j, --jobs <number>       Specify number of processors to use (default: all available)"
-    echo "  -h, --help                Display this help message"
+print_help() {
+    cat <<EOF
+Usage: ./scripts/build.sh [options]
+
+Configure and build the library.
+
+Options:
+  -o, --overwrite   Remove the existing build directory before configuring
+  -h, --help        Show this help message
+EOF
 }
 
-# Parse arguments
 while [[ "$#" -gt 0 ]]; do
     case $1 in
-        -o|--overwrite)
-            OVERWRITE=true
-            shift
-            ;;
-        -j|--jobs)
-            if [[ -n "$2" && "$2" != -* ]]; then
-                JOBS_ARG="-j$2"
-                shift 2
-            else
-                JOBS_ARG="-j"
-                shift
-            fi
-            ;;
-        -h|--help)
-            show_help
-            exit 0
-            ;;
-        *)
-            echo "[build.sh, ERROR] Unknown option: $1"
-            show_help
-            exit 1
-            ;;
+        -o|--overwrite) OVERWRITE=true; shift ;;
+        -h|--help) print_help; exit 0 ;;
+        *) echo "Unknown option: $1" >&2; echo; print_help; exit 1 ;;
     esac
 done
 
-# Optionally clean build
 if [ "$OVERWRITE" = true ]; then
-    echo "[build.sh] Cleaning previous build with: $CLEANUP_SCRIPT"
-    "$CLEANUP_SCRIPT"
+    echo "Overwrite flag set: Cleaning previous build..."
+    rm -rf "$BUILD_DIR"
 fi
 
-# Create and enter build directory
 mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR" || exit 1
 
-# Run CMake and Make
-echo "[build.sh] Running cmake in: $BUILD_DIR"
-cmake "$BASE_DIR"
+echo "Configuring the project with CMake..."
+cmake -S "$PROJECT_DIR" -B "$BUILD_DIR"
 
-echo "[build.sh] Building with make $JOBS_ARG"
-make $JOBS_ARG
+echo "Building the project..."
+cmake --build "$BUILD_DIR" --parallel
 
-echo "[build.sh] Build complete."
+echo "Build finished! Library artifacts are in build/lib/."

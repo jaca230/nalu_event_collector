@@ -1,20 +1,34 @@
 #!/bin/bash
-set -e  # Exit on any error
+
+set -euo pipefail
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
-
+PROJECT_DIR=$(realpath "$SCRIPT_DIR/..")
+BUILD_DIR="$PROJECT_DIR/build"
 INSTALL_PREFIX="/usr/local"
 OVERWRITE=false
+
+print_help() {
+    cat <<EOF
+Usage: ./scripts/install.sh [options]
+
+Configure, build, and install the library.
+
+Options:
+  -p, --prefix DIR  Install prefix (default: /usr/local)
+  -o, --overwrite   Remove the existing build directory before configuring
+  -h, --help        Show this help message
+EOF
+}
 
 while [[ "$#" -gt 0 ]]; do
     case $1 in
         -o|--overwrite) OVERWRITE=true; shift ;;
         -p|--prefix) INSTALL_PREFIX="$2"; shift 2 ;;
-        *) echo "Unknown option: $1"; exit 1 ;;
+        -h|--help) print_help; exit 0 ;;
+        *) echo "Unknown option: $1" >&2; echo; print_help; exit 1 ;;
     esac
 done
-
-BUILD_DIR="$SCRIPT_DIR/../build"
 
 if [ "$OVERWRITE" = true ]; then
     echo "Overwrite flag set: Cleaning previous build..."
@@ -22,21 +36,14 @@ if [ "$OVERWRITE" = true ]; then
 fi
 
 mkdir -p "$BUILD_DIR"
-cd "$BUILD_DIR"
 
 echo "Configuring the project with CMake..."
-cmake -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX" "$SCRIPT_DIR/.."
+cmake -S "$PROJECT_DIR" -B "$BUILD_DIR" -DCMAKE_INSTALL_PREFIX="$INSTALL_PREFIX"
 
 echo "Building the project..."
-cmake --build . -- -j$(nproc)
+cmake --build "$BUILD_DIR" --parallel
 
 echo "Installing the project to $INSTALL_PREFIX..."
-if [ "$EUID" -ne 0 ]; then
-    echo "Running 'sudo make install'..."
-    sudo cmake --build . --target install
-else
-    cmake --build . --target install
-fi
+sudo cmake --install "$BUILD_DIR"
 
 echo "Installation finished!"
-echo "Headers and libraries are installed in $INSTALL_PREFIX/include and $INSTALL_PREFIX/lib."

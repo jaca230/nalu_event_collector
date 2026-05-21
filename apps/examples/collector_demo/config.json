@@ -1,0 +1,56 @@
+{
+  "logging": {
+    "level": "debug"
+  },
+  "app": {
+    "run_mode": "compact",
+    "background": false,
+    "background_duration_s": 10,
+    "manual_cycles": 10,
+    "manual_sleep_ms": 100,
+    "print_middle_event": true
+  },
+  "collector": {
+    "sleep_time_us": 500000,
+    "event_builder": {
+      "channels": [
+        0, 1, 2, 3, 4, 5, 6, 7,
+        8, 9, 10, 11, 12, 13, 14, 15,
+        16, 17, 18, 19, 20, 21, 22, 23,
+        24, 25, 26, 27, 28, 29, 30, 31
+      ],
+      "trigger_type": "self",
+      "windows": 2,
+      "time_threshold": 1500,
+      "event_completion_time_us": 10000,
+      "max_events_in_buffer": 10000,
+      "max_trigger_time": 16777216,
+      "clock_frequency": 23843000,
+      "max_lookback": 2,
+      "event_header": 48059,
+      "event_trailer": 61166
+    },
+    "udp_receiver": {
+      "address": "192.168.1.1",
+      "port": 12345,
+      "buffer_size": 104857600,
+      "max_packet_size": 1040,
+      "timeout_sec": 2
+    },
+    "packet_parser": {
+      "packet_size": 74,
+      "start_marker": "0E",
+      "stop_marker": "FA5A",
+      "chan_mask": 63,
+      "chan_shift": 0,
+      "abs_wind_mask": 63,
+      "evt_wind_mask": 63,
+      "evt_wind_shift": 6,
+      "timing_mask": 4095,
+      "timing_shift": 12,
+      "check_packet_integrity": true,
+      "constructed_packet_header": 43690,
+      "constructed_packet_footer": 65535
+    }
+  }
+}

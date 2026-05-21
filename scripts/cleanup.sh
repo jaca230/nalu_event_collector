@@ -1,25 +1,12 @@
 #!/bin/bash
 
-# Get absolute paths
+set -euo pipefail
+
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
-BASE_DIR=$(realpath "$SCRIPT_DIR/..")
+PROJECT_DIR=$(realpath "$SCRIPT_DIR/..")
 
-echo "[cleanup.sh] Cleaning project build artifacts in: $BASE_DIR"
+echo "[cleanup.sh] Cleaning project build artifacts in: $PROJECT_DIR"
 
-# Directories to remove (expandable if needed)
-DIRS_TO_CLEAN=(
-    "$BASE_DIR/build"
-    "$BASE_DIR/bin"
-    "$BASE_DIR/lib"
-)
-
-for DIR in "${DIRS_TO_CLEAN[@]}"; do
-    if [ -d "$DIR" ]; then
-        echo "[cleanup.sh] Removing: $(realpath "$DIR")"
-        rm -rf "$DIR"
-    else
-        echo "[cleanup.sh] Skipping: $DIR (does not exist)"
-    fi
-done
+find "$PROJECT_DIR" -maxdepth 4 -type d -name build -prune -exec rm -rf {} +
 
 echo "[cleanup.sh] Cleanup complete."
