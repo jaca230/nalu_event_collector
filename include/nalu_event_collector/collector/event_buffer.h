@@ -80,8 +80,8 @@ class EventBuffer {
     /** @brief Remove all events before @p index and return the removal count. */
     size_t remove_events_before_index_exclusive(size_t index);
 
-    /** @brief Route a packet into an existing event or create a new event. */
-    void add_packet(const Packet& packet, bool& in_safety_buffer_zone, uint32_t& event_index);
+    /** @brief Route one complete channel group into an event or create a new event. */
+    void add_packet_group(const std::vector<Packet>& packet_group, uint32_t& event_index);
 
     /** @brief Clear all buffered events. */
     void clear();

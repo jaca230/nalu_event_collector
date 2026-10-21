@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <array>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
@@ -113,8 +114,26 @@ class Event {
     /** @brief Append one packet to the event. */
     void add_packet(const Packet& packet);
 
+    /** @brief Return whether one complete channel group can be added safely. */
+    bool can_accept_channel_group(uint8_t channel, size_t packet_count) const;
+
+    /** @brief Append one complete, single-channel packet group atomically. */
+    void add_packet_group(const std::vector<Packet>& packet_group);
+
+    /** @brief Return the number of packets currently stored for a channel. */
+    uint16_t get_channel_packet_count(uint8_t channel) const;
+
+    /** @brief Return whether every observed channel has exactly the configured windows. */
+    bool has_complete_channel_groups() const;
+
+    /** @brief Return whether expiration completes this event instead of invalidating it. */
+    bool uses_time_based_completion() const;
+
     /** @brief Determine completeness using embedded event metadata. */
     bool is_event_complete() const;
+
+    /** @brief Return whether an incomplete event has exceeded its collection timeout. */
+    bool has_timed_out() const;
 
     /** @brief Determine completeness using explicit compatibility arguments. */
     bool is_event_complete(int windows,
@@ -133,6 +152,8 @@ class Event {
     uint16_t expected_packet_count_ = 0;
     bool warn_on_expected_overrun_ = false;
     bool warned_on_expected_overrun_ = false;
+    uint64_t allowed_channel_mask_ = 0;
+    std::array<uint16_t, 64> channel_packet_counts_{};
 
     Event(const Event&) = delete;
     Event& operator=(const Event&) = delete;

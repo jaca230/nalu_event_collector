@@ -21,9 +21,8 @@ namespace nalu_event_collector {
 /**
  * @brief Converts parsed packets into buffered event objects.
  *
- * `EventBuilder` applies trigger-window grouping rules, manages a short
- * post-trigger safety region, and forwards packet ownership into an
- * `EventBuffer`.
+ * `EventBuilder` assembles complete per-channel window groups before routing
+ * them atomically into an `EventBuffer`.
  */
 class EventBuilder {
   public:
@@ -64,21 +63,46 @@ class EventBuilder {
         return time_threshold_duration_;
     }
 
-    /** @brief Override the size of the post-event safety region. */
+    /**
+     * @brief Retained source-compatible no-op for the removed safety-buffer heuristic.
+     *
+     * Complete channel groups are now searched against the configured event
+     * lookback on every insertion, so a separate safety-region counter is no
+     * longer used.
+     */
     void set_post_event_safety_buffer_counter_max(size_t counter_max);
 
   private:
-    void manage_safety_buffer();
+    struct ChannelGroupKey {
+        uint8_t channel;
+        uint32_t trigger_time;
+    };
+
+    struct PendingChannelGroup {
+        ChannelGroupKey key;
+        std::vector<Packet> packets;
+        std::chrono::steady_clock::time_point created_at;
+    };
+
+    struct CompletedChannelGroup {
+        ChannelGroupKey key;
+        std::chrono::steady_clock::time_point completed_at;
+    };
+
+    bool is_configured_channel(uint8_t channel) const;
+    bool is_recently_completed(const ChannelGroupKey& key) const;
+    void collect_packet(const Packet& packet);
+    void prune_channel_groups();
     std::chrono::steady_clock::duration ticks_to_duration(uint32_t ticks, uint32_t clock_freq) const;
 
     std::vector<int> channels_;
     int windows_;
     std::string trigger_type_;
     std::chrono::steady_clock::duration time_threshold_duration_;
-    size_t post_event_safety_buffer_counter_max_;
-    size_t post_event_safety_buffer_counter_ = 0;
-    bool in_safety_buffer_zone_ = false;
     uint32_t event_index_ = 0;
+    uint32_t event_completion_time_us_;
+    std::vector<PendingChannelGroup> pending_channel_groups_;
+    std::vector<CompletedChannelGroup> completed_channel_groups_;
     TimeDifferenceCalculator time_diff_calculator_;
     EventBuffer event_buffer_;
 };
