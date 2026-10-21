@@ -107,6 +107,10 @@ void Collector::collect() {
     }
 
     const auto event_start = std::chrono::steady_clock::now();
+    // Serialize event mutation with get_data()/clear_events(). EventBuffer
+    // protects its container, but callers also inspect fields through the
+    // returned Event pointers after that internal lock has been released.
+    std::lock_guard<std::mutex> lock(data_mutex_);
     event_builder_.collect_events(packets);
     const auto event_end = std::chrono::steady_clock::now();
     const auto total_end = std::chrono::steady_clock::now();
@@ -116,7 +120,6 @@ void Collector::collect() {
     const double event_time = std::chrono::duration<double>(event_end - event_start).count();
     const double data_rate = (data_size / (1024.0 * 1024.0)) / total_time;
 
-    std::lock_guard<std::mutex> lock(data_mutex_);
     timing_data_.collection_cycle_index = cycle_count_;
     timing_data_.collection_cycle_timestamp_ns =
         std::chrono::duration_cast<std::chrono::nanoseconds>(start_time.time_since_epoch()).count();
@@ -145,43 +148,30 @@ void Collector::collectionLoop() {
     }
 }
 
-void Collector::log_skipped_incomplete_events(const std::vector<Event*>& new_events,
-                                              size_t complete_event_count) const {
-    size_t skipped = 0;
-    const size_t prefix_len = std::min(new_events.size(), complete_event_count);
-    for (size_t i = 0; i < prefix_len; ++i) {
-        const auto* event = new_events[i];
-        if (event->is_event_complete()) {
-            continue;
-        }
-
-        ++skipped;
-        const int active_channels = __builtin_popcountll(event->header.channel_mask);
-        const int expected_packets =
-            static_cast<int>(event->header.num_windows) * active_channels;
-        const auto age_us = std::chrono::duration_cast<std::chrono::microseconds>(
-                                std::chrono::steady_clock::now() - event->get_creation_timestamp())
-                                .count();
-        std::ostringstream channel_mask_stream;
-        channel_mask_stream << std::hex << event->header.channel_mask;
-        spdlog::warn(
-            "Skipped incomplete event index {}: packets={}/{}, windows={}, active_channels={}, "
-            "reference_time={}, age_us={}, channel_mask=0x{}",
-            event->header.index,
-            event->header.num_packets,
-            expected_packets,
-            event->header.num_windows,
-            active_channels,
-            event->header.reference_time,
-            age_us,
-            channel_mask_stream.str());
-    }
-
-    if (skipped > 0) {
-        spdlog::warn("Advancing past {} incomplete event(s) while returning {} complete event(s)",
-                     skipped,
-                     complete_event_count);
-    }
+void Collector::log_dropped_incomplete_event(const Event& event) const {
+    const int active_channels = __builtin_popcountll(event.header.channel_mask);
+    const int expected_packets = static_cast<int>(event.header.num_windows) * active_channels;
+    const uint32_t event_index = event.header.index;
+    const uint16_t num_packets = event.header.num_packets;
+    const uint8_t num_windows = event.header.num_windows;
+    const uint32_t reference_time = event.header.reference_time;
+    const uint64_t channel_mask = event.header.channel_mask;
+    const auto age_us = std::chrono::duration_cast<std::chrono::microseconds>(
+                            std::chrono::steady_clock::now() - event.get_creation_timestamp())
+                            .count();
+    std::ostringstream channel_mask_stream;
+    channel_mask_stream << std::hex << channel_mask;
+    spdlog::warn(
+        "Dropping timed-out incomplete event index {}: packets={}/{}, windows={}, "
+        "active_channels={}, reference_time={}, age_us={}, channel_mask=0x{}",
+        event_index,
+        num_packets,
+        expected_packets,
+        num_windows,
+        active_channels,
+        reference_time,
+        age_us,
+        channel_mask_stream.str());
 }
 
 std::vector<Event*> Collector::get_events() { return get_data().second; }
@@ -199,14 +189,26 @@ std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
 
     std::vector<Event*> complete_events;
     complete_events.reserve(new_events.size());
+    size_t processed_event_count = 0;
     for (auto* event : new_events) {
         if (event->is_event_complete()) {
             complete_events.push_back(event);
+            ++processed_event_count;
+            continue;
         }
+
+        if (event->has_timed_out()) {
+            log_dropped_incomplete_event(*event);
+            ++processed_event_count;
+            continue;
+        }
+
+        // Do not skip over a live incomplete event. Advancing by the number
+        // of complete events across a hole can return a later event twice.
+        break;
     }
 
-    log_skipped_incomplete_events(new_events, complete_events.size());
-    last_event_index_ += complete_events.size();
+    last_event_index_ += processed_event_count;
     return {timing_data_, complete_events};
 }
 

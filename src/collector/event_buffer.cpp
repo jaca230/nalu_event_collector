@@ -169,24 +169,42 @@ std::vector<Event*> EventBuffer::get_events_after_index_inclusive(size_t index) 
     return result;
 }
 
-void EventBuffer::add_packet(const Packet& packet,
-                             bool& in_safety_buffer_zone,
-                             uint32_t& event_index) {
+void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
+                                   uint32_t& event_index) {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
 
+    if (packet_group.empty()) {
+        throw std::invalid_argument("Cannot route an empty channel packet group.");
+    }
+
+    const Packet& first_packet = packet_group.front();
+    for (const auto& packet : packet_group) {
+        if (packet.channel != first_packet.channel ||
+            packet.trigger_time != first_packet.trigger_time) {
+            throw std::invalid_argument(
+                "A channel packet group must have one channel and one trigger timestamp.");
+        }
+    }
+
     Event* matched_event = nullptr;
+    uint32_t best_time_difference = std::numeric_limits<uint32_t>::max();
     const size_t events_size = events_.size();
 
     if (events_size > 0) {
-        const size_t lookback_limit =
-            in_safety_buffer_zone ? std::min(max_lookback_, events_size) : 1;
+        const size_t lookback_limit = std::min(max_lookback_, events_size);
 
         for (size_t i = 0; i < lookback_limit; ++i) {
-            if (time_diff_calculator_.is_within_threshold(
-                    packet.trigger_time,
-                    events_[events_size - 1 - i]->header.reference_time)) {
-                matched_event = events_[events_size - 1 - i].get();
-                break;
+            Event* candidate = events_[events_size - 1 - i].get();
+            if (!candidate->can_accept_channel_group(first_packet.channel,
+                                                     packet_group.size())) {
+                continue;
+            }
+
+            const uint32_t difference = time_diff_calculator_.compute_time_diff(
+                first_packet.trigger_time, candidate->header.reference_time);
+            if (difference <= time_threshold_ && difference < best_time_difference) {
+                matched_event = candidate;
+                best_time_difference = difference;
             }
         }
     }
@@ -195,11 +213,11 @@ void EventBuffer::add_packet(const Packet& packet,
         auto new_event = std::make_unique<Event>(event_header_,
                                                  extra_info_,
                                                  event_index++,
-                                                 packet.trigger_time,
+                                                 first_packet.trigger_time,
                                                  time_threshold_,
                                                  clock_frequency_,
                                                  event_completion_time_us_,
-                                                 packet.get_size(),
+                                                 first_packet.get_size(),
                                                  0,
                                                  event_trailer_,
                                                  static_cast<uint16_t>(max_event_size_),
@@ -208,13 +226,12 @@ void EventBuffer::add_packet(const Packet& packet,
                                                  use_time_based_completion_,
                                                  expected_packet_count_,
                                                  warn_on_expected_overrun_);
-        new_event->add_packet(packet);
+        new_event->add_packet_group(packet_group);
         add_event_helper(new_event);
-        in_safety_buffer_zone = true;
         return;
     }
 
-    matched_event->add_packet(packet);
+    matched_event->add_packet_group(packet_group);
 }
 
 void EventBuffer::clear() {

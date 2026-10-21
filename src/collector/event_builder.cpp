@@ -1,11 +1,14 @@
 /**
  * @file event_builder.cpp
- * @brief Implements packet grouping and safety-buffer handling for events.
+ * @brief Implements atomic channel-group assembly and event routing.
  */
 
 #include "nalu_event_collector/collector/event_builder.h"
 
-#include <cmath>
+#include <algorithm>
+#include <stdexcept>
+
+#include <spdlog/spdlog.h>
 
 namespace nalu_event_collector {
 
@@ -25,7 +28,7 @@ EventBuilder::EventBuilder(std::vector<int> channels,
       windows_(windows),
       trigger_type_(std::move(trigger_type)),
       time_threshold_duration_(ticks_to_duration(time_threshold, clock_frequency)),
-      post_event_safety_buffer_counter_max_(0),
+      event_completion_time_us_(event_completion_time_us),
       time_diff_calculator_(max_trigger_time, time_threshold),
       event_buffer_(event_max_size,
                     time_diff_calculator_,
@@ -39,8 +42,9 @@ EventBuilder::EventBuilder(std::vector<int> channels,
                     time_threshold,
                     clock_frequency,
                     event_completion_time_us) {
-    post_event_safety_buffer_counter_max_ =
-        static_cast<size_t>(std::ceil(channels_.size() * windows_ * 0.10));
+    if (windows_ <= 0 || windows_ > 255) {
+        throw std::invalid_argument("windows must be between 1 and 255.");
+    }
 }
 
 EventBuilder::EventBuilder(const EventBuilderConfig& config)
@@ -57,27 +61,100 @@ EventBuilder::EventBuilder(const EventBuilderConfig& config)
                    config.clock_frequency,
                    config.event_completion_time_us) {}
 
-void EventBuilder::set_post_event_safety_buffer_counter_max(size_t counter_max) {
-    post_event_safety_buffer_counter_max_ = counter_max;
-}
-
 void EventBuilder::collect_events(const std::vector<Packet>& packets) {
+    prune_channel_groups();
     for (const auto& packet : packets) {
-        event_buffer_.add_packet(packet, in_safety_buffer_zone_, event_index_);
-        manage_safety_buffer();
+        collect_packet(packet);
     }
 }
 
-void EventBuilder::manage_safety_buffer() {
-    if (!in_safety_buffer_zone_) {
+void EventBuilder::set_post_event_safety_buffer_counter_max(size_t counter_max) {
+    static_cast<void>(counter_max);
+}
+
+bool EventBuilder::is_configured_channel(uint8_t channel) const {
+    return std::find(channels_.begin(), channels_.end(), static_cast<int>(channel)) !=
+           channels_.end();
+}
+
+bool EventBuilder::is_recently_completed(const ChannelGroupKey& key) const {
+    return std::any_of(completed_channel_groups_.begin(),
+                       completed_channel_groups_.end(),
+                       [&key](const CompletedChannelGroup& completed) {
+                           return completed.key.channel == key.channel &&
+                                  completed.key.trigger_time == key.trigger_time;
+                       });
+}
+
+void EventBuilder::collect_packet(const Packet& packet) {
+    if (!is_configured_channel(packet.channel)) {
+        spdlog::warn("Dropping packet from unconfigured channel {}", packet.channel);
         return;
     }
 
-    ++post_event_safety_buffer_counter_;
-    if (post_event_safety_buffer_counter_ >= post_event_safety_buffer_counter_max_) {
-        in_safety_buffer_zone_ = false;
-        post_event_safety_buffer_counter_ = 0;
+    const ChannelGroupKey key{packet.channel, packet.trigger_time};
+    if (is_recently_completed(key)) {
+        spdlog::warn("Dropping duplicate packet for completed channel group: channel={}, "
+                     "trigger_time={}",
+                     packet.channel,
+                     packet.trigger_time);
+        return;
     }
+
+    auto pending = std::find_if(
+        pending_channel_groups_.begin(),
+        pending_channel_groups_.end(),
+        [&key](const PendingChannelGroup& group) {
+            return group.key.channel == key.channel && group.key.trigger_time == key.trigger_time;
+        });
+
+    if (pending == pending_channel_groups_.end()) {
+        pending_channel_groups_.push_back(
+            PendingChannelGroup{key, {}, std::chrono::steady_clock::now()});
+        pending = std::prev(pending_channel_groups_.end());
+        pending->packets.reserve(static_cast<size_t>(windows_));
+    }
+
+    pending->packets.push_back(packet);
+    if (pending->packets.size() < static_cast<size_t>(windows_)) {
+        return;
+    }
+
+    event_buffer_.add_packet_group(pending->packets, event_index_);
+    completed_channel_groups_.push_back(
+        CompletedChannelGroup{pending->key, std::chrono::steady_clock::now()});
+    pending_channel_groups_.erase(pending);
+}
+
+void EventBuilder::prune_channel_groups() {
+    const auto now = std::chrono::steady_clock::now();
+    const auto timeout = std::chrono::microseconds(event_completion_time_us_);
+
+    pending_channel_groups_.erase(
+        std::remove_if(
+            pending_channel_groups_.begin(),
+            pending_channel_groups_.end(),
+            [now, timeout](const PendingChannelGroup& group) {
+                if (now - group.created_at < timeout) {
+                    return false;
+                }
+                spdlog::warn(
+                    "Dropping incomplete channel group: channel={}, trigger_time={}, packets={}",
+                    group.key.channel,
+                    group.key.trigger_time,
+                    group.packets.size());
+                return true;
+            }),
+        pending_channel_groups_.end());
+
+    completed_channel_groups_.erase(
+        std::remove_if(
+            completed_channel_groups_.begin(),
+            completed_channel_groups_.end(),
+            [now, timeout](const CompletedChannelGroup& group) {
+                return now - group.completed_at >= timeout;
+            }),
+        completed_channel_groups_.end());
 }
 
 std::chrono::steady_clock::duration EventBuilder::ticks_to_duration(uint32_t ticks,

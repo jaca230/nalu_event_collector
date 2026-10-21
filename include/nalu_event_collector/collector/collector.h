@@ -70,8 +70,7 @@ class Collector {
 
   private:
     void collectionLoop();
-    void log_skipped_incomplete_events(const std::vector<Event*>& new_events,
-                                       size_t complete_event_count) const;
+    void log_dropped_incomplete_event(const Event& event) const;
 
     UdpReceiver receiver_;
     PacketParser parser_;

@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.14)
 
 project(nalu_event_collector VERSION 0.2 LANGUAGES CXX)
 
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
+  include(CTest)
+endif()
+
 if(NOT DEFINED PROJECT_NAMESPACE)
   set(PROJECT_NAMESPACE nalu_event_collector)
 endif()
@@ -75,6 +79,17 @@ target_link_libraries(${PROJECT_NAME}
     Threads::Threads
     nalu_event_collector_spdlog
 )
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND BUILD_TESTING)
+  add_executable(nalu_event_collector_tests
+    tests/event_grouping_tests.cpp
+  )
+  target_link_libraries(nalu_event_collector_tests
+    PRIVATE
+      ${PROJECT_NAME}
+  )
+  add_test(NAME nalu_event_collector_tests COMMAND nalu_event_collector_tests)
+endif()
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
   install(TARGETS ${PROJECT_NAME}

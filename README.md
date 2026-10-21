@@ -101,3 +101,17 @@ CMAKE_PREFIX_PATH=/path/to/install ./apps/examples/collector_demo/scripts/build.
 - The example app is only a smoke/demo application. It assumes live board traffic and is not part of the library package.
 - Logging is handled with `spdlog`.
 - No hardware-facing runtime validation is included in this repo; packet/event behavior still depends on upstream board configuration and UDP traffic.
+
+## Event grouping
+
+Packets are first assembled into a complete channel group: exactly `windows`
+packets with the same channel and trigger timestamp. The group is then added to
+an event atomically. This prevents a threshold-boundary match from splitting a
+channel's windows across two events.
+
+For normal external-trigger collection, an event is complete only when every
+configured channel has exactly `windows` packets. The trigger-time threshold is
+still used to associate complete channel groups from different channels; it is
+not used to decide whether an individual packet belongs to a partially assembled
+event. Incomplete groups and events are discarded after
+`event_completion_time_us` with a warning.

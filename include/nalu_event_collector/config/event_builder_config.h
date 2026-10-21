@@ -43,7 +43,7 @@ struct EventBuilderConfig {
     /** @brief Trigger-time threshold in device ticks for packet matching. */
     uint32_t time_threshold = 5000;
 
-    /** @brief Completion timeout for self-trigger events in microseconds. */
+    /** @brief Timeout for time-based events and incomplete groups/events, in microseconds. */
     uint32_t event_completion_time_us = 10000;
 
     /** @brief Maximum number of retained events in the rolling event buffer. */
@@ -55,7 +55,7 @@ struct EventBuilderConfig {
     /** @brief Device clock frequency used for duration conversion. */
     uint32_t clock_frequency = 23843000;
 
-    /** @brief Number of prior events to search while in the safety region. */
+    /** @brief Number of recent events searched for a compatible channel group. */
     size_t max_lookback = 2;
 
     /** @brief Event header word written into serialized events. */
