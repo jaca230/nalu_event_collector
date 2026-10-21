@@ -161,9 +161,22 @@ void Collector::log_dropped_incomplete_event(const Event& event) const {
                             .count();
     std::ostringstream channel_mask_stream;
     channel_mask_stream << std::hex << channel_mask;
+    std::ostringstream channel_counts_stream;
+    bool first_channel = true;
+    for (size_t channel = 0; channel < 64; ++channel) {
+        if ((channel_mask & (1ULL << channel)) == 0) {
+            continue;
+        }
+        if (!first_channel) {
+            channel_counts_stream << ',';
+        }
+        channel_counts_stream << channel << ':'
+                              << event.get_channel_packet_count(static_cast<uint8_t>(channel));
+        first_channel = false;
+    }
     spdlog::warn(
         "Dropping timed-out incomplete event index {}: packets={}/{}, windows={}, "
-        "active_channels={}, reference_time={}, age_us={}, channel_mask=0x{}",
+        "active_channels={}, reference_time={}, age_us={}, channel_mask=0x{}, channel_counts={{{}}}",
         event_index,
         num_packets,
         expected_packets,
@@ -171,7 +184,8 @@ void Collector::log_dropped_incomplete_event(const Event& event) const {
         active_channels,
         reference_time,
         age_us,
-        channel_mask_stream.str());
+        channel_mask_stream.str(),
+        channel_counts_stream.str());
 }
 
 std::vector<Event*> Collector::get_events() { return get_data().second; }
@@ -198,6 +212,16 @@ std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
         }
 
         if (event->has_timed_out()) {
+            // Self-trigger and WLC events complete by timeout. If the deadline
+            // crosses between the two clock reads above, return the event now
+            // instead of misclassifying it as an expired strict event.
+            if (event->uses_time_based_completion() &&
+                (event->get_trigger_type() != Event::TriggerType::Internal ||
+                 event->has_complete_channel_groups())) {
+                complete_events.push_back(event);
+                ++processed_event_count;
+                continue;
+            }
             log_dropped_incomplete_event(*event);
             ++processed_event_count;
             continue;

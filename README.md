@@ -115,3 +115,9 @@ still used to associate complete channel groups from different channels; it is
 not used to decide whether an individual packet belongs to a partially assembled
 event. Incomplete groups and events are discarded after
 `event_completion_time_us` with a warning.
+
+For self-trigger collection, the configured channels are an allow-list rather
+than a list required in every event. An event's serialized channel mask contains
+only the channels actually observed in that event, and every observed channel is
+required to contribute exactly `windows` packets. A complete group from one
+channel is therefore a valid self-trigger event after the completion timeout.

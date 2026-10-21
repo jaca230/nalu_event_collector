@@ -54,7 +54,14 @@ Event::Event(uint16_t hdr,
       use_time_based_completion_(use_time_based_completion),
       expected_packet_count_(expected_packet_count),
       warn_on_expected_overrun_(warn_on_expected_overrun),
-      creation_timestamp(std::chrono::steady_clock::now()) {}
+      creation_timestamp(std::chrono::steady_clock::now()),
+      allowed_channel_mask_(channel_mask_value) {
+    // In self-trigger mode the configured mask is an allow-list. The serialized
+    // event mask describes only the channels actually observed in this event.
+    if (get_trigger_type() == TriggerType::Internal) {
+        header.channel_mask = 0;
+    }
+}
 
 void Event::print_event_info() const {
     std::cout << "Event Header:\n";
@@ -119,6 +126,9 @@ void Event::add_packet(const Packet& packet) {
     ++header.num_packets;
     if (packet.channel < channel_packet_counts_.size()) {
         ++channel_packet_counts_[packet.channel];
+        if (get_trigger_type() == TriggerType::Internal) {
+            header.channel_mask |= (1ULL << packet.channel);
+        }
     }
 
     if (warn_on_expected_overrun_ && !warned_on_expected_overrun_ &&
@@ -143,7 +153,7 @@ bool Event::can_accept_channel_group(uint8_t channel, size_t packet_count) const
     }
 
     const uint64_t channel_bit = 1ULL << channel;
-    return (header.channel_mask & channel_bit) != 0 && channel_packet_counts_[channel] == 0;
+    return (allowed_channel_mask_ & channel_bit) != 0 && channel_packet_counts_[channel] == 0;
 }
 
 void Event::add_packet_group(const std::vector<Packet>& packet_group) {
@@ -176,6 +186,26 @@ uint16_t Event::get_channel_packet_count(uint8_t channel) const {
     return channel_packet_counts_[channel];
 }
 
+bool Event::has_complete_channel_groups() const {
+    const int active_channels = count_active_channels(header.channel_mask);
+    if (active_channels == 0 || header.num_windows == 0 ||
+        header.num_packets != active_channels * header.num_windows) {
+        return false;
+    }
+
+    for (size_t channel = 0; channel < channel_packet_counts_.size(); ++channel) {
+        if ((header.channel_mask & (1ULL << channel)) != 0 &&
+            channel_packet_counts_[channel] != header.num_windows) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Event::uses_time_based_completion() const {
+    return use_time_based_completion_ || get_trigger_type() == TriggerType::Internal;
+}
+
 int Event::count_active_channels(uint64_t channel_mask) const {
     int count = 0;
     while (channel_mask != 0) {
@@ -186,34 +216,28 @@ int Event::count_active_channels(uint64_t channel_mask) const {
 }
 
 bool Event::is_event_complete() const {
+    const TriggerType trigger_type = get_trigger_type();
+    if (trigger_type == TriggerType::Internal) {
+        const auto elapsed = std::chrono::steady_clock::now() - creation_timestamp;
+        const uint32_t completion_time_us = header.event_completion_time_us;
+        return elapsed >= std::chrono::microseconds(completion_time_us) &&
+               has_complete_channel_groups();
+    }
+
     if (use_time_based_completion_) {
         const auto elapsed = std::chrono::steady_clock::now() - creation_timestamp;
         const uint32_t completion_time_us = header.event_completion_time_us;
         return elapsed >= std::chrono::microseconds(completion_time_us);
     }
 
-    const int active_channels = count_active_channels(header.channel_mask);
-
-    switch (get_trigger_type()) {
-        case TriggerType::Internal: {
-            const auto elapsed = std::chrono::steady_clock::now() - creation_timestamp;
-            const uint32_t completion_time_us = header.event_completion_time_us;
-            return elapsed >= std::chrono::microseconds(completion_time_us);
-        }
+    switch (trigger_type) {
+        case TriggerType::Internal:
+            return false;
         case TriggerType::External:
         case TriggerType::Immediate:
         case TriggerType::Unknown:
         default:
-            if (active_channels == 0 || header.num_windows == 0) {
-                return false;
-            }
-            for (size_t channel = 0; channel < channel_packet_counts_.size(); ++channel) {
-                if ((header.channel_mask & (1ULL << channel)) != 0 &&
-                    channel_packet_counts_[channel] != header.num_windows) {
-                    return false;
-                }
-            }
-            return true;
+            return has_complete_channel_groups();
     }
 }
 

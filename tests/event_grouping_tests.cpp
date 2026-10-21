@@ -61,6 +61,14 @@ EventBuilderConfig external_config() {
     return config;
 }
 
+EventBuilderConfig self_config() {
+    EventBuilderConfig config = external_config();
+    config.channels = {0, 2};
+    config.trigger_type = "self";
+    config.event_completion_time_us = 0;
+    return config;
+}
+
 void test_channel_groups_are_indivisible() {
     EventBuilder builder(external_config());
     uint16_t parser_index = 0;
@@ -131,6 +139,49 @@ void test_external_completion_requires_each_channel() {
             "total packet count must not hide an imbalanced per-channel event");
 }
 
+void test_self_trigger_requires_windows_only_for_observed_channels() {
+    CollectorConfig config;
+    config.event_builder = self_config();
+    Collector collector(config);
+    uint16_t parser_index = 0;
+
+    collector.get_event_builder().collect_events(group(2, 700, parser_index));
+    auto events = collector.get_data().second;
+
+    require(events.size() == 1, "one complete channel group is a valid self-trigger event");
+    require(events.front()->header.channel_mask == (1ULL << 2),
+            "self-trigger mask must contain only observed channels");
+    require(events.front()->header.num_packets == 2,
+            "self-trigger event should contain one complete channel group");
+    require(events.front()->has_complete_channel_groups(),
+            "every observed self-trigger channel must have exactly windows packets");
+}
+
+void test_partial_observed_self_trigger_channel_is_invalid() {
+    Event event(0xBBBB,
+                0x20,
+                0,
+                700,
+                10,
+                23'843'000,
+                0,
+                80,
+                0,
+                0xEEEE,
+                16,
+                0x5,
+                2,
+                true);
+
+    event.add_packet(packet(2, 700, 0));
+    require(event.header.channel_mask == (1ULL << 2),
+            "a self-trigger mask must track the partially observed channel");
+    require(!event.has_complete_channel_groups(),
+            "an observed channel with fewer than windows packets must be invalid");
+    require(!event.is_event_complete(),
+            "timeout must not complete a malformed self-trigger event");
+}
+
 void test_incomplete_hole_does_not_duplicate_later_event() {
     CollectorConfig config;
     config.event_builder = external_config();
@@ -159,6 +210,8 @@ int main() {
     test_channel_groups_are_indivisible();
     test_partial_and_duplicate_groups_are_not_events();
     test_external_completion_requires_each_channel();
+    test_self_trigger_requires_windows_only_for_observed_channels();
+    test_partial_observed_self_trigger_channel_is_invalid();
     test_incomplete_hole_does_not_duplicate_later_event();
     return 0;
 }
