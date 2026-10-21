@@ -80,6 +80,9 @@ class EventBuffer {
     /** @brief Remove all events before @p index and return the removal count. */
     size_t remove_events_before_index_exclusive(size_t index);
 
+    /** @brief Transfer ownership of all events before @p index to the caller. */
+    std::vector<std::unique_ptr<Event>> take_events_before_index_exclusive(size_t index);
+
     /** @brief Route one complete channel group into an event or create a new event. */
     void add_packet_group(const std::vector<Packet>& packet_group, uint32_t& event_index);
 
@@ -95,7 +98,7 @@ class EventBuffer {
     std::function<void()> overflow_callback_;
     TimeDifferenceCalculator& time_diff_calculator_;
     size_t max_lookback_;
-    size_t max_event_size_;
+    uint16_t max_packets_per_event_;
     uint8_t windows_;
     uint64_t channel_mask_;
     uint16_t event_header_;

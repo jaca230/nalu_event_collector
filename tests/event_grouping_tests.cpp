@@ -153,8 +153,26 @@ void test_self_trigger_requires_windows_only_for_observed_channels() {
             "self-trigger mask must contain only observed channels");
     require(events.front()->header.num_packets == 2,
             "self-trigger event should contain one complete channel group");
+    require(events.front()->max_packets == 4,
+            "event storage should be bounded by windows times allowed channels");
     require(events.front()->has_complete_channel_groups(),
             "every observed self-trigger channel must have exactly windows packets");
+}
+
+void test_take_data_transfers_event_ownership() {
+    CollectorConfig config;
+    config.event_builder = self_config();
+    Collector collector(config);
+    uint16_t parser_index = 0;
+
+    collector.get_event_builder().collect_events(group(0, 800, parser_index));
+    auto data = collector.take_data();
+
+    require(data.second.size() == 1, "take_data should return the ready event");
+    require(data.second.front()->header.reference_time == 800,
+            "the transferred event should remain valid");
+    require(collector.get_event_builder().get_event_buffer().get_events().empty(),
+            "a transferred event must no longer be retained by the collector");
 }
 
 void test_partial_observed_self_trigger_channel_is_invalid() {
@@ -211,6 +229,7 @@ int main() {
     test_partial_and_duplicate_groups_are_not_events();
     test_external_completion_requires_each_channel();
     test_self_trigger_requires_windows_only_for_observed_channels();
+    test_take_data_transfers_event_ownership();
     test_partial_observed_self_trigger_channel_is_invalid();
     test_incomplete_hole_does_not_duplicate_later_event();
     return 0;

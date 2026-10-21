@@ -7,6 +7,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <memory>
 #include <mutex>
 #include <thread>
 #include <utility>
@@ -56,6 +57,14 @@ class Collector {
     /** @brief Return timing data and newly available complete events together. */
     std::pair<CollectorTimingData, std::vector<Event*>> get_data();
 
+    /**
+     * @brief Transfer ownership of newly available complete events to the caller.
+     *
+     * Unlike get_data(), returned events are removed from the collector and do
+     * not require a later clear_events() call.
+     */
+    std::pair<CollectorTimingData, std::vector<std::unique_ptr<Event>>> take_data();
+
     /** @brief Remove events that have already been returned to the caller. */
     void clear_events();
 
@@ -69,7 +78,10 @@ class Collector {
     EventBuilder& get_event_builder() { return event_builder_; }
 
   private:
+    enum class EventDisposition { Ready, Drop, Wait };
+
     void collectionLoop();
+    EventDisposition classify_event(const Event& event) const;
     void log_dropped_incomplete_event(const Event& event) const;
 
     UdpReceiver receiver_;

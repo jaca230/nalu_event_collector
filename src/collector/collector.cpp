@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -195,6 +196,27 @@ CollectorTimingData Collector::get_timing_data() {
     return timing_data_;
 }
 
+Collector::EventDisposition Collector::classify_event(const Event& event) const {
+    if (event.is_event_complete()) {
+        return EventDisposition::Ready;
+    }
+
+    if (!event.has_timed_out()) {
+        return EventDisposition::Wait;
+    }
+
+    // Self-trigger and WLC events complete by timeout. If the deadline
+    // crosses between the two clock reads above, classify the event as ready
+    // rather than as an expired strict event.
+    if (event.uses_time_based_completion() &&
+        (event.get_trigger_type() != Event::TriggerType::Internal ||
+         event.has_complete_channel_groups())) {
+        return EventDisposition::Ready;
+    }
+
+    return EventDisposition::Drop;
+}
+
 std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
     std::lock_guard<std::mutex> lock(data_mutex_);
 
@@ -205,26 +227,17 @@ std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
     complete_events.reserve(new_events.size());
     size_t processed_event_count = 0;
     for (auto* event : new_events) {
-        if (event->is_event_complete()) {
-            complete_events.push_back(event);
-            ++processed_event_count;
-            continue;
-        }
-
-        if (event->has_timed_out()) {
-            // Self-trigger and WLC events complete by timeout. If the deadline
-            // crosses between the two clock reads above, return the event now
-            // instead of misclassifying it as an expired strict event.
-            if (event->uses_time_based_completion() &&
-                (event->get_trigger_type() != Event::TriggerType::Internal ||
-                 event->has_complete_channel_groups())) {
+        switch (classify_event(*event)) {
+            case EventDisposition::Ready:
                 complete_events.push_back(event);
                 ++processed_event_count;
                 continue;
-            }
-            log_dropped_incomplete_event(*event);
-            ++processed_event_count;
-            continue;
+            case EventDisposition::Drop:
+                log_dropped_incomplete_event(*event);
+                ++processed_event_count;
+                continue;
+            case EventDisposition::Wait:
+                break;
         }
 
         // Do not skip over a live incomplete event. Advancing by the number
@@ -234,6 +247,44 @@ std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
 
     last_event_index_ += processed_event_count;
     return {timing_data_, complete_events};
+}
+
+std::pair<CollectorTimingData, std::vector<std::unique_ptr<Event>>> Collector::take_data() {
+    std::lock_guard<std::mutex> lock(data_mutex_);
+    if (last_event_index_ != 0) {
+        throw std::logic_error(
+            "take_data() cannot follow get_data() until clear_events() has been called.");
+    }
+
+    std::vector<Event*> events =
+        event_builder_.get_event_buffer().get_events_after_index_inclusive(0);
+    std::vector<EventDisposition> dispositions;
+    dispositions.reserve(events.size());
+
+    size_t processed_event_count = 0;
+    for (auto* event : events) {
+        const EventDisposition disposition = classify_event(*event);
+        if (disposition == EventDisposition::Wait) {
+            break;
+        }
+        if (disposition == EventDisposition::Drop) {
+            log_dropped_incomplete_event(*event);
+        }
+        dispositions.push_back(disposition);
+        ++processed_event_count;
+    }
+
+    auto processed_events = event_builder_.get_event_buffer()
+                                .take_events_before_index_exclusive(processed_event_count);
+    std::vector<std::unique_ptr<Event>> complete_events;
+    complete_events.reserve(processed_events.size());
+    for (size_t i = 0; i < processed_events.size(); ++i) {
+        if (dispositions[i] == EventDisposition::Ready) {
+            complete_events.push_back(std::move(processed_events[i]));
+        }
+    }
+
+    return {timing_data_, std::move(complete_events)};
 }
 
 void Collector::clear_events() {

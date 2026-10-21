@@ -28,13 +28,13 @@ EventBuffer::EventBuffer(size_t max_events,
     : max_events_(max_events),
       time_diff_calculator_(time_diff_calculator),
       max_lookback_(max_lookback),
-      max_event_size_(std::numeric_limits<uint16_t>::max()),
+      max_packets_per_event_(0),
       windows_(windows),
       channel_mask_(0),
       event_header_(event_header),
       event_trailer_(event_trailer),
       extra_info_(0),
-      expected_packet_count_(static_cast<uint16_t>(windows * channels.size())),
+      expected_packet_count_(0),
       warn_on_expected_overrun_(trigger_type == "ext" && !wlc_mode),
       use_time_based_completion_(trigger_type == "self" || (trigger_type == "ext" && wlc_mode)),
       time_threshold_(time_threshold),
@@ -45,6 +45,9 @@ EventBuffer::EventBuffer(size_t max_events,
             channel_mask_ |= (1ULL << channel);
         }
     }
+    const auto active_channel_count = static_cast<uint16_t>(__builtin_popcountll(channel_mask_));
+    expected_packet_count_ = static_cast<uint16_t>(windows_ * active_channel_count);
+    max_packets_per_event_ = expected_packet_count_;
 
     uint8_t trigger_bits = 0;
     if (trigger_type == "ext") {
@@ -129,6 +132,21 @@ size_t EventBuffer::remove_events_before_index_exclusive(size_t index) {
     const size_t num_removed = index;
     events_.erase(events_.begin(), events_.begin() + num_removed);
     return num_removed;
+}
+
+std::vector<std::unique_ptr<Event>> EventBuffer::take_events_before_index_exclusive(size_t index) {
+    std::lock_guard<std::mutex> lock(buffer_mutex_);
+    if (index > events_.size()) {
+        throw std::out_of_range("Index is out of range.");
+    }
+
+    std::vector<std::unique_ptr<Event>> result;
+    result.reserve(index);
+    for (size_t i = 0; i < index; ++i) {
+        result.push_back(std::move(events_[i]));
+    }
+    events_.erase(events_.begin(), events_.begin() + index);
+    return result;
 }
 
 std::vector<Event*> EventBuffer::get_events_after_timestamp(
@@ -220,7 +238,7 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
                                                  first_packet.get_size(),
                                                  0,
                                                  event_trailer_,
-                                                 static_cast<uint16_t>(max_event_size_),
+                                                 max_packets_per_event_,
                                                  channel_mask_,
                                                  windows_,
                                                  use_time_based_completion_,
