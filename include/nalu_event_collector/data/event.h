@@ -21,7 +21,7 @@ namespace nalu_event_collector {
  * @brief Represents one collected event and its serialized metadata.
  */
 class Event {
-  public:
+   public:
 #pragma pack(push, 1)
     /**
      * @brief Serialized event header written ahead of packet payloads.
@@ -79,27 +79,19 @@ class Event {
     Event();
 
     /** @brief Construct a fully parameterized event container. */
-    Event(uint16_t hdr,
-          uint8_t extra_info,
-          uint32_t idx,
-          uint32_t ref_time,
-          uint32_t time_thresh,
-          uint32_t clk_freq,
-          uint32_t event_completion_time_us,
-          uint16_t size,
-          uint16_t num,
-          uint16_t ftr,
-          uint16_t max_num_packets,
-          uint64_t channel_mask_value,
-          uint8_t num_windows_value,
-          bool use_time_based_completion = false,
+    Event(uint16_t hdr, uint8_t extra_info, uint32_t idx, uint32_t ref_time,
+          uint32_t time_thresh, uint32_t clk_freq,
+          uint32_t event_completion_time_us, uint16_t size, uint16_t num,
+          uint16_t ftr, uint16_t max_num_packets, uint64_t channel_mask_value,
+          uint8_t num_windows_value, bool use_time_based_completion = false,
           uint16_t expected_packet_count = 0,
           bool warn_on_expected_overrun = false);
 
     /** @brief Print a readable event summary to stdout. */
     void print_event_info() const;
 
-    /** @brief Return the low-level packet error code encoded in the info byte. */
+    /** @brief Return the low-level packet error code encoded in the info byte.
+     */
     uint8_t get_error_code() const;
 
     /** @brief Decode the trigger source from the info byte. */
@@ -108,7 +100,8 @@ class Event {
     /** @brief Return the serialized size of the event in bytes. */
     size_t get_size() const;
 
-    /** @brief Serialize the event header, packets, and footer into @p buffer. */
+    /** @brief Serialize the event header, packets, and footer into @p buffer.
+     */
     void serialize_to_buffer(char* buffer) const;
 
     /** @brief Append one packet to the event. */
@@ -123,35 +116,41 @@ class Event {
     /** @brief Return the number of packets currently stored for a channel. */
     uint16_t get_channel_packet_count(uint8_t channel) const;
 
-    /** @brief Return whether every observed channel has exactly the configured windows. */
+    /** @brief Return whether every observed channel has exactly the configured
+     * windows. */
     bool has_complete_channel_groups() const;
 
-    /** @brief Return whether expiration completes this event instead of invalidating it. */
+    /** @brief Return whether expiration completes this event instead of
+     * invalidating it. */
     bool uses_time_based_completion() const;
 
     /** @brief Determine completeness using embedded event metadata. */
     bool is_event_complete() const;
 
-    /** @brief Return whether an incomplete event has exceeded its collection timeout. */
+    /** @brief Return whether an incomplete event has exceeded its collection
+     * timeout. */
     bool has_timed_out() const;
 
+    /** @brief Mark a strategy-owned aggregate event ready for publication. */
+    void mark_complete();
+
     /** @brief Determine completeness using explicit compatibility arguments. */
-    bool is_event_complete(int windows,
-                           const std::vector<int>& channels,
-                           std::string trigger_type_str,
-                           bool use_time_based_completion,
-                           std::chrono::steady_clock::duration max_time_between_events) const;
+    bool is_event_complete(
+        int windows, const std::vector<int>& channels,
+        std::string trigger_type_str, bool use_time_based_completion,
+        std::chrono::steady_clock::duration max_time_between_events) const;
 
     /** @brief Return the event creation timestamp. */
     std::chrono::steady_clock::time_point get_creation_timestamp() const;
 
-  private:
+   private:
     int count_active_channels(uint64_t channel_mask) const;
 
     bool use_time_based_completion_ = false;
     uint16_t expected_packet_count_ = 0;
     bool warn_on_expected_overrun_ = false;
     bool warned_on_expected_overrun_ = false;
+    bool explicitly_complete_ = false;
     uint64_t allowed_channel_mask_ = 0;
     std::array<uint16_t, 64> channel_packet_counts_{};
 

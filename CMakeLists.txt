@@ -77,8 +77,18 @@ target_include_directories(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     Threads::Threads
-    nalu_event_collector_spdlog
 )
+
+if(USE_EXTERNAL_SPDLOG)
+  target_link_libraries(${PROJECT_NAME} PUBLIC spdlog::spdlog)
+else()
+  target_link_libraries(${PROJECT_NAME} PRIVATE nalu_event_collector_spdlog)
+  target_include_directories(${PROJECT_NAME}
+    PUBLIC
+      $<BUILD_INTERFACE:${spdlog_SOURCE_DIR}/include>
+      $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+  )
+endif()
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND BUILD_TESTING)
   add_executable(nalu_event_collector_tests
@@ -89,6 +99,16 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND BUILD_TESTING)
       ${PROJECT_NAME}
   )
   add_test(NAME nalu_event_collector_tests COMMAND nalu_event_collector_tests)
+
+  add_executable(nalu_event_collector_simulated_stream_tests
+    tests/simulated_stream_tests.cpp
+  )
+  target_link_libraries(nalu_event_collector_simulated_stream_tests
+    PRIVATE
+      ${PROJECT_NAME}
+  )
+  add_test(NAME nalu_event_collector_simulated_stream_tests
+           COMMAND nalu_event_collector_simulated_stream_tests)
 endif()
 
 if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
@@ -103,6 +123,12 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
   install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
   )
+
+  if(NOT USE_EXTERNAL_SPDLOG)
+    install(DIRECTORY ${spdlog_SOURCE_DIR}/include/spdlog
+      DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+  endif()
 
   install(EXPORT ${PROJECT_NAME}Targets
     FILE ${PROJECT_NAME}Targets.cmake

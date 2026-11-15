@@ -121,3 +121,94 @@ than a list required in every event. An event's serialized channel mask contains
 only the channels actually observed in that event, and every observed channel is
 required to contribute exactly `windows` packets. A complete group from one
 channel is therefore a valid self-trigger event after the completion timeout.
+
+## Collection strategies
+
+`EventBuilder` delegates packet grouping to the public `CollectionStrategy`
+interface. The built-in selector is `event_builder.collection_strategy`:
+
+- `trigger_time` preserves the traditional one-output-event-per-trigger behavior.
+- `time_batch` first forms normal trigger events, then combines those events into
+  larger fixed-wall-clock output events.
+
+Only output concerns are global. Each strategy owns its remaining configuration:
+
+```json
+{
+  "collection_strategy": "time_batch",
+  "max_events_in_buffer": 10000,
+  "event_header": 48059,
+  "event_trailer": 61166,
+  "collection_strategies": {
+    "trigger_time": {
+      "channels": [0, 2],
+      "trigger_type": "self",
+      "windows": 8,
+      "time_threshold": 1500,
+      "event_completion_time_us": 10000
+    },
+    "time_batch": {
+      "duration_us": 100000,
+      "max_packets": 65535,
+      "trigger_events": {
+        "channels": [0, 2],
+        "trigger_type": "self",
+        "windows": 8,
+        "time_threshold": 1500,
+        "event_completion_time_us": 10000
+      }
+    }
+  }
+}
+```
+
+For `time_batch`, constituent trigger events are appended atomically: capacity
+rollover never splits one trigger event between batches. Packet order and each
+packet's trigger timestamp are preserved. Empty time intervals do not emit an
+event, and an orderly `flush()` publishes a non-empty final partial batch.
+Setting `duration_us` to zero is useful for deterministic operation and closes
+one batch after each packet-collection call.
+
+Applications can implement a new strategy by deriving from
+`CollectionStrategy` and injecting it with
+`EventBuilder(config, std::move(strategy))`. The strategy may use the
+output-only `EventBuffer(max_events)` constructor and may keep an entirely
+application-specific configuration object.
+
+Strategy code is organized by implementation:
+
+```text
+include/nalu_event_collector/collector/strategies/
+  collection_strategy.h
+  collection_strategy_factory.h
+  collection_strategies_config.h
+  trigger_time/
+    trigger_time_collection_strategy.h
+    trigger_time_collection_strategy_config.h
+  time_batch/
+    time_batch_collection_strategy.h
+    time_batch_collection_strategy_config.h
+src/collector/strategies/
+  trigger_time/
+  time_batch/
+```
+
+The strategy dispatch occurs once per parsed packet vector, not once per
+packet. The traditional trigger-time strategy therefore retains its direct
+packet loop. Time batching adds one intentional packet copy when a completed
+trigger event is appended to its aggregate output event.
+
+## Tests
+
+Build and run the deterministic unit and simulated-stream suites:
+
+```bash
+./scripts/build.sh
+./build/bin/nalu_event_collector_tests
+./build/bin/nalu_event_collector_simulated_stream_tests
+```
+
+The simulated suite constructs raw 74-byte board packets and exercises the
+incremental parser using fragmented reads. It covers threshold-boundary event
+association, a 1,000-trigger stream, fixed readout-cycle batching, and recovery
+after a dropped packet.

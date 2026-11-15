@@ -5,28 +5,40 @@
 
 #include "nalu_event_collector/collector/event_buffer.h"
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
 #include <limits>
 #include <stdexcept>
 
-#include <spdlog/spdlog.h>
-
 namespace nalu_event_collector {
+
+EventBuffer::EventBuffer(size_t max_events)
+    : max_events_(max_events),
+      max_lookback_(0),
+      max_packets_per_event_(0),
+      windows_(0),
+      channel_mask_(0),
+      event_header_(0),
+      event_trailer_(0),
+      extra_info_(0),
+      expected_packet_count_(0),
+      warn_on_expected_overrun_(false),
+      use_time_based_completion_(false),
+      time_threshold_(0),
+      clock_frequency_(0),
+      event_completion_time_us_(0) {}
 
 EventBuffer::EventBuffer(size_t max_events,
                          TimeDifferenceCalculator& time_diff_calculator,
-                         size_t max_lookback,
-                         const std::vector<int>& channels,
-                         uint8_t windows,
-                         uint16_t event_header,
-                         uint16_t event_trailer,
-                         std::string trigger_type,
-                         bool wlc_mode,
-                         uint32_t time_threshold,
+                         size_t max_lookback, const std::vector<int>& channels,
+                         uint8_t windows, uint16_t event_header,
+                         uint16_t event_trailer, std::string trigger_type,
+                         bool wlc_mode, uint32_t time_threshold,
                          uint32_t clock_frequency,
                          uint32_t event_completion_time_us)
     : max_events_(max_events),
-      time_diff_calculator_(time_diff_calculator),
+      time_diff_calculator_(&time_diff_calculator),
       max_lookback_(max_lookback),
       max_packets_per_event_(0),
       windows_(windows),
@@ -36,7 +48,8 @@ EventBuffer::EventBuffer(size_t max_events,
       extra_info_(0),
       expected_packet_count_(0),
       warn_on_expected_overrun_(trigger_type == "ext" && !wlc_mode),
-      use_time_based_completion_(trigger_type == "self" || (trigger_type == "ext" && wlc_mode)),
+      use_time_based_completion_(trigger_type == "self" ||
+                                 (trigger_type == "ext" && wlc_mode)),
       time_threshold_(time_threshold),
       clock_frequency_(clock_frequency),
       event_completion_time_us_(event_completion_time_us) {
@@ -45,8 +58,10 @@ EventBuffer::EventBuffer(size_t max_events,
             channel_mask_ |= (1ULL << channel);
         }
     }
-    const auto active_channel_count = static_cast<uint16_t>(__builtin_popcountll(channel_mask_));
-    expected_packet_count_ = static_cast<uint16_t>(windows_ * active_channel_count);
+    const auto active_channel_count =
+        static_cast<uint16_t>(__builtin_popcountll(channel_mask_));
+    expected_packet_count_ =
+        static_cast<uint16_t>(windows_ * active_channel_count);
     max_packets_per_event_ = expected_packet_count_;
 
     uint8_t trigger_bits = 0;
@@ -97,7 +112,8 @@ void EventBuffer::set_max_events(size_t max_events) {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
     max_events_ = max_events;
     if (events_.size() > max_events_) {
-        events_.erase(events_.begin(), events_.begin() + (events_.size() - max_events_));
+        events_.erase(events_.begin(),
+                      events_.begin() + (events_.size() - max_events_));
     }
 }
 
@@ -110,13 +126,12 @@ size_t EventBuffer::remove_events_before_timestamp(
         seed_index = 0;
     }
 
-    const auto it = std::lower_bound(
-        events_.begin() + seed_index,
-        events_.end(),
-        timestamp,
-        [](const std::unique_ptr<Event>& event, const std::chrono::steady_clock::time_point& ts) {
-            return event->get_creation_timestamp() < ts;
-        });
+    const auto it =
+        std::lower_bound(events_.begin() + seed_index, events_.end(), timestamp,
+                         [](const std::unique_ptr<Event>& event,
+                            const std::chrono::steady_clock::time_point& ts) {
+                             return event->get_creation_timestamp() < ts;
+                         });
 
     const size_t num_removed = std::distance(events_.begin(), it);
     events_.erase(events_.begin(), it);
@@ -134,7 +149,8 @@ size_t EventBuffer::remove_events_before_index_exclusive(size_t index) {
     return num_removed;
 }
 
-std::vector<std::unique_ptr<Event>> EventBuffer::take_events_before_index_exclusive(size_t index) {
+std::vector<std::unique_ptr<Event>>
+EventBuffer::take_events_before_index_exclusive(size_t index) {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
     if (index > events_.size()) {
         throw std::out_of_range("Index is out of range.");
@@ -159,13 +175,12 @@ std::vector<Event*> EventBuffer::get_events_after_timestamp(
         seed_index = 0;
     }
 
-    auto it = std::lower_bound(
-        events_.begin() + seed_index,
-        events_.end(),
-        timestamp,
-        [](const std::unique_ptr<Event>& event, const std::chrono::steady_clock::time_point& ts) {
-            return event->get_creation_timestamp() < ts;
-        });
+    auto it =
+        std::lower_bound(events_.begin() + seed_index, events_.end(), timestamp,
+                         [](const std::unique_ptr<Event>& event,
+                            const std::chrono::steady_clock::time_point& ts) {
+                             return event->get_creation_timestamp() < ts;
+                         });
 
     for (; it != events_.end(); ++it) {
         result.push_back(it->get());
@@ -173,7 +188,8 @@ std::vector<Event*> EventBuffer::get_events_after_timestamp(
     return result;
 }
 
-std::vector<Event*> EventBuffer::get_events_after_index_inclusive(size_t index) const {
+std::vector<Event*> EventBuffer::get_events_after_index_inclusive(
+    size_t index) const {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
     if (index >= events_.size()) {
         return {};
@@ -191,8 +207,15 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
                                    uint32_t& event_index) {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
 
+    if (time_diff_calculator_ == nullptr) {
+        throw std::logic_error(
+            "add_packet_group requires a trigger-matching EventBuffer "
+            "configuration.");
+    }
+
     if (packet_group.empty()) {
-        throw std::invalid_argument("Cannot route an empty channel packet group.");
+        throw std::invalid_argument(
+            "Cannot route an empty channel packet group.");
     }
 
     const Packet& first_packet = packet_group.front();
@@ -200,7 +223,8 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
         if (packet.channel != first_packet.channel ||
             packet.trigger_time != first_packet.trigger_time) {
             throw std::invalid_argument(
-                "A channel packet group must have one channel and one trigger timestamp.");
+                "A channel packet group must have one channel and one trigger "
+                "timestamp.");
         }
     }
 
@@ -218,9 +242,12 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
                 continue;
             }
 
-            const uint32_t difference = time_diff_calculator_.compute_time_diff(
-                first_packet.trigger_time, candidate->header.reference_time);
-            if (difference <= time_threshold_ && difference < best_time_difference) {
+            const uint32_t difference =
+                time_diff_calculator_->compute_time_diff(
+                    first_packet.trigger_time,
+                    candidate->header.reference_time);
+            if (difference <= time_threshold_ &&
+                difference < best_time_difference) {
                 matched_event = candidate;
                 best_time_difference = difference;
             }
@@ -228,22 +255,13 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
     }
 
     if (matched_event == nullptr) {
-        auto new_event = std::make_unique<Event>(event_header_,
-                                                 extra_info_,
-                                                 event_index++,
-                                                 first_packet.trigger_time,
-                                                 time_threshold_,
-                                                 clock_frequency_,
-                                                 event_completion_time_us_,
-                                                 first_packet.get_size(),
-                                                 0,
-                                                 event_trailer_,
-                                                 max_packets_per_event_,
-                                                 channel_mask_,
-                                                 windows_,
-                                                 use_time_based_completion_,
-                                                 expected_packet_count_,
-                                                 warn_on_expected_overrun_);
+        auto new_event = std::make_unique<Event>(
+            event_header_, extra_info_, event_index++,
+            first_packet.trigger_time, time_threshold_, clock_frequency_,
+            event_completion_time_us_, first_packet.get_size(), 0,
+            event_trailer_, max_packets_per_event_, channel_mask_, windows_,
+            use_time_based_completion_, expected_packet_count_,
+            warn_on_expected_overrun_);
         new_event->add_packet_group(packet_group);
         add_event_helper(new_event);
         return;

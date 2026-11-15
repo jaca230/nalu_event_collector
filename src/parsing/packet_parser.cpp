@@ -79,26 +79,23 @@ void PacketParser::set_stop_marker(const std::vector<uint8_t>& stop_marker) { st
 
 std::vector<Packet> PacketParser::process_stream(const std::vector<uint8_t>& byte_stream) {
     std::vector<Packet> packets;
-    const uint8_t* data_ptr = byte_stream.data();
+    std::vector<uint8_t> combined;
+    const std::vector<uint8_t>* stream = &byte_stream;
+    if (!leftovers_.empty()) {
+        combined.reserve(leftovers_.size() + byte_stream.size());
+        combined.insert(combined.end(), leftovers_.begin(), leftovers_.end());
+        combined.insert(combined.end(), byte_stream.begin(), byte_stream.end());
+        stream = &combined;
+    }
+
+    const uint8_t* data_ptr = stream->data();
     uint8_t error_code = 0;
     const size_t stop_marker_len = stop_marker_.size();
     const size_t start_marker_len = start_marker_.size();
-    const size_t leftovers_size = leftovers_.size();
     size_t i = 0;
 
-    if (leftovers_size > 0) {
-        process_leftovers(packets,
-                          data_ptr,
-                          byte_stream.size(),
-                          leftovers_size,
-                          packet_size_,
-                          start_marker_len,
-                          stop_marker_len);
-        i = packet_size_ - leftovers_size;
-    }
-
     const size_t initial_packets = packets.size();
-    while (i + packet_size_ <= byte_stream.size()) {
+    while (i + packet_size_ <= stream->size()) {
         process_byte_stream_segment_with_checks(
             packets, data_ptr, i, error_code, start_marker_len, stop_marker_len);
         if (packets.size() > initial_packets) {
@@ -110,14 +107,14 @@ std::vector<Packet> PacketParser::process_stream(const std::vector<uint8_t>& byt
                                ? &PacketParser::process_byte_stream_segment_with_checks
                                : &PacketParser::process_byte_stream_segment_without_checks;
 
-    while (i + packet_size_ <= byte_stream.size()) {
+    while (i + packet_size_ <= stream->size()) {
         (this->*process_segment)(
             packets, data_ptr, i, error_code, start_marker_len, stop_marker_len);
     }
 
     leftovers_.clear();
-    if (i < byte_stream.size()) {
-        leftovers_.assign(byte_stream.begin() + i, byte_stream.end());
+    if (i < stream->size()) {
+        leftovers_.assign(stream->begin() + i, stream->end());
     }
 
     return packets;
@@ -202,34 +199,6 @@ void PacketParser::process_byte_stream_segment_without_checks(std::vector<Packet
                                                               size_t) {
     process_packet(packets, byte_stream, i, 0);
     i += packet_size_;
-}
-
-void PacketParser::process_leftovers(std::vector<Packet>& data_list,
-                                     const uint8_t* byte_stream,
-                                     size_t byte_stream_len,
-                                     size_t leftovers_size,
-                                     size_t packet_size,
-                                     size_t start_marker_len,
-                                     size_t stop_marker_len) {
-    if (leftovers_size >= packet_size) {
-        spdlog::warn("Leftovers size ({}) >= packet size ({})", leftovers_size, packet_size);
-        return;
-    }
-
-    const size_t remaining_bytes = packet_size - leftovers_size;
-    leftovers_.resize(packet_size);
-    std::memcpy(leftovers_.data() + leftovers_size, byte_stream, remaining_bytes);
-
-    const uint8_t* combined_ptr = leftovers_.data();
-    if (!check_marker(combined_ptr, 0, start_marker_.data(), start_marker_len)) {
-        spdlog::warn("Combined data does not start with the start marker");
-    }
-
-    const size_t end_marker_position = packet_size - stop_marker_len;
-    if (end_marker_position <= byte_stream_len &&
-        check_marker(combined_ptr, end_marker_position, stop_marker_.data(), stop_marker_len)) {
-        process_packet(data_list, combined_ptr, 0, 0);
-    }
 }
 
 std::vector<uint8_t> PacketParser::hexStringToBytes(const std::string& hex) {

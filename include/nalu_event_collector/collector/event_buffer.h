@@ -5,6 +5,8 @@
 
 #pragma once
 
+#include <sys/types.h>
+
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
@@ -12,7 +14,6 @@
 #include <memory>
 #include <mutex>
 #include <string>
-#include <sys/types.h>
 #include <vector>
 
 #include "nalu_event_collector/data/event.h"
@@ -28,19 +29,18 @@ namespace nalu_event_collector {
  * new one.
  */
 class EventBuffer {
-  public:
+   public:
+    /** @brief Construct an output-only buffer for a custom collection strategy.
+     */
+    explicit EventBuffer(size_t max_events);
+
     /** @brief Construct an event buffer with event-matching configuration. */
     EventBuffer(size_t max_events,
                 TimeDifferenceCalculator& time_diff_calculator,
-                size_t max_lookback,
-                const std::vector<int>& channels,
-                uint8_t windows,
-                uint16_t event_header,
-                uint16_t event_trailer,
-                std::string trigger_type,
-                bool wlc_mode,
-                uint32_t time_threshold,
-                uint32_t clock_frequency,
+                size_t max_lookback, const std::vector<int>& channels,
+                uint8_t windows, uint16_t event_header, uint16_t event_trailer,
+                std::string trigger_type, bool wlc_mode,
+                uint32_t time_threshold, uint32_t clock_frequency,
                 uint32_t event_completion_time_us);
 
     /** @brief Destroy the buffer. */
@@ -64,12 +64,14 @@ class EventBuffer {
     /** @brief Change the maximum number of retained events. */
     void set_max_events(size_t max_events);
 
-    /** @brief Return events whose creation timestamp is at or after @p timestamp. */
+    /** @brief Return events whose creation timestamp is at or after @p
+     * timestamp. */
     std::vector<Event*> get_events_after_timestamp(
         const std::chrono::steady_clock::time_point& timestamp,
         ssize_t seed_index = -1) const;
 
-    /** @brief Remove events older than @p timestamp and return the removal count. */
+    /** @brief Remove events older than @p timestamp and return the removal
+     * count. */
     size_t remove_events_before_timestamp(
         const std::chrono::steady_clock::time_point& timestamp,
         ssize_t seed_index = -1);
@@ -77,26 +79,31 @@ class EventBuffer {
     /** @brief Return all events from @p index onward. */
     std::vector<Event*> get_events_after_index_inclusive(size_t index) const;
 
-    /** @brief Remove all events before @p index and return the removal count. */
+    /** @brief Remove all events before @p index and return the removal count.
+     */
     size_t remove_events_before_index_exclusive(size_t index);
 
-    /** @brief Transfer ownership of all events before @p index to the caller. */
-    std::vector<std::unique_ptr<Event>> take_events_before_index_exclusive(size_t index);
+    /** @brief Transfer ownership of all events before @p index to the caller.
+     */
+    std::vector<std::unique_ptr<Event>> take_events_before_index_exclusive(
+        size_t index);
 
-    /** @brief Route one complete channel group into an event or create a new event. */
-    void add_packet_group(const std::vector<Packet>& packet_group, uint32_t& event_index);
+    /** @brief Route one complete channel group into an event or create a new
+     * event. */
+    void add_packet_group(const std::vector<Packet>& packet_group,
+                          uint32_t& event_index);
 
     /** @brief Clear all buffered events. */
     void clear();
 
-  private:
+   private:
     void add_event_helper(std::unique_ptr<Event>& event);
 
     mutable std::mutex buffer_mutex_;
     std::vector<std::unique_ptr<Event>> events_;
     size_t max_events_;
     std::function<void()> overflow_callback_;
-    TimeDifferenceCalculator& time_diff_calculator_;
+    TimeDifferenceCalculator* time_diff_calculator_ = nullptr;
     size_t max_lookback_;
     uint16_t max_packets_per_event_;
     uint8_t windows_;
