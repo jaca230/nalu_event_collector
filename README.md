@@ -90,6 +90,31 @@ Or through the top-level dispatcher:
 ./scripts/run.sh collector_demo
 ```
 
+Replay a previously recorded raw board byte stream through the same parser and
+selected collection strategy without opening a UDP socket:
+
+```bash
+./apps/examples/collector_demo/scripts/run.sh \
+  --config apps/examples/collector_demo/config.replay.json \
+  --replay /path/to/captured_events.bin \
+  --strategy trigger_time \
+  --expect-events 1001 \
+  --expect-packets 24024 \
+  --mode summary
+```
+
+The strategy and packet/event settings still come from `config.json`. Change
+`event_builder.collection_strategy` to replay the same bytes through
+`trigger_time` or `time_batch`, or use `--strategy` as a command-line override.
+The optional `--expect-events` and `--expect-packets` checks return a nonzero
+exit status when replay output changes. `app.replay_chunk_bytes` controls the bounded
+read size. Files may contain capture framing between board packets when packet
+integrity checking is enabled; the parser resynchronizes on the configured
+packet markers. Because old raw captures do not contain arrival timestamps,
+wall-clock `time_batch.duration_us` measures replay time rather than original
+acquisition time. Use `duration_us: 0` for deterministic one-batch-per-replay-
+chunk behavior.
+
 To build the app against an installed package instead of the local source tree:
 
 ```bash

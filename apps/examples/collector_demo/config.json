@@ -8,6 +8,7 @@
     "background_duration_s": 10,
     "manual_cycles": 10,
     "manual_sleep_ms": 100,
+    "replay_chunk_bytes": 1048576,
     "print_middle_event": true
   },
   "collector": {

@@ -1,0 +1,70 @@
+{
+  "logging": {
+    "level": "warning"
+  },
+  "app": {
+    "run_mode": "summary",
+    "background": false,
+    "replay_chunk_bytes": 1048576,
+    "print_middle_event": false
+  },
+  "collector": {
+    "sleep_time_us": 0,
+    "event_builder": {
+      "collection_strategy": "trigger_time",
+      "max_events_in_buffer": 10000,
+      "event_header": 48059,
+      "event_trailer": 61166,
+      "collection_strategies": {
+        "trigger_time": {
+          "channels": [2],
+          "trigger_type": "ext",
+          "windows": 24,
+          "wlc_mode": false,
+          "time_threshold": 1500,
+          "event_completion_time_us": 10000,
+          "max_trigger_time": 16777216,
+          "clock_frequency": 23843000,
+          "max_lookback": 2
+        },
+        "time_batch": {
+          "duration_us": 0,
+          "max_packets": 65535,
+          "trigger_events": {
+            "channels": [2],
+            "trigger_type": "ext",
+            "windows": 24,
+            "wlc_mode": false,
+            "time_threshold": 1500,
+            "event_completion_time_us": 10000,
+            "max_trigger_time": 16777216,
+            "clock_frequency": 23843000,
+            "max_lookback": 2
+          }
+        }
+      }
+    },
+    "udp_receiver": {
+      "address": "192.168.1.1",
+      "port": 12345,
+      "buffer_size": 104857600,
+      "max_packet_size": 1040,
+      "timeout_sec": 2
+    },
+    "packet_parser": {
+      "packet_size": 74,
+      "start_marker": "0E",
+      "stop_marker": "FA5A",
+      "chan_mask": 63,
+      "chan_shift": 0,
+      "abs_wind_mask": 63,
+      "evt_wind_mask": 63,
+      "evt_wind_shift": 6,
+      "timing_mask": 4095,
+      "timing_shift": 12,
+      "check_packet_integrity": true,
+      "constructed_packet_header": 43690,
+      "constructed_packet_footer": 65535
+    }
+  }
+}
