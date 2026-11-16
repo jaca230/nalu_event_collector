@@ -6,19 +6,16 @@
 #include "nalu_event_collector/network/udp_receiver.h"
 
 #include <arpa/inet.h>
+#include <spdlog/spdlog.h>
 #include <unistd.h>
 
 #include <cstring>
 #include <stdexcept>
 
-#include <spdlog/spdlog.h>
-
 namespace nalu_event_collector {
 
-UdpReceiver::UdpReceiver(const std::string& address,
-                         uint16_t port,
-                         size_t buffer_size,
-                         size_t max_packet_size,
+UdpReceiver::UdpReceiver(const std::string& address, uint16_t port,
+                         size_t buffer_size, size_t max_packet_size,
                          int timeout_sec)
     : address_(address),
       port_(port),
@@ -29,11 +26,8 @@ UdpReceiver::UdpReceiver(const std::string& address,
       timeout_sec_(timeout_sec) {}
 
 UdpReceiver::UdpReceiver(const UdpReceiverConfig& config)
-    : UdpReceiver(config.address,
-                  config.port,
-                  config.buffer_size,
-                  config.max_packet_size,
-                  config.timeout_sec) {}
+    : UdpReceiver(config.address, config.port, config.buffer_size,
+                  config.max_packet_size, config.timeout_sec) {}
 
 UdpReceiver::~UdpReceiver() { stop(); }
 
@@ -48,7 +42,8 @@ void UdpReceiver::initSocket() {
     server_addr.sin_port = htons(port_);
     inet_pton(AF_INET, address_.c_str(), &server_addr.sin_addr);
 
-    if (bind(socket_fd_, reinterpret_cast<sockaddr*>(&server_addr), sizeof(server_addr)) < 0) {
+    if (bind(socket_fd_, reinterpret_cast<sockaddr*>(&server_addr),
+             sizeof(server_addr)) < 0) {
         throw std::runtime_error("Failed to bind socket");
     }
 
@@ -56,7 +51,8 @@ void UdpReceiver::initSocket() {
         timeval timeout{};
         timeout.tv_sec = timeout_sec_;
         timeout.tv_usec = 0;
-        setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
+        setsockopt(socket_fd_, SOL_SOCKET, SO_RCVTIMEO, &timeout,
+                   sizeof(timeout));
     }
 }
 
@@ -78,6 +74,11 @@ void UdpReceiver::stop() {
     running_ = false;
 
     if (socket_fd_ >= 0) {
+        // Closing a descriptor in one thread does not reliably interrupt a
+        // blocking recvfrom() in another thread on Linux. Wake the receiver
+        // explicitly so shutdown is not delayed by the configured socket
+        // timeout.
+        shutdown(socket_fd_, SHUT_RDWR);
         close(socket_fd_);
         socket_fd_ = -1;
     }
@@ -94,34 +95,33 @@ void UdpReceiver::receiveLoop() {
         while (running_) {
             sockaddr_in client_addr{};
             socklen_t client_addr_len = sizeof(client_addr);
-            const ssize_t received_bytes =
-                recvfrom(socket_fd_,
-                         udp_packet_buffer.get(),
-                         max_packet_size_,
-                         0,
-                         reinterpret_cast<sockaddr*>(&client_addr),
-                         &client_addr_len);
+            const ssize_t received_bytes = recvfrom(
+                socket_fd_, udp_packet_buffer.get(), max_packet_size_, 0,
+                reinterpret_cast<sockaddr*>(&client_addr), &client_addr_len);
 
+            if (received_bytes <= 0 && !running_) {
+                break;
+            }
             if (received_bytes < 0) {
-                if (!running_) {
-                    break;
-                }
                 continue;
             }
 
             if (received_bytes < 16) {
-                spdlog::warn("Malformed UDP packet: too small ({} bytes)", received_bytes);
+                spdlog::warn("Malformed UDP packet: too small ({} bytes)",
+                             received_bytes);
                 continue;
             }
 
             uint16_t payload_size = 0;
-            std::memcpy(&payload_size, udp_packet_buffer.get(), sizeof(uint16_t));
+            std::memcpy(&payload_size, udp_packet_buffer.get(),
+                        sizeof(uint16_t));
             payload_size = ntohs(payload_size);
 
             if (payload_size != static_cast<uint16_t>(received_bytes - 16)) {
-                spdlog::warn("Malformed UDP packet: expected payload size {}, received {}",
-                             payload_size,
-                             received_bytes - 16);
+                spdlog::warn(
+                    "Malformed UDP packet: expected payload size {}, received "
+                    "{}",
+                    payload_size, received_bytes - 16);
                 continue;
             }
 
