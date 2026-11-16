@@ -72,20 +72,28 @@ CollectorConfig parse_collector_config(const nlohmann::json& json) {
     if (collector.contains("event_builder")) {
         const auto& event_builder = collector.at("event_builder");
         assign_if_present(event_builder, "collection_strategy",
-                          config.event_builder.collection_strategy);
+                          config.event_builder.settings.collection_strategy);
         assign_if_present(event_builder, "max_events_in_buffer",
-                          config.event_builder.max_events_in_buffer);
+                          config.event_builder.settings.max_events_in_buffer);
         assign_if_present(event_builder, "event_header",
-                          config.event_builder.event_header);
+                          config.event_builder.settings.event_header);
         assign_if_present(event_builder, "event_trailer",
-                          config.event_builder.event_trailer);
+                          config.event_builder.settings.event_trailer);
+
+        if (event_builder.contains("event_source")) {
+            const auto& event_source = event_builder.at("event_source");
+            assign_if_present(event_source, "channels",
+                              config.event_builder.event_source.channels);
+            assign_if_present(event_source, "trigger_type",
+                              config.event_builder.event_source.trigger_type);
+            assign_if_present(event_source, "windows",
+                              config.event_builder.event_source.windows);
+            assign_if_present(event_source, "wlc_mode",
+                              config.event_builder.event_source.wlc_mode);
+        }
 
         const auto parse_trigger_strategy = [](const nlohmann::json& value,
                                                auto& output) {
-            assign_if_present(value, "channels", output.channels);
-            assign_if_present(value, "trigger_type", output.trigger_type);
-            assign_if_present(value, "windows", output.windows);
-            assign_if_present(value, "wlc_mode", output.wlc_mode);
             assign_if_present(value, "time_threshold", output.time_threshold);
             assign_if_present(value, "event_completion_time_us",
                               output.event_completion_time_us);
@@ -97,23 +105,25 @@ CollectorConfig parse_collector_config(const nlohmann::json& json) {
         if (event_builder.contains("collection_strategies")) {
             const auto& strategies = event_builder.at("collection_strategies");
             if (strategies.contains("trigger_time")) {
-                parse_trigger_strategy(
-                    strategies.at("trigger_time"),
-                    config.event_builder.collection_strategies.trigger_time);
+                parse_trigger_strategy(strategies.at("trigger_time"),
+                                       config.event_builder.settings
+                                           .collection_strategies.trigger_time);
             }
             if (strategies.contains("time_batch")) {
                 const auto& time_batch = strategies.at("time_batch");
-                assign_if_present(time_batch, "duration_us",
-                                  config.event_builder.collection_strategies
-                                      .time_batch.duration_us);
-                assign_if_present(time_batch, "max_packets",
-                                  config.event_builder.collection_strategies
-                                      .time_batch.max_packets);
+                assign_if_present(
+                    time_batch, "duration_us",
+                    config.event_builder.settings.collection_strategies
+                        .time_batch.duration_us);
+                assign_if_present(
+                    time_batch, "max_packets",
+                    config.event_builder.settings.collection_strategies
+                        .time_batch.max_packets);
                 if (time_batch.contains("trigger_events")) {
                     parse_trigger_strategy(
                         time_batch.at("trigger_events"),
-                        config.event_builder.collection_strategies.time_batch
-                            .trigger_events);
+                        config.event_builder.settings.collection_strategies
+                            .time_batch.trigger_events);
                 }
             }
         }
@@ -244,10 +254,10 @@ ReplaySummary replay_file(Collector& collector,
 
     const auto& event_builder = collector_config.event_builder;
     const uint32_t completion_time_us =
-        event_builder.collection_strategy == "time_batch"
-            ? event_builder.collection_strategies.time_batch.trigger_events
-                  .event_completion_time_us
-            : event_builder.collection_strategies.trigger_time
+        event_builder.settings.collection_strategy == "time_batch"
+            ? event_builder.settings.collection_strategies.time_batch
+                  .trigger_events.event_completion_time_us
+            : event_builder.settings.collection_strategies.trigger_time
                   .event_completion_time_us;
     if (completion_time_us > 0) {
         std::this_thread::sleep_for(
@@ -378,7 +388,7 @@ int main(int argc, char** argv) {
 
     AppConfig app_config = load_config(config_path);
     if (!override_strategy.empty()) {
-        app_config.collector.event_builder.collection_strategy =
+        app_config.collector.event_builder.settings.collection_strategy =
             override_strategy;
     }
     configure(app_config.logging_level);
@@ -397,14 +407,15 @@ int main(int argc, char** argv) {
         const ReplaySummary summary =
             replay_file(collector, app_config.collector, replay_path,
                         app_config.replay_chunk_bytes);
-        std::cout << "Replay complete:\n"
-                  << "  strategy: "
-                  << app_config.collector.event_builder.collection_strategy
-                  << "\n"
-                  << "  input bytes: " << summary.bytes << "\n"
-                  << "  input chunks: " << summary.chunks << "\n"
-                  << "  output events: " << summary.events << "\n"
-                  << "  output packets: " << summary.packets << "\n";
+        std::cout
+            << "Replay complete:\n"
+            << "  strategy: "
+            << app_config.collector.event_builder.settings.collection_strategy
+            << "\n"
+            << "  input bytes: " << summary.bytes << "\n"
+            << "  input chunks: " << summary.chunks << "\n"
+            << "  output events: " << summary.events << "\n"
+            << "  output packets: " << summary.packets << "\n";
         if (check_expected_events && summary.events != expected_events) {
             std::cerr << "Replay check failed: expected " << expected_events
                       << " events, got " << summary.events << "\n";

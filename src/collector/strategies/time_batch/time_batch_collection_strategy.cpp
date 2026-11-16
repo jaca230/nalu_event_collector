@@ -16,7 +16,7 @@ TimeBatchCollectionStrategy::TimeBatchCollectionStrategy(
     : config_(config),
       strategy_config_(strategy_config),
       trigger_strategy_(config, strategy_config.trigger_events),
-      output_buffer_(config.max_events_in_buffer),
+      output_buffer_(config.settings.max_events_in_buffer),
       batch_duration_(strategy_config.duration_us),
       max_packets_per_batch_(
           static_cast<uint16_t>(strategy_config.max_packets)) {
@@ -83,15 +83,14 @@ void TimeBatchCollectionStrategy::append_trigger_event(const Event& event) {
 
     if (current_batch_ == nullptr) {
         current_batch_ = std::make_unique<Event>(
-            config_.event_header, event.header.info, batch_index_++,
+            config_.settings.event_header, event.header.info, batch_index_++,
             event.header.reference_time,
             strategy_config_.trigger_events.time_threshold,
             strategy_config_.trigger_events.clock_frequency,
             strategy_config_.duration_us, event.header.packet_size, 0,
-            config_.event_trailer, max_packets_per_batch_,
+            config_.settings.event_trailer, max_packets_per_batch_,
             event.header.channel_mask,
-            static_cast<uint8_t>(strategy_config_.trigger_events.windows),
-            false);
+            static_cast<uint8_t>(config_.event_source.windows), false);
     }
 
     for (size_t i = 0; i < event.header.num_packets; ++i) {

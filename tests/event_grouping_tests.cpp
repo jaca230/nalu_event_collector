@@ -74,10 +74,10 @@ void append(std::vector<Packet>& destination,
 
 EventBuilderConfig external_config() {
     EventBuilderConfig config;
-    auto& strategy = config.collection_strategies.trigger_time;
-    strategy.channels = {0, 1};
-    strategy.windows = 2;
-    strategy.trigger_type = "ext";
+    auto& strategy = config.settings.collection_strategies.trigger_time;
+    config.event_source.channels = {0, 1};
+    config.event_source.windows = 2;
+    config.event_source.trigger_type = "ext";
     strategy.time_threshold = 10;
     strategy.max_lookback = 4;
     strategy.event_completion_time_us = 1'000'000;
@@ -86,9 +86,9 @@ EventBuilderConfig external_config() {
 
 EventBuilderConfig self_config() {
     EventBuilderConfig config = external_config();
-    auto& strategy = config.collection_strategies.trigger_time;
-    strategy.channels = {0, 2};
-    strategy.trigger_type = "self";
+    auto& strategy = config.settings.collection_strategies.trigger_time;
+    config.event_source.channels = {0, 2};
+    config.event_source.trigger_type = "self";
     strategy.event_completion_time_us = 0;
     return config;
 }
@@ -96,11 +96,11 @@ EventBuilderConfig self_config() {
 EventBuilderConfig time_batch_config(std::string trigger_type = "ext") {
     EventBuilderConfig config =
         trigger_type == "self" ? self_config() : external_config();
-    config.collection_strategy = "time_batch";
-    config.collection_strategies.time_batch.trigger_events =
-        config.collection_strategies.trigger_time;
-    config.collection_strategies.time_batch.duration_us = 1'000'000;
-    config.collection_strategies.time_batch.max_packets = 64;
+    config.settings.collection_strategy = "time_batch";
+    config.settings.collection_strategies.time_batch.trigger_events =
+        config.settings.collection_strategies.trigger_time;
+    config.settings.collection_strategies.time_batch.duration_us = 1'000'000;
+    config.settings.collection_strategies.time_batch.max_packets = 64;
     return config;
 }
 
@@ -134,7 +134,7 @@ void test_channel_groups_are_indivisible() {
 
 void test_partial_and_duplicate_groups_are_not_events() {
     EventBuilderConfig config = external_config();
-    config.collection_strategies.trigger_time.channels = {0};
+    config.event_source.channels = {0};
     EventBuilder builder(config);
     uint16_t parser_index = 0;
 
@@ -223,7 +223,7 @@ void test_partial_observed_self_trigger_channel_is_invalid() {
 void test_incomplete_hole_does_not_duplicate_later_event() {
     CollectorConfig config;
     config.event_builder = external_config();
-    config.event_builder.collection_strategies.trigger_time
+    config.event_builder.settings.collection_strategies.trigger_time
         .event_completion_time_us = 0;
     Collector collector(config);
 
@@ -284,8 +284,8 @@ void test_time_batch_combines_complete_external_trigger_events() {
 
 void test_zero_duration_time_batch_closes_each_collection_cycle() {
     EventBuilderConfig config = time_batch_config();
-    config.collection_strategies.time_batch.trigger_events.channels = {0};
-    config.collection_strategies.time_batch.duration_us = 0;
+    config.event_source.channels = {0};
+    config.settings.collection_strategies.time_batch.duration_us = 0;
     EventBuilder builder(config);
     uint16_t parser_index = 0;
 
@@ -303,8 +303,8 @@ void test_zero_duration_time_batch_closes_each_collection_cycle() {
 
 void test_time_batch_publishes_on_fixed_deadline_without_new_packets() {
     EventBuilderConfig config = time_batch_config();
-    config.collection_strategies.time_batch.trigger_events.channels = {0};
-    config.collection_strategies.time_batch.duration_us = 500;
+    config.event_source.channels = {0};
+    config.settings.collection_strategies.time_batch.duration_us = 500;
     EventBuilder builder(config);
     uint16_t parser_index = 0;
 
@@ -348,7 +348,7 @@ void test_time_batch_drops_incomplete_external_trigger_event() {
 
 void test_time_batch_respects_packet_capacity_at_trigger_boundaries() {
     EventBuilderConfig config = time_batch_config();
-    config.collection_strategies.time_batch.max_packets = 4;
+    config.settings.collection_strategies.time_batch.max_packets = 4;
     EventBuilder builder(config);
     uint16_t parser_index = 0;
     std::vector<Packet> packets;
@@ -369,7 +369,7 @@ void test_time_batch_respects_packet_capacity_at_trigger_boundaries() {
 
 void test_unknown_collection_strategy_is_rejected() {
     EventBuilderConfig config = external_config();
-    config.collection_strategy = "not_a_strategy";
+    config.settings.collection_strategy = "not_a_strategy";
     try {
         EventBuilder builder(config);
         static_cast<void>(builder);

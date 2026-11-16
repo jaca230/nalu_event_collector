@@ -24,8 +24,7 @@ void require(bool condition, const std::string& message) {
     }
 }
 
-std::vector<uint8_t> raw_packet(uint8_t channel,
-                                uint32_t trigger_time,
+std::vector<uint8_t> raw_packet(uint8_t channel, uint32_t trigger_time,
                                 uint16_t logical_position = 0) {
     std::vector<uint8_t> bytes(74, 0);
     bytes[0] = 0x0E;
@@ -41,30 +40,29 @@ std::vector<uint8_t> raw_packet(uint8_t channel,
     bytes[7] = static_cast<uint8_t>((logical_position & 0x3U) << 6U);
 
     for (size_t i = 0; i < 64; ++i) {
-        bytes[8 + i] = static_cast<uint8_t>((trigger_time + channel + i) & 0xFFU);
+        bytes[8 + i] =
+            static_cast<uint8_t>((trigger_time + channel + i) & 0xFFU);
     }
     bytes[72] = 0xFA;
     bytes[73] = 0x5A;
     return bytes;
 }
 
-void append(std::vector<uint8_t>& destination, const std::vector<uint8_t>& source) {
+void append(std::vector<uint8_t>& destination,
+            const std::vector<uint8_t>& source) {
     destination.insert(destination.end(), source.begin(), source.end());
 }
 
-void append_channel_group(std::vector<uint8_t>& stream,
-                          uint8_t channel,
-                          uint32_t trigger_time,
-                          size_t windows) {
+void append_channel_group(std::vector<uint8_t>& stream, uint8_t channel,
+                          uint32_t trigger_time, size_t windows) {
     for (size_t window = 0; window < windows; ++window) {
-        append(stream,
-               raw_packet(channel, trigger_time, static_cast<uint16_t>(window)));
+        append(stream, raw_packet(channel, trigger_time,
+                                  static_cast<uint16_t>(window)));
     }
 }
 
 void append_external_trigger(std::vector<uint8_t>& stream,
-                             uint32_t trigger_time,
-                             size_t windows = 2) {
+                             uint32_t trigger_time, size_t windows = 2) {
     append_channel_group(stream, 0, trigger_time, windows);
     append_channel_group(stream, 1, trigger_time + 1, windows);
 }
@@ -77,11 +75,11 @@ PacketParser parser() {
 
 EventBuilderConfig trigger_config() {
     EventBuilderConfig config;
-    config.max_events_in_buffer = 4096;
-    auto& strategy = config.collection_strategies.trigger_time;
-    strategy.channels = {0, 1};
-    strategy.trigger_type = "ext";
-    strategy.windows = 2;
+    config.settings.max_events_in_buffer = 4096;
+    auto& strategy = config.settings.collection_strategies.trigger_time;
+    config.event_source.channels = {0, 1};
+    config.event_source.trigger_type = "ext";
+    config.event_source.windows = 2;
     strategy.time_threshold = 10;
     strategy.event_completion_time_us = 1'000'000;
     strategy.max_lookback = 8;
@@ -90,11 +88,11 @@ EventBuilderConfig trigger_config() {
 
 EventBuilderConfig batch_config() {
     EventBuilderConfig config = trigger_config();
-    config.collection_strategy = "time_batch";
-    auto& batch = config.collection_strategies.time_batch;
+    config.settings.collection_strategy = "time_batch";
+    auto& batch = config.settings.collection_strategies.time_batch;
     batch.duration_us = 0;
     batch.max_packets = 4096;
-    batch.trigger_events = config.collection_strategies.trigger_time;
+    batch.trigger_events = config.settings.collection_strategies.trigger_time;
     return config;
 }
 
@@ -105,8 +103,9 @@ std::vector<Packet> parse_fragmented(PacketParser& packet_parser,
     size_t offset = 0;
     size_t chunk_index = 0;
     while (offset < stream.size()) {
-        const size_t chunk_size = std::min(
-            chunk_sizes[chunk_index++ % chunk_sizes.size()], stream.size() - offset);
+        const size_t chunk_size =
+            std::min(chunk_sizes[chunk_index++ % chunk_sizes.size()],
+                     stream.size() - offset);
         std::vector<uint8_t> chunk(stream.begin() + offset,
                                    stream.begin() + offset + chunk_size);
         auto parsed = packet_parser.process_stream(chunk);
@@ -123,10 +122,11 @@ void test_parser_accepts_arbitrarily_fragmented_stream() {
     append(stream, raw_packet(9, 0x0ABCDE, 2));
 
     auto packet_parser = parser();
-    const auto packets = parse_fragmented(
-        packet_parser, stream, {1, 2, 5, 3, 17, 4, 71, 6, 9});
+    const auto packets =
+        parse_fragmented(packet_parser, stream, {1, 2, 5, 3, 17, 4, 71, 6, 9});
 
-    require(packets.size() == 3, "fragmented stream should produce three packets");
+    require(packets.size() == 3,
+            "fragmented stream should produce three packets");
     require(packets[0].channel == 3 && packets[0].trigger_time == 0x123456,
             "first fragmented packet decoded incorrectly");
     require(packets[1].channel == 7 && packets[1].trigger_time == 0x654321,
@@ -148,9 +148,10 @@ void test_fragmented_threshold_boundary_stream_keeps_groups_indivisible() {
     const std::vector<size_t> chunks = {13, 149, 7, 81, 2, 211};
     size_t chunk_index = 0;
     while (offset < stream.size()) {
-        const size_t size =
-            std::min(chunks[chunk_index++ % chunks.size()], stream.size() - offset);
-        std::vector<uint8_t> chunk(stream.begin() + offset, stream.begin() + offset + size);
+        const size_t size = std::min(chunks[chunk_index++ % chunks.size()],
+                                     stream.size() - offset);
+        std::vector<uint8_t> chunk(stream.begin() + offset,
+                                   stream.begin() + offset + size);
         const auto packets = packet_parser.process_stream(chunk);
         if (!packets.empty()) {
             builder.collect_events(packets);
@@ -159,7 +160,8 @@ void test_fragmented_threshold_boundary_stream_keeps_groups_indivisible() {
     }
 
     auto& events = builder.get_event_buffer().get_events();
-    require(events.size() == 2, "threshold-boundary stream should produce two events");
+    require(events.size() == 2,
+            "threshold-boundary stream should produce two events");
     for (const auto& event : events) {
         require(event->header.num_packets == 4,
                 "a simulated channel group was split between events");
@@ -174,7 +176,8 @@ void test_large_simulated_trigger_stream() {
     std::vector<uint8_t> stream;
     stream.reserve(trigger_count * 4 * 74);
     for (size_t trigger = 0; trigger < trigger_count; ++trigger) {
-        append_external_trigger(stream, static_cast<uint32_t>(1000 + trigger * 100));
+        append_external_trigger(stream,
+                                static_cast<uint32_t>(1000 + trigger * 100));
     }
 
     auto packet_parser = parser();
@@ -183,9 +186,10 @@ void test_large_simulated_trigger_stream() {
     const std::vector<size_t> chunks = {4093, 17, 8191, 73, 1024, 5};
     size_t chunk_index = 0;
     while (offset < stream.size()) {
-        const size_t size =
-            std::min(chunks[chunk_index++ % chunks.size()], stream.size() - offset);
-        std::vector<uint8_t> chunk(stream.begin() + offset, stream.begin() + offset + size);
+        const size_t size = std::min(chunks[chunk_index++ % chunks.size()],
+                                     stream.size() - offset);
+        std::vector<uint8_t> chunk(stream.begin() + offset,
+                                   stream.begin() + offset + size);
         const auto packets = packet_parser.process_stream(chunk);
         if (!packets.empty()) {
             builder.collect_events(packets);
@@ -213,8 +217,8 @@ void test_simulated_readout_cycles_form_time_batches() {
     for (size_t cycle = 0; cycle < cycles; ++cycle) {
         std::vector<uint8_t> readout_cycle;
         for (size_t trigger = 0; trigger < triggers_per_cycle; ++trigger) {
-            const uint32_t timestamp =
-                static_cast<uint32_t>(10'000 + (cycle * triggers_per_cycle + trigger) * 100);
+            const uint32_t timestamp = static_cast<uint32_t>(
+                10'000 + (cycle * triggers_per_cycle + trigger) * 100);
             append_external_trigger(readout_cycle, timestamp);
         }
         const auto packets = packet_parser.process_stream(readout_cycle);
@@ -225,29 +229,35 @@ void test_simulated_readout_cycles_form_time_batches() {
 
     auto& batches = builder.get_event_buffer().get_events();
     require(batches.size() == cycles,
-            "zero-duration strategy should produce one batch per simulated readout cycle");
+            "zero-duration strategy should produce one batch per simulated "
+            "readout cycle");
     for (const auto& batch : batches) {
         require(batch->header.num_packets == triggers_per_cycle * 4,
-                "time batch contains the wrong number of constituent trigger packets");
-        require(batch->is_event_complete(), "published time batch should be complete");
+                "time batch contains the wrong number of constituent trigger "
+                "packets");
+        require(batch->is_event_complete(),
+                "published time batch should be complete");
     }
 }
 
 void test_dropped_packet_does_not_contaminate_next_time_batch_event() {
     std::vector<uint8_t> stream;
     append_channel_group(stream, 0, 100, 2);
-    append(stream, raw_packet(1, 101, 0));  // One window from this trigger is lost.
+    append(stream,
+           raw_packet(1, 101, 0));  // One window from this trigger is lost.
     append_external_trigger(stream, 200);
 
     EventBuilderConfig config = batch_config();
-    config.collection_strategies.time_batch.trigger_events.event_completion_time_us = 0;
+    config.settings.collection_strategies.time_batch.trigger_events
+        .event_completion_time_us = 0;
     EventBuilder builder(config);
     auto packet_parser = parser();
     const auto packets = packet_parser.process_stream(stream);
     builder.collect_events(packets);
 
     auto& batches = builder.get_event_buffer().get_events();
-    require(batches.size() == 1, "complete trigger after a loss should still be batched");
+    require(batches.size() == 1,
+            "complete trigger after a loss should still be batched");
     require(batches.front()->header.num_packets == 4,
             "incomplete trigger packets leaked into the next batch");
     for (size_t i = 0; i < batches.front()->header.num_packets; ++i) {

@@ -61,16 +61,16 @@ class EventBuilder {
     CollectionStrategy& get_collection_strategy() { return *strategy_; }
 
     /** @brief Return the configured number of windows per event. */
-    int get_windows() const { return trigger_event_config().windows; }
+    int get_windows() const { return config_.event_source.windows; }
 
     /** @brief Return the configured active channel list. */
     const std::vector<int>& get_channels() const {
-        return trigger_event_config().channels;
+        return config_.event_source.channels;
     }
 
     /** @brief Return the configured trigger mode label. */
     const std::string& get_trigger_type() const {
-        return trigger_event_config().trigger_type;
+        return config_.event_source.trigger_type;
     }
 
     /** @brief Return the trigger matching threshold expressed as a duration. */
