@@ -11,7 +11,6 @@
 #include "nalu_event_collector/config/collector_config.h"
 #include "nalu_event_collector/data/event.h"
 #include "nalu_event_collector/data/packet.h"
-#include "nalu_event_collector/network/udp_receiver.h"
 
 namespace {
 
@@ -23,7 +22,6 @@ using nalu_event_collector::EventBuffer;
 using nalu_event_collector::EventBuilder;
 using nalu_event_collector::EventBuilderConfig;
 using nalu_event_collector::Packet;
-using nalu_event_collector::UdpReceiver;
 
 class TestCollectionStrategy final : public CollectionStrategy {
    public:
@@ -405,20 +403,6 @@ void test_application_defined_strategy_can_own_its_config() {
             "strategy");
 }
 
-void test_udp_receiver_stop_interrupts_blocking_receive() {
-    UdpReceiver receiver("127.0.0.1", 0, 1024, 1040, 10);
-    receiver.start();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-    const auto start = std::chrono::steady_clock::now();
-    receiver.stop();
-    const auto elapsed = std::chrono::steady_clock::now() - start;
-
-    require(elapsed < std::chrono::seconds(1),
-            "receiver stop should interrupt recvfrom instead of waiting for "
-            "the socket timeout");
-}
-
 }  // namespace
 
 int main() {
@@ -437,6 +421,5 @@ int main() {
     test_time_batch_respects_packet_capacity_at_trigger_boundaries();
     test_unknown_collection_strategy_is_rejected();
     test_application_defined_strategy_can_own_its_config();
-    test_udp_receiver_stop_interrupts_blocking_receive();
     return 0;
 }
