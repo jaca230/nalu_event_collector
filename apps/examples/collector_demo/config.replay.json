@@ -15,12 +15,14 @@
       "max_events_in_buffer": 10000,
       "event_header": 48059,
       "event_trailer": 61166,
+      "event_source": {
+        "channels": [2],
+        "trigger_type": "ext",
+        "windows": 24,
+        "wlc_mode": false
+      },
       "collection_strategies": {
         "trigger_time": {
-          "channels": [2],
-          "trigger_type": "ext",
-          "windows": 24,
-          "wlc_mode": false,
           "time_threshold": 1500,
           "event_completion_time_us": 10000,
           "max_trigger_time": 16777216,
@@ -31,10 +33,6 @@
           "duration_us": 0,
           "max_packets": 65535,
           "trigger_events": {
-            "channels": [2],
-            "trigger_type": "ext",
-            "windows": 24,
-            "wlc_mode": false,
             "time_threshold": 1500,
             "event_completion_time_us": 10000,
             "max_trigger_time": 16777216,

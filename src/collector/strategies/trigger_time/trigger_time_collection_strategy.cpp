@@ -15,18 +15,19 @@ namespace nalu_event_collector {
 TriggerTimeCollectionStrategy::TriggerTimeCollectionStrategy(
     const EventBuilderConfig& config,
     const TriggerTimeCollectionStrategyConfig& strategy_config)
-    : channels_(strategy_config.channels),
-      windows_(strategy_config.windows),
+    : channels_(config.event_source.channels),
+      windows_(config.event_source.windows),
       event_completion_time_us_(strategy_config.event_completion_time_us),
       time_diff_calculator_(strategy_config.max_trigger_time,
                             strategy_config.time_threshold),
-      event_buffer_(config.max_events_in_buffer, time_diff_calculator_,
-                    strategy_config.max_lookback, channels_,
-                    static_cast<uint8_t>(windows_), config.event_header,
-                    config.event_trailer, strategy_config.trigger_type,
-                    strategy_config.wlc_mode, strategy_config.time_threshold,
-                    strategy_config.clock_frequency,
-                    strategy_config.event_completion_time_us) {
+      event_buffer_(
+          config.settings.max_events_in_buffer, time_diff_calculator_,
+          strategy_config.max_lookback, channels_,
+          static_cast<uint8_t>(windows_), config.settings.event_header,
+          config.settings.event_trailer, config.event_source.trigger_type,
+          config.event_source.wlc_mode, strategy_config.time_threshold,
+          strategy_config.clock_frequency,
+          strategy_config.event_completion_time_us) {
     if (windows_ <= 0 || windows_ > 255) {
         throw std::invalid_argument("windows must be between 1 and 255.");
     }

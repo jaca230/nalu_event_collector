@@ -14,16 +14,16 @@ namespace nalu_event_collector {
 
 std::unique_ptr<CollectionStrategy> make_collection_strategy(
     const EventBuilderConfig& config) {
-    if (config.collection_strategy == "trigger_time") {
+    if (config.settings.collection_strategy == "trigger_time") {
         return std::make_unique<TriggerTimeCollectionStrategy>(
-            config, config.collection_strategies.trigger_time);
+            config, config.settings.collection_strategies.trigger_time);
     }
-    if (config.collection_strategy == "time_batch") {
+    if (config.settings.collection_strategy == "time_batch") {
         return std::make_unique<TimeBatchCollectionStrategy>(
-            config, config.collection_strategies.time_batch);
+            config, config.settings.collection_strategies.time_batch);
     }
     throw std::invalid_argument(
-        "Unknown collection_strategy '" + config.collection_strategy +
+        "Unknown collection_strategy '" + config.settings.collection_strategy +
         "'. Supported strategies are 'trigger_time' and 'time_batch'.");
 }
 

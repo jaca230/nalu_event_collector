@@ -150,13 +150,15 @@ channel is therefore a valid self-trigger event after the completion timeout.
 ## Collection strategies
 
 `EventBuilder` delegates packet grouping to the public `CollectionStrategy`
-interface. The built-in selector is `event_builder.collection_strategy`:
+interface. The built-in selector is `event_builder.settings.collection_strategy`
+in C++ (`event_builder.collection_strategy` in the demo JSON):
 
 - `trigger_time` preserves the traditional one-output-event-per-trigger behavior.
 - `time_batch` first forms normal trigger events, then combines those events into
   larger fixed-wall-clock output events.
 
-Only output concerns are global. Each strategy owns its remaining configuration:
+Acquisition context is shared by every strategy. Strategy-specific timing and
+batching controls remain strategy-owned:
 
 ```json
 {
@@ -164,11 +166,14 @@ Only output concerns are global. Each strategy owns its remaining configuration:
   "max_events_in_buffer": 10000,
   "event_header": 48059,
   "event_trailer": 61166,
+  "event_source": {
+    "channels": [0, 2],
+    "trigger_type": "self",
+    "windows": 8,
+    "wlc_mode": false
+  },
   "collection_strategies": {
     "trigger_time": {
-      "channels": [0, 2],
-      "trigger_type": "self",
-      "windows": 8,
       "time_threshold": 1500,
       "event_completion_time_us": 10000
     },
@@ -176,9 +181,6 @@ Only output concerns are global. Each strategy owns its remaining configuration:
       "duration_us": 100000,
       "max_packets": 65535,
       "trigger_events": {
-        "channels": [0, 2],
-        "trigger_type": "self",
-        "windows": 8,
         "time_threshold": 1500,
         "event_completion_time_us": 10000
       }

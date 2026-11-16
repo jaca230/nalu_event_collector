@@ -7,25 +7,10 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <string>
-#include <vector>
 
 namespace nalu_event_collector {
 
-inline std::vector<int> default_channels() {
-    std::vector<int> channels;
-    channels.reserve(32);
-    for (int channel = 0; channel < 32; ++channel) {
-        channels.push_back(channel);
-    }
-    return channels;
-}
-
 struct TriggerTimeCollectionStrategyConfig {
-    std::vector<int> channels = default_channels();
-    std::string trigger_type = "self";
-    int windows = 4;
-    bool wlc_mode = false;
     uint32_t time_threshold = 5000;
     uint32_t event_completion_time_us = 10000;
     uint32_t max_trigger_time = 16777216;

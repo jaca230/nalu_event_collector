@@ -16,10 +16,10 @@ namespace {
 
 const TriggerTimeCollectionStrategyConfig& selected_trigger_config(
     const EventBuilderConfig& config) {
-    if (config.collection_strategy == "time_batch") {
-        return config.collection_strategies.time_batch.trigger_events;
+    if (config.settings.collection_strategy == "time_batch") {
+        return config.settings.collection_strategies.time_batch.trigger_events;
     }
-    return config.collection_strategies.trigger_time;
+    return config.settings.collection_strategies.trigger_time;
 }
 
 }  // namespace
@@ -33,17 +33,17 @@ EventBuilder::EventBuilder(std::vector<int> channels, int windows,
                            uint32_t event_completion_time_us)
     : EventBuilder([&]() {
           EventBuilderConfig config;
-          auto& strategy = config.collection_strategies.trigger_time;
-          strategy.channels = std::move(channels);
-          strategy.windows = windows;
-          strategy.trigger_type = std::move(trigger_type);
-          strategy.wlc_mode = wlc_mode;
+          auto& strategy = config.settings.collection_strategies.trigger_time;
+          config.event_source.channels = std::move(channels);
+          config.event_source.windows = windows;
+          config.event_source.trigger_type = std::move(trigger_type);
+          config.event_source.wlc_mode = wlc_mode;
           strategy.time_threshold = time_threshold;
           strategy.max_trigger_time = max_trigger_time;
           strategy.max_lookback = max_lookback;
-          config.max_events_in_buffer = event_max_size;
-          config.event_header = event_header;
-          config.event_trailer = event_trailer;
+          config.settings.max_events_in_buffer = event_max_size;
+          config.settings.event_header = event_header;
+          config.settings.event_trailer = event_trailer;
           strategy.clock_frequency = clock_frequency;
           strategy.event_completion_time_us = event_completion_time_us;
           return config;
