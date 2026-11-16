@@ -18,6 +18,10 @@ Run the collector_demo app.
 Options:
   --config PATH     Path to config.json (default: apps/examples/collector_demo/config.json)
   --mode MODE       Run mode override: summary, compact, full
+  --strategy NAME   Override strategy: trigger_time or time_batch
+  --replay PATH     Replay a previously recorded raw byte stream
+  --expect-events N Fail unless replay produces N events
+  --expect-packets N Fail unless replay produces N packets
   --debug           Run under gdb
   -h, --help        Show this help message
 
@@ -30,6 +34,10 @@ while [[ "$#" -gt 0 ]]; do
     case $1 in
         --config) CONFIG_PATH="$2"; shift 2 ;;
         --mode) APP_ARGS+=("--mode" "$2"); shift 2 ;;
+        --strategy) APP_ARGS+=("--strategy" "$2"); shift 2 ;;
+        --replay) APP_ARGS+=("--replay" "$2"); shift 2 ;;
+        --expect-events) APP_ARGS+=("--expect-events" "$2"); shift 2 ;;
+        --expect-packets) APP_ARGS+=("--expect-packets" "$2"); shift 2 ;;
         --debug) DEBUG=true; shift ;;
         -h|--help) print_help; exit 0 ;;
         *) APP_ARGS+=("$1"); shift ;;

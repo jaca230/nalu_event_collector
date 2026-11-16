@@ -5,6 +5,8 @@
 
 #include "nalu_event_collector/collector/collector.h"
 
+#include <spdlog/spdlog.h>
+
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -12,8 +14,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-
-#include <spdlog/spdlog.h>
 
 namespace nalu_event_collector {
 
@@ -29,10 +29,12 @@ void print_table_separator(std::ostream& stream, size_t columns) {
     stream << "+\n";
 }
 
-void print_table_row(std::ostream& stream, const std::vector<std::string>& columns) {
+void print_table_row(std::ostream& stream,
+                     const std::vector<std::string>& columns) {
     stream << std::setfill(' ');
     for (const auto& column : columns) {
-        stream << "| " << std::setw(kTableColumnWidth) << std::right << column << ' ';
+        stream << "| " << std::setw(kTableColumnWidth) << std::right << column
+               << ' ';
     }
     stream << "|\n";
 }
@@ -43,9 +45,7 @@ std::string format_fixed(double value, int precision = 3) {
     return stream.str();
 }
 
-std::string format_integer(size_t value) {
-    return std::to_string(value);
-}
+std::string format_integer(size_t value) { return std::to_string(value); }
 
 }  // namespace
 
@@ -57,9 +57,8 @@ Collector::Collector(const CollectorConfig& config)
       last_event_index_(0),
       cycle_count_(0),
       sleep_time_us_(config.sleep_time_us) {
-    receiver_.getDataBuffer().setOverflowCallback([]() {
-        throw std::runtime_error("UdpDataBuffer overflow detected");
-    });
+    receiver_.getDataBuffer().setOverflowCallback(
+        []() { throw std::runtime_error("UdpDataBuffer overflow detected"); });
 }
 
 Collector::~Collector() { stop(); }
@@ -84,6 +83,8 @@ void Collector::stop() {
     if (collector_thread_.joinable()) {
         collector_thread_.join();
     }
+    std::lock_guard<std::mutex> lock(data_mutex_);
+    event_builder_.flush();
 }
 
 void Collector::collect() {
@@ -92,10 +93,13 @@ void Collector::collect() {
     std::vector<uint8_t> data = receiver_.getDataBuffer().getAllBytes();
     const auto udp_end = std::chrono::steady_clock::now();
 
-    const double udp_time = std::chrono::duration<double>(udp_end - udp_start).count();
+    const double udp_time =
+        std::chrono::duration<double>(udp_end - udp_start).count();
     const size_t data_size = data.size();
 
     if (data.empty()) {
+        std::lock_guard<std::mutex> lock(data_mutex_);
+        event_builder_.poll();
         return;
     }
 
@@ -104,6 +108,8 @@ void Collector::collect() {
     const auto parse_end = std::chrono::steady_clock::now();
 
     if (packets.empty()) {
+        std::lock_guard<std::mutex> lock(data_mutex_);
+        event_builder_.poll();
         return;
     }
 
@@ -116,14 +122,19 @@ void Collector::collect() {
     const auto event_end = std::chrono::steady_clock::now();
     const auto total_end = std::chrono::steady_clock::now();
 
-    const double total_time = std::chrono::duration<double>(total_end - start_time).count();
-    const double parse_time = std::chrono::duration<double>(parse_end - parse_start).count();
-    const double event_time = std::chrono::duration<double>(event_end - event_start).count();
+    const double total_time =
+        std::chrono::duration<double>(total_end - start_time).count();
+    const double parse_time =
+        std::chrono::duration<double>(parse_end - parse_start).count();
+    const double event_time =
+        std::chrono::duration<double>(event_end - event_start).count();
     const double data_rate = (data_size / (1024.0 * 1024.0)) / total_time;
 
     timing_data_.collection_cycle_index = cycle_count_;
     timing_data_.collection_cycle_timestamp_ns =
-        std::chrono::duration_cast<std::chrono::nanoseconds>(start_time.time_since_epoch()).count();
+        std::chrono::duration_cast<std::chrono::nanoseconds>(
+            start_time.time_since_epoch())
+            .count();
     timing_data_.udp_time = udp_time;
     timing_data_.parse_time = parse_time;
     timing_data_.event_time = event_time;
@@ -151,15 +162,17 @@ void Collector::collectionLoop() {
 
 void Collector::log_dropped_incomplete_event(const Event& event) const {
     const int active_channels = __builtin_popcountll(event.header.channel_mask);
-    const int expected_packets = static_cast<int>(event.header.num_windows) * active_channels;
+    const int expected_packets =
+        static_cast<int>(event.header.num_windows) * active_channels;
     const uint32_t event_index = event.header.index;
     const uint16_t num_packets = event.header.num_packets;
     const uint8_t num_windows = event.header.num_windows;
     const uint32_t reference_time = event.header.reference_time;
     const uint64_t channel_mask = event.header.channel_mask;
-    const auto age_us = std::chrono::duration_cast<std::chrono::microseconds>(
-                            std::chrono::steady_clock::now() - event.get_creation_timestamp())
-                            .count();
+    const auto age_us =
+        std::chrono::duration_cast<std::chrono::microseconds>(
+            std::chrono::steady_clock::now() - event.get_creation_timestamp())
+            .count();
     std::ostringstream channel_mask_stream;
     channel_mask_stream << std::hex << channel_mask;
     std::ostringstream channel_counts_stream;
@@ -171,21 +184,18 @@ void Collector::log_dropped_incomplete_event(const Event& event) const {
         if (!first_channel) {
             channel_counts_stream << ',';
         }
-        channel_counts_stream << channel << ':'
-                              << event.get_channel_packet_count(static_cast<uint8_t>(channel));
+        channel_counts_stream
+            << channel << ':'
+            << event.get_channel_packet_count(static_cast<uint8_t>(channel));
         first_channel = false;
     }
     spdlog::warn(
-        "Dropping timed-out incomplete event index {}: packets={}/{}, windows={}, "
-        "active_channels={}, reference_time={}, age_us={}, channel_mask=0x{}, channel_counts={{{}}}",
-        event_index,
-        num_packets,
-        expected_packets,
-        num_windows,
-        active_channels,
-        reference_time,
-        age_us,
-        channel_mask_stream.str(),
+        "Dropping timed-out incomplete event index {}: packets={}/{}, "
+        "windows={}, "
+        "active_channels={}, reference_time={}, age_us={}, channel_mask=0x{}, "
+        "channel_counts={{{}}}",
+        event_index, num_packets, expected_packets, num_windows,
+        active_channels, reference_time, age_us, channel_mask_stream.str(),
         channel_counts_stream.str());
 }
 
@@ -196,7 +206,8 @@ CollectorTimingData Collector::get_timing_data() {
     return timing_data_;
 }
 
-Collector::EventDisposition Collector::classify_event(const Event& event) const {
+Collector::EventDisposition Collector::classify_event(
+    const Event& event) const {
     if (event.is_event_complete()) {
         return EventDisposition::Ready;
     }
@@ -219,9 +230,11 @@ Collector::EventDisposition Collector::classify_event(const Event& event) const 
 
 std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
     std::lock_guard<std::mutex> lock(data_mutex_);
+    event_builder_.poll();
 
     std::vector<Event*> new_events =
-        event_builder_.get_event_buffer().get_events_after_index_inclusive(last_event_index_);
+        event_builder_.get_event_buffer().get_events_after_index_inclusive(
+            last_event_index_);
 
     std::vector<Event*> complete_events;
     complete_events.reserve(new_events.size());
@@ -249,11 +262,14 @@ std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
     return {timing_data_, complete_events};
 }
 
-std::pair<CollectorTimingData, std::vector<std::unique_ptr<Event>>> Collector::take_data() {
+std::pair<CollectorTimingData, std::vector<std::unique_ptr<Event>>>
+Collector::take_data() {
     std::lock_guard<std::mutex> lock(data_mutex_);
+    event_builder_.poll();
     if (last_event_index_ != 0) {
         throw std::logic_error(
-            "take_data() cannot follow get_data() until clear_events() has been called.");
+            "take_data() cannot follow get_data() until clear_events() has "
+            "been called.");
     }
 
     std::vector<Event*> events =
@@ -274,8 +290,9 @@ std::pair<CollectorTimingData, std::vector<std::unique_ptr<Event>>> Collector::t
         ++processed_event_count;
     }
 
-    auto processed_events = event_builder_.get_event_buffer()
-                                .take_events_before_index_exclusive(processed_event_count);
+    auto processed_events =
+        event_builder_.get_event_buffer().take_events_before_index_exclusive(
+            processed_event_count);
     std::vector<std::unique_ptr<Event>> complete_events;
     complete_events.reserve(processed_events.size());
     for (size_t i = 0; i < processed_events.size(); ++i) {
@@ -294,7 +311,8 @@ void Collector::clear_events() {
     }
 
     const size_t events_removed =
-        event_builder_.get_event_buffer().remove_events_before_index_exclusive(last_event_index_);
+        event_builder_.get_event_buffer().remove_events_before_index_exclusive(
+            last_event_index_);
     last_event_index_ -= events_removed;
 }
 
@@ -303,20 +321,15 @@ void Collector::printPerformanceStats() {
 
     std::cout << "\nRolling Average (" << cycle_count_ << ")\n";
     print_table_separator(std::cout, 6);
-    print_table_row(std::cout,
-                    {"Avg Data Rate (MB/s)",
-                     "Avg Parse Time (us)",
-                     "Avg Event Time (us)",
-                     "Avg UDP Time (us)",
-                     "Avg Total Time (us)",
-                     "Avg Data (bytes)"});
-    print_table_row(std::cout,
-                    {format_fixed(avg_data_rate_),
-                     format_fixed(avg_parse_time_ * 1e6),
-                     format_fixed(avg_event_time_ * 1e6),
-                     format_fixed(avg_udp_time_ * 1e6),
-                     format_fixed(avg_total_time_ * 1e6),
-                     format_integer(static_cast<size_t>(avg_data_processed_))});
+    print_table_row(std::cout, {"Avg Data Rate (MB/s)", "Avg Parse Time (us)",
+                                "Avg Event Time (us)", "Avg UDP Time (us)",
+                                "Avg Total Time (us)", "Avg Data (bytes)"});
+    print_table_row(
+        std::cout,
+        {format_fixed(avg_data_rate_), format_fixed(avg_parse_time_ * 1e6),
+         format_fixed(avg_event_time_ * 1e6), format_fixed(avg_udp_time_ * 1e6),
+         format_fixed(avg_total_time_ * 1e6),
+         format_integer(static_cast<size_t>(avg_data_processed_))});
     print_table_separator(std::cout, 6);
 }
 

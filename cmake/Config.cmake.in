@@ -1,4 +1,9 @@
 @PACKAGE_INIT@
 
+include(CMakeFindDependencyMacro)
+if(@USE_EXTERNAL_SPDLOG@)
+  find_dependency(spdlog REQUIRED)
+endif()
+
 set(_package_name "nalu_event_collector")
 include("${CMAKE_CURRENT_LIST_DIR}/${_package_name}Targets.cmake")

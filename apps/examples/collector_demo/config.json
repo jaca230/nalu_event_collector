@@ -8,28 +8,39 @@
     "background_duration_s": 10,
     "manual_cycles": 10,
     "manual_sleep_ms": 100,
+    "replay_chunk_bytes": 1048576,
     "print_middle_event": true
   },
   "collector": {
     "sleep_time_us": 500000,
     "event_builder": {
-      "channels": [
-        0, 1, 2, 3, 4, 5, 6, 7,
-        8, 9, 10, 11, 12, 13, 14, 15,
-        16, 17, 18, 19, 20, 21, 22, 23,
-        24, 25, 26, 27, 28, 29, 30, 31
-      ],
-      "trigger_type": "self",
-      "windows": 2,
-      "wlc_mode": false,
-      "time_threshold": 1500,
-      "event_completion_time_us": 10000,
+      "collection_strategy": "trigger_time",
       "max_events_in_buffer": 10000,
-      "max_trigger_time": 16777216,
-      "clock_frequency": 23843000,
-      "max_lookback": 2,
       "event_header": 48059,
-      "event_trailer": 61166
+      "event_trailer": 61166,
+      "collection_strategies": {
+        "trigger_time": {
+          "channels": [
+            0, 1, 2, 3, 4, 5, 6, 7,
+            8, 9, 10, 11, 12, 13, 14, 15,
+            16, 17, 18, 19, 20, 21, 22, 23,
+            24, 25, 26, 27, 28, 29, 30, 31
+          ],
+          "trigger_type": "self",
+          "windows": 2,
+          "wlc_mode": false,
+          "time_threshold": 1500,
+          "event_completion_time_us": 10000,
+          "max_trigger_time": 16777216,
+          "clock_frequency": 23843000,
+          "max_lookback": 2
+        },
+        "time_batch": {
+          "duration_us": 100000,
+          "max_packets": 65535,
+          "trigger_events": {}
+        }
+      }
     },
     "udp_receiver": {
       "address": "192.168.1.1",

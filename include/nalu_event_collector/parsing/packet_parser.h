@@ -128,14 +128,6 @@ class PacketParser {
                                                     uint8_t& error_code,
                                                     size_t start_marker_len,
                                                     size_t stop_marker_len);
-    void process_leftovers(std::vector<Packet>& data_list,
-                           const uint8_t* byte_stream,
-                           size_t byte_stream_len,
-                           size_t leftovers_size,
-                           size_t packet_size,
-                           size_t start_marker_len,
-                           size_t stop_marker_len);
-
     size_t packet_size_;
     uint8_t chan_mask_;
     uint8_t chan_shift_;
