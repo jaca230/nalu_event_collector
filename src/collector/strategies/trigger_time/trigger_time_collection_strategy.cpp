@@ -35,10 +35,10 @@ TriggerTimeCollectionStrategy::TriggerTimeCollectionStrategy(
 
 void TriggerTimeCollectionStrategy::collect(
     const std::vector<Packet>& packets) {
-    prune_channel_groups();
     for (const auto& packet : packets) {
         collect_packet(packet);
     }
+    prune_channel_groups();
 }
 
 void TriggerTimeCollectionStrategy::poll() { prune_channel_groups(); }
