@@ -105,6 +105,11 @@ class PacketParser {
     /** @brief Parse @p byte_stream into zero or more Packet objects. */
     std::vector<Packet> process_stream(const std::vector<uint8_t>& byte_stream);
 
+    /** @brief Bytes belonging to an unfinished raw packet. */
+    size_t pending_bytes() const { return leftovers_.size(); }
+    /** @brief Discard an already-reported unfinished tail at end of input. */
+    void discard_pending_bytes() { leftovers_.clear(); }
+
   private:
     static std::vector<uint8_t> hexStringToBytes(const std::string& hex);
 

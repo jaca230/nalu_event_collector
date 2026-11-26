@@ -8,6 +8,7 @@
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
+#include <mutex>
 #include <string>
 #include <thread>
 
@@ -46,6 +47,7 @@ class UdpReceiver {
 
     /** @brief Access the owned raw byte buffer. */
     UdpDataBuffer& getDataBuffer();
+    void check_health() const;
 
   private:
     void initSocket();
@@ -59,6 +61,8 @@ class UdpReceiver {
     UdpDataBuffer data_buffer_;
     size_t max_packet_size_;
     int timeout_sec_;
+    mutable std::mutex error_mutex_;
+    std::string error_;
 };
 
 }  // namespace nalu_event_collector

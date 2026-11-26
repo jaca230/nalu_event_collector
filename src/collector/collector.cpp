@@ -49,45 +49,89 @@ std::string format_integer(size_t value) { return std::to_string(value); }
 
 }  // namespace
 
-Collector::Collector(const CollectorConfig& config)
-    : receiver_(config.udp_receiver),
-      parser_(config.packet_parser),
-      event_builder_(config.event_builder),
-      running_(false),
-      last_event_index_(0),
-      cycle_count_(0),
+Collector::Collector(const CollectorConfig &config)
+    : fail_on_data_loss_(config.event_builder.event_source.fail_on_data_loss),
+      receiver_(config.udp_receiver), parser_(config.packet_parser),
+      event_builder_(config.event_builder), running_(false),
+      last_event_index_(0), cycle_count_(0),
       sleep_time_us_(config.sleep_time_us) {
     receiver_.getDataBuffer().setOverflowCallback(
         []() { throw std::runtime_error("UdpDataBuffer overflow detected"); });
 }
 
-Collector::~Collector() { stop(); }
+Collector::~Collector() {
+    try {
+        stop();
+    } catch (const std::exception &error) {
+        spdlog::error("Collector cleanup after failure: {}", error.what());
+    } catch (...) {
+        spdlog::error("Collector cleanup after unknown failure");
+    }
+}
 
 void Collector::start() {
-    if (running_) {
+    if (running_)
         return;
-    }
-
-    running_ = true;
+    check_health();
+    // A prior worker may have exited; always join before replacing its thread.
+    if (collector_thread_.joinable())
+        collector_thread_.join();
     receiver_.start();
-    collector_thread_ = std::thread(&Collector::collectionLoop, this);
+    finalized_ = false;
+    running_ = true;
+    try {
+        collector_thread_ = std::thread(&Collector::collectionLoop, this);
+    } catch (...) {
+        running_ = false;
+        receiver_.stop();
+        throw;
+    }
 }
 
 void Collector::stop() {
-    if (!running_) {
-        return;
-    }
-
-    running_ = false;
+    const bool active =
+        running_.exchange(false) || collector_thread_.joinable();
     receiver_.stop();
-    if (collector_thread_.joinable()) {
+    if (collector_thread_.joinable())
         collector_thread_.join();
+    if (!active)
+        return;
+    check_health();
+    collect(); // Drain bytes already received before closing the socket.
+    flush();
+}
+
+void Collector::check_health() const {
+    std::exception_ptr error;
+    {
+        std::lock_guard<std::mutex> lock(error_mutex_);
+        error = worker_error_;
     }
+    if (error)
+        std::rethrow_exception(error);
+    receiver_.check_health();
+}
+
+void Collector::flush() {
+    check_health();
+    if (running_)
+        throw std::logic_error("Stop background collection before final flush");
     std::lock_guard<std::mutex> lock(data_mutex_);
+    if (const auto pending = parser_.pending_bytes()) {
+        const auto reason =
+            "Incomplete raw packet at final flush: " + std::to_string(pending) +
+            " bytes";
+        if (fail_on_data_loss_)
+            throw std::runtime_error(reason);
+        spdlog::warn("{}; discarding tail", reason);
+        parser_.discard_pending_bytes();
+    }
     event_builder_.flush();
+    finalized_ = true;
 }
 
 void Collector::collect() {
+    check_health();
     const auto start_time = std::chrono::steady_clock::now();
     const auto udp_start = std::chrono::steady_clock::now();
     std::vector<uint8_t> data = receiver_.getDataBuffer().getAllBytes();
@@ -152,15 +196,27 @@ void Collector::collect() {
 }
 
 void Collector::collectionLoop() {
-    while (running_) {
-        collect();
-        if (sleep_time_us_.count() > 0) {
-            std::this_thread::sleep_for(sleep_time_us_);
+    try {
+        while (running_) {
+            collect();
+            if (sleep_time_us_.count() > 0)
+                std::this_thread::sleep_for(sleep_time_us_);
         }
+    } catch (...) {
+        {
+            std::lock_guard<std::mutex> lock(error_mutex_);
+            worker_error_ = std::current_exception();
+        }
+        running_ = false;
+        // The caller observes the exception through check_health()/data access.
+        // stop() still joins this thread even though running_ is now false.
     }
 }
 
 void Collector::log_dropped_incomplete_event(const Event& event) const {
+    if (fail_on_data_loss_)
+        throw std::runtime_error("Incomplete trigger event timed out; index=" +
+                                 std::to_string(event.header.index));
     const int active_channels = __builtin_popcountll(event.header.channel_mask);
     const int expected_packets =
         static_cast<int>(event.header.num_windows) * active_channels;
@@ -212,7 +268,7 @@ Collector::EventDisposition Collector::classify_event(
         return EventDisposition::Ready;
     }
 
-    if (!event.has_timed_out()) {
+    if (!finalized_ && !event.has_timed_out()) {
         return EventDisposition::Wait;
     }
 
@@ -229,6 +285,7 @@ Collector::EventDisposition Collector::classify_event(
 }
 
 std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
+    check_health();
     std::lock_guard<std::mutex> lock(data_mutex_);
     event_builder_.poll();
 
@@ -264,6 +321,7 @@ std::pair<CollectorTimingData, std::vector<Event*>> Collector::get_data() {
 
 std::pair<CollectorTimingData, std::vector<std::unique_ptr<Event>>>
 Collector::take_data() {
+    check_health();
     std::lock_guard<std::mutex> lock(data_mutex_);
     event_builder_.poll();
     if (last_event_index_ != 0) {

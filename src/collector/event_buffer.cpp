@@ -14,44 +14,28 @@
 namespace nalu_event_collector {
 
 EventBuffer::EventBuffer(size_t max_events)
-    : max_events_(max_events),
-      max_lookback_(0),
-      max_packets_per_event_(0),
-      windows_(0),
-      channel_mask_(0),
-      event_header_(0),
-      event_trailer_(0),
-      extra_info_(0),
-      expected_packet_count_(0),
-      warn_on_expected_overrun_(false),
-      use_time_based_completion_(false),
-      time_threshold_(0),
-      clock_frequency_(0),
-      event_completion_time_us_(0) {}
+    : max_events_(max_events), max_lookback_(0), max_packets_per_event_(0),
+      windows_(0), channel_mask_(0), event_header_(0), event_trailer_(0),
+      extra_info_(0), expected_packet_count_(0),
+      warn_on_expected_overrun_(false), use_time_based_completion_(false),
+      time_threshold_(0), clock_frequency_(0), event_completion_time_us_(0) {}
 
 EventBuffer::EventBuffer(size_t max_events,
-                         TimeDifferenceCalculator& time_diff_calculator,
-                         size_t max_lookback, const std::vector<int>& channels,
+                         TimeDifferenceCalculator &time_diff_calculator,
+                         size_t max_lookback, const std::vector<int> &channels,
                          uint8_t windows, uint16_t event_header,
                          uint16_t event_trailer, std::string trigger_type,
                          bool wlc_mode, uint32_t time_threshold,
                          uint32_t clock_frequency,
                          uint32_t event_completion_time_us)
-    : max_events_(max_events),
-      time_diff_calculator_(&time_diff_calculator),
-      max_lookback_(max_lookback),
-      max_packets_per_event_(0),
-      windows_(windows),
-      channel_mask_(0),
-      event_header_(event_header),
-      event_trailer_(event_trailer),
-      extra_info_(0),
-      expected_packet_count_(0),
+    : max_events_(max_events), time_diff_calculator_(&time_diff_calculator),
+      max_lookback_(max_lookback), max_packets_per_event_(0), windows_(windows),
+      channel_mask_(0), event_header_(event_header),
+      event_trailer_(event_trailer), extra_info_(0), expected_packet_count_(0),
       warn_on_expected_overrun_(trigger_type == "ext" && !wlc_mode),
       use_time_based_completion_(trigger_type == "self" ||
                                  (trigger_type == "ext" && wlc_mode)),
-      time_threshold_(time_threshold),
-      clock_frequency_(clock_frequency),
+      time_threshold_(time_threshold), clock_frequency_(clock_frequency),
       event_completion_time_us_(event_completion_time_us) {
     for (int channel : channels) {
         if (channel >= 0 && channel < 64) {
@@ -83,11 +67,11 @@ void EventBuffer::add_event(std::unique_ptr<Event> event) {
     add_event_helper(event);
 }
 
-std::vector<std::unique_ptr<Event>>& EventBuffer::get_events() {
+std::vector<std::unique_ptr<Event>> &EventBuffer::get_events() {
     return events_;
 }
 
-Event& EventBuffer::get_latest_event() {
+Event &EventBuffer::get_latest_event() {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
     if (events_.empty()) {
         throw std::out_of_range("No events in the buffer.");
@@ -95,7 +79,7 @@ Event& EventBuffer::get_latest_event() {
     return *events_.back();
 }
 
-Event& EventBuffer::get_event_by_index(size_t index) {
+Event &EventBuffer::get_event_by_index(size_t index) {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
     if (index >= events_.size()) {
         throw std::out_of_range("Index is out of range.");
@@ -118,7 +102,7 @@ void EventBuffer::set_max_events(size_t max_events) {
 }
 
 size_t EventBuffer::remove_events_before_timestamp(
-    const std::chrono::steady_clock::time_point& timestamp,
+    const std::chrono::steady_clock::time_point &timestamp,
     ssize_t seed_index) {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
 
@@ -128,8 +112,8 @@ size_t EventBuffer::remove_events_before_timestamp(
 
     const auto it =
         std::lower_bound(events_.begin() + seed_index, events_.end(), timestamp,
-                         [](const std::unique_ptr<Event>& event,
-                            const std::chrono::steady_clock::time_point& ts) {
+                         [](const std::unique_ptr<Event> &event,
+                            const std::chrono::steady_clock::time_point &ts) {
                              return event->get_creation_timestamp() < ts;
                          });
 
@@ -165,11 +149,11 @@ EventBuffer::take_events_before_index_exclusive(size_t index) {
     return result;
 }
 
-std::vector<Event*> EventBuffer::get_events_after_timestamp(
-    const std::chrono::steady_clock::time_point& timestamp,
+std::vector<Event *> EventBuffer::get_events_after_timestamp(
+    const std::chrono::steady_clock::time_point &timestamp,
     ssize_t seed_index) const {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
-    std::vector<Event*> result;
+    std::vector<Event *> result;
 
     if (seed_index < 0 || static_cast<size_t>(seed_index) >= events_.size()) {
         seed_index = 0;
@@ -177,8 +161,8 @@ std::vector<Event*> EventBuffer::get_events_after_timestamp(
 
     auto it =
         std::lower_bound(events_.begin() + seed_index, events_.end(), timestamp,
-                         [](const std::unique_ptr<Event>& event,
-                            const std::chrono::steady_clock::time_point& ts) {
+                         [](const std::unique_ptr<Event> &event,
+                            const std::chrono::steady_clock::time_point &ts) {
                              return event->get_creation_timestamp() < ts;
                          });
 
@@ -188,14 +172,14 @@ std::vector<Event*> EventBuffer::get_events_after_timestamp(
     return result;
 }
 
-std::vector<Event*> EventBuffer::get_events_after_index_inclusive(
-    size_t index) const {
+std::vector<Event *>
+EventBuffer::get_events_after_index_inclusive(size_t index) const {
     std::lock_guard<std::mutex> lock(buffer_mutex_);
     if (index >= events_.size()) {
         return {};
     }
 
-    std::vector<Event*> result;
+    std::vector<Event *> result;
     result.reserve(events_.size() - index);
     for (size_t i = index; i < events_.size(); ++i) {
         result.push_back(events_[i].get());
@@ -203,23 +187,15 @@ std::vector<Event*> EventBuffer::get_events_after_index_inclusive(
     return result;
 }
 
-void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
-                                   uint32_t& event_index) {
-    std::lock_guard<std::mutex> lock(buffer_mutex_);
-
-    if (time_diff_calculator_ == nullptr) {
-        throw std::logic_error(
-            "add_packet_group requires a trigger-matching EventBuffer "
-            "configuration.");
-    }
-
+void EventBuffer::add_packet_group(const std::vector<Packet> &packet_group,
+                                   uint32_t &event_index) {
     if (packet_group.empty()) {
         throw std::invalid_argument(
             "Cannot route an empty channel packet group.");
     }
 
-    const Packet& first_packet = packet_group.front();
-    for (const auto& packet : packet_group) {
+    const Packet &first_packet = packet_group.front();
+    for (const auto &packet : packet_group) {
         if (packet.channel != first_packet.channel ||
             packet.trigger_time != first_packet.trigger_time) {
             throw std::invalid_argument(
@@ -228,7 +204,21 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
         }
     }
 
-    Event* matched_event = nullptr;
+    add_validated_packet_group(packet_group.data(), packet_group.size(),
+                               event_index);
+}
+
+void EventBuffer::add_validated_packet_group(const Packet *group, size_t count,
+                                             uint32_t &event_index) {
+    std::lock_guard<std::mutex> lock(buffer_mutex_);
+    if (!time_diff_calculator_)
+        throw std::logic_error(
+            "add_packet_group requires trigger-matching configuration");
+    if (!count || !windows_ || count != windows_ || group[0].channel >= 64 ||
+        !(channel_mask_ & (1ULL << group[0].channel)))
+        throw std::invalid_argument("Invalid channel group size / channel");
+    const Packet &first_packet = group[0];
+    Event *matched_event = nullptr;
     uint32_t best_time_difference = std::numeric_limits<uint32_t>::max();
     const size_t events_size = events_.size();
 
@@ -236,9 +226,9 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
         const size_t lookback_limit = std::min(max_lookback_, events_size);
 
         for (size_t i = 0; i < lookback_limit; ++i) {
-            Event* candidate = events_[events_size - 1 - i].get();
+            Event *candidate = events_[events_size - 1 - i].get();
             if (!candidate->can_accept_channel_group(first_packet.channel,
-                                                     packet_group.size())) {
+                                                     count)) {
                 continue;
             }
 
@@ -262,12 +252,12 @@ void EventBuffer::add_packet_group(const std::vector<Packet>& packet_group,
             event_trailer_, max_packets_per_event_, channel_mask_, windows_,
             use_time_based_completion_, expected_packet_count_,
             warn_on_expected_overrun_);
-        new_event->add_packet_group(packet_group);
+        new_event->append_validated_channel_group(group, count);
         add_event_helper(new_event);
         return;
     }
 
-    matched_event->add_packet_group(packet_group);
+    matched_event->append_validated_channel_group(group, count);
 }
 
 void EventBuffer::clear() {
@@ -275,7 +265,7 @@ void EventBuffer::clear() {
     events_.clear();
 }
 
-void EventBuffer::add_event_helper(std::unique_ptr<Event>& event) {
+void EventBuffer::add_event_helper(std::unique_ptr<Event> &event) {
     if (events_.size() >= max_events_) {
         if (overflow_callback_) {
             overflow_callback_();
@@ -287,4 +277,4 @@ void EventBuffer::add_event_helper(std::unique_ptr<Event>& event) {
     events_.push_back(std::move(event));
 }
 
-}  // namespace nalu_event_collector
+} // namespace nalu_event_collector

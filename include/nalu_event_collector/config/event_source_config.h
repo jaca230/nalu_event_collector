@@ -24,6 +24,7 @@ struct EventSourceConfig {
     std::string trigger_type = "self";
     int windows = 4;
     bool wlc_mode = false;
+    bool fail_on_data_loss = false;
 };
 
 }  // namespace nalu_event_collector

@@ -196,6 +196,15 @@ event, and an orderly `flush()` publishes a non-empty final partial batch.
 Setting `duration_us` to zero is useful for deterministic operation and closes
 one batch after each packet-collection call.
 
+With `event_source.fail_on_data_loss=true`, final flushing immediately rejects
+unfinished waveforms, missing required channel groups, and partial raw packets.
+For manual collection, stop the receiver, drain with `collect()`, then call
+`Collector::flush()` before taking the final data. Threaded users call `stop()`;
+`check_health()` and data access rethrow receiver/worker errors on the calling
+thread. Destruction still joins the workers without throwing. Duplicate-window
+validation uses physical positions; firmware 957's logical-position field is
+preserved as metadata and is not used for that validation.
+
 Applications can implement a new strategy by deriving from
 `CollectionStrategy` and injecting it with
 `EventBuilder(config, std::move(strategy))`. The strategy may use the

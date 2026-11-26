@@ -21,7 +21,7 @@ namespace nalu_event_collector {
  * @brief Represents one collected event and its serialized metadata.
  */
 class Event {
-   public:
+  public:
 #pragma pack(push, 1)
     /**
      * @brief Serialized event header written ahead of packet payloads.
@@ -102,16 +102,16 @@ class Event {
 
     /** @brief Serialize the event header, packets, and footer into @p buffer.
      */
-    void serialize_to_buffer(char* buffer) const;
+    void serialize_to_buffer(char *buffer) const;
 
     /** @brief Append one packet to the event. */
-    void add_packet(const Packet& packet);
+    void add_packet(const Packet &packet);
 
     /** @brief Return whether one complete channel group can be added safely. */
     bool can_accept_channel_group(uint8_t channel, size_t packet_count) const;
 
     /** @brief Append one complete, single-channel packet group atomically. */
-    void add_packet_group(const std::vector<Packet>& packet_group);
+    void add_packet_group(const std::vector<Packet> &packet_group);
 
     /** @brief Return the number of packets currently stored for a channel. */
     uint16_t get_channel_packet_count(uint8_t channel) const;
@@ -136,15 +136,20 @@ class Event {
 
     /** @brief Determine completeness using explicit compatibility arguments. */
     bool is_event_complete(
-        int windows, const std::vector<int>& channels,
+        int windows, const std::vector<int> &channels,
         std::string trigger_type_str, bool use_time_based_completion,
         std::chrono::steady_clock::duration max_time_between_events) const;
 
     /** @brief Return the event creation timestamp. */
     std::chrono::steady_clock::time_point get_creation_timestamp() const;
 
-   private:
-    int count_active_channels(uint64_t channel_mask) const;
+  private:
+    friend class EventBuffer;
+    void append_validated_channel_group(const Packet *group, size_t count);
+    void update_channel_count(uint8_t channel, uint16_t count);
+    void warn_if_expected_overrun();
+    uint64_t complete_channel_mask_ = 0;
+    uint8_t counted_windows_ = 0;
 
     bool use_time_based_completion_ = false;
     uint16_t expected_packet_count_ = 0;
@@ -154,8 +159,8 @@ class Event {
     uint64_t allowed_channel_mask_ = 0;
     std::array<uint16_t, 64> channel_packet_counts_{};
 
-    Event(const Event&) = delete;
-    Event& operator=(const Event&) = delete;
+    Event(const Event &) = delete;
+    Event &operator=(const Event &) = delete;
 };
 
-}  // namespace nalu_event_collector
+} // namespace nalu_event_collector
