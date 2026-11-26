@@ -9,6 +9,7 @@
 #include <spdlog/spdlog.h>
 #include <unistd.h>
 
+#include <cerrno>
 #include <cstring>
 #include <stdexcept>
 
@@ -37,6 +38,12 @@ void UdpReceiver::initSocket() {
         throw std::runtime_error("Failed to create socket");
     }
 
+    int receive_bytes = 4 * 1024 * 1024;
+    setsockopt(socket_fd_, SOL_SOCKET, SO_RCVBUF, &receive_bytes,
+               sizeof(receive_bytes));
+    int report_overflow = 1;
+    setsockopt(socket_fd_, SOL_SOCKET, SO_RXQ_OVFL, &report_overflow,
+               sizeof(report_overflow));
     sockaddr_in server_addr{};
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(port_);
@@ -61,8 +68,8 @@ void UdpReceiver::start() {
         return;
     }
 
-    running_ = true;
     initSocket();
+    running_ = true;
     receiver_thread_ = std::thread(&UdpReceiver::receiveLoop, this);
 }
 
@@ -95,21 +102,44 @@ void UdpReceiver::receiveLoop() {
         while (running_) {
             sockaddr_in client_addr{};
             socklen_t client_addr_len = sizeof(client_addr);
-            const ssize_t received_bytes = recvfrom(
-                socket_fd_, udp_packet_buffer.get(), max_packet_size_, 0,
-                reinterpret_cast<sockaddr*>(&client_addr), &client_addr_len);
+            iovec iov{udp_packet_buffer.get(), max_packet_size_};
+            alignas(cmsghdr) char control[CMSG_SPACE(sizeof(uint32_t))]{};
+            msghdr message{};
+            message.msg_name = &client_addr;
+            message.msg_namelen = client_addr_len;
+            message.msg_iov = &iov;
+            message.msg_iovlen = 1;
+            message.msg_control = control;
+            message.msg_controllen = sizeof(control);
+            const ssize_t received_bytes = recvmsg(socket_fd_, &message, 0);
+            if (received_bytes >= 0 && (message.msg_flags & MSG_TRUNC))
+              throw std::runtime_error(
+                  "UDP datagram truncated: increase max_packet_size");
+            for (auto *c = CMSG_FIRSTHDR(&message); received_bytes >= 0 && c;
+                 c = CMSG_NXTHDR(&message, c)) {
+              if (c->cmsg_level == SOL_SOCKET && c->cmsg_type == SO_RXQ_OVFL) {
+                uint32_t dropped = 0;
+                std::memcpy(&dropped, CMSG_DATA(c), sizeof(dropped));
+                if (dropped)
+                  throw std::runtime_error("Kernel UDP socket dropped " +
+                                           std::to_string(dropped) +
+                                           " datagrams");
+              }
+            }
 
             if (received_bytes <= 0 && !running_) {
                 break;
             }
             if (received_bytes < 0) {
-                continue;
+              if (errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR)
+                throw std::runtime_error("UDP receive failed");
+              continue;
             }
 
             if (received_bytes < 16) {
                 spdlog::warn("Malformed UDP packet: too small ({} bytes)",
                              received_bytes);
-                continue;
+                throw std::runtime_error("Malformed UDP transport header");
             }
 
             uint16_t payload_size = 0;
@@ -122,14 +152,24 @@ void UdpReceiver::receiveLoop() {
                     "Malformed UDP packet: expected payload size {}, received "
                     "{}",
                     payload_size, received_bytes - 16);
-                continue;
+                throw std::runtime_error("UDP transport length mismatch");
             }
 
             data_buffer_.append(udp_packet_buffer.get() + 16, payload_size);
         }
     } catch (const std::exception& error) {
+      {
+        std::lock_guard lock(error_mutex_);
+        error_ = error.what();
+      }
         spdlog::error("Receiver thread error: {}", error.what());
     }
+}
+
+void UdpReceiver::check_health() const {
+  std::lock_guard lock(error_mutex_);
+  if (!error_.empty())
+    throw std::runtime_error(error_);
 }
 
 UdpDataBuffer& UdpReceiver::getDataBuffer() { return data_buffer_; }

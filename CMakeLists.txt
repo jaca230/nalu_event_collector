@@ -156,3 +156,21 @@ if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR)
 
   export(PACKAGE ${PROJECT_NAME})
 endif()
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND BUILD_TESTING)
+  add_executable(nalu_udp_simulator_tests tests/udp_simulator_tests.cpp)
+  target_link_libraries(nalu_udp_simulator_tests PRIVATE ${PROJECT_NAME} Threads::Threads)
+  add_test(NAME nalu_udp_simulator_tests COMMAND nalu_udp_simulator_tests)
+endif()
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND BUILD_TESTING)
+  add_executable(nalu_assembly_optimization_tests tests/assembly_optimization_tests.cpp)
+  target_link_libraries(nalu_assembly_optimization_tests PRIVATE ${PROJECT_NAME})
+  add_test(NAME nalu_assembly_optimization_tests COMMAND nalu_assembly_optimization_tests)
+endif()
+
+if(CMAKE_SOURCE_DIR STREQUAL PROJECT_SOURCE_DIR AND BUILD_TESTING)
+  add_executable(nalu_lifecycle_tests tests/lifecycle_tests.cpp)
+  target_link_libraries(nalu_lifecycle_tests PRIVATE ${PROJECT_NAME} Threads::Threads)
+  add_test(NAME nalu_lifecycle_tests COMMAND nalu_lifecycle_tests)
+endif()

@@ -7,6 +7,7 @@
 
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <stdexcept>
@@ -14,11 +15,8 @@
 namespace nalu_event_collector {
 
 Event::Event()
-    : header{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-      packets(nullptr),
-      footer{0},
-      max_packets(0),
-      creation_timestamp(std::chrono::steady_clock::now()),
+    : header{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, packets(nullptr), footer{0},
+      max_packets(0), creation_timestamp(std::chrono::steady_clock::now()),
       use_time_based_completion_(false) {}
 
 Event::Event(uint16_t hdr, uint8_t extra_info, uint32_t idx, uint32_t ref_time,
@@ -39,14 +37,14 @@ Event::Event(uint16_t hdr, uint8_t extra_info, uint32_t idx, uint32_t ref_time,
              channel_mask_value,
              num_windows_value,
              num},
-      packets(std::make_unique<Packet[]>(max_num_packets)),
-      footer{ftr},
+      packets(std::make_unique<Packet[]>(max_num_packets)), footer{ftr},
       max_packets(max_num_packets),
       creation_timestamp(std::chrono::steady_clock::now()),
       use_time_based_completion_(use_time_based_completion),
       expected_packet_count_(expected_packet_count),
       warn_on_expected_overrun_(warn_on_expected_overrun),
       allowed_channel_mask_(channel_mask_value) {
+    counted_windows_ = num_windows_value;
     // In self-trigger mode the configured mask is an allow-list. The serialized
     // event mask describes only the channels actually observed in this event.
     if (get_trigger_type() == TriggerType::Internal) {
@@ -77,14 +75,14 @@ uint8_t Event::get_error_code() const { return header.info & 0x0F; }
 Event::TriggerType Event::get_trigger_type() const {
     const uint8_t trigger_bits = (header.info & 0x30) >> 4;
     switch (trigger_bits) {
-        case 1:
-            return TriggerType::External;
-        case 2:
-            return TriggerType::Internal;
-        case 3:
-            return TriggerType::Immediate;
-        default:
-            return TriggerType::Unknown;
+    case 1:
+        return TriggerType::External;
+    case 2:
+        return TriggerType::Internal;
+    case 3:
+        return TriggerType::Immediate;
+    default:
+        return TriggerType::Unknown;
     }
 }
 
@@ -93,7 +91,7 @@ size_t Event::get_size() const {
            sizeof(footer);
 }
 
-void Event::serialize_to_buffer(char* buffer) const {
+void Event::serialize_to_buffer(char *buffer) const {
     if (buffer == nullptr) {
         return;
     }
@@ -107,27 +105,37 @@ void Event::serialize_to_buffer(char* buffer) const {
     std::memcpy(buffer + offset, &footer, sizeof(footer));
 }
 
-void Event::add_packet(const Packet& packet) {
+void Event::add_packet(const Packet &packet) {
     if (header.num_packets >= max_packets) {
         // This will basically never fire since we set max packets to a numeric
         // limit Kept here as legacy/defensive code in case of future changes to
         // max_packets handling
-        spdlog::error(
-            "Attempt to add packet exceeds max packet limit. max={}, "
-            "current={}",
-            max_packets, header.num_packets);
+        spdlog::error("Attempt to add packet exceeds max packet limit. max={}, "
+                      "current={}",
+                      max_packets, header.num_packets);
         throw std::overflow_error("Maximum number of packets exceeded.");
     }
 
     packets[header.num_packets] = packet;
     ++header.num_packets;
-    if (packet.channel < channel_packet_counts_.size()) {
-        ++channel_packet_counts_[packet.channel];
-        if (get_trigger_type() == TriggerType::Internal) {
-            header.channel_mask |= (1ULL << packet.channel);
-        }
-    }
+    update_channel_count(packet.channel, 1);
+    warn_if_expected_overrun();
+}
 
+void Event::update_channel_count(uint8_t channel, uint16_t count) {
+    if (channel >= channel_packet_counts_.size())
+        return;
+    channel_packet_counts_[channel] += count;
+    const uint64_t bit = 1ULL << channel;
+    if (channel_packet_counts_[channel] == counted_windows_)
+        complete_channel_mask_ |= bit;
+    else
+        complete_channel_mask_ &= ~bit;
+    if (get_trigger_type() == TriggerType::Internal)
+        header.channel_mask |= bit;
+}
+
+void Event::warn_if_expected_overrun() {
     if (warn_on_expected_overrun_ && !warned_on_expected_overrun_ &&
         expected_packet_count_ > 0 &&
         header.num_packets > expected_packet_count_) {
@@ -144,17 +152,15 @@ void Event::add_packet(const Packet& packet) {
 bool Event::can_accept_channel_group(uint8_t channel,
                                      size_t packet_count) const {
     if (channel >= channel_packet_counts_.size() ||
-        packet_count != header.num_windows || header.num_windows == 0 ||
-        is_event_complete()) {
+        packet_count != header.num_windows || !header.num_windows)
         return false;
-    }
-
-    const uint64_t channel_bit = 1ULL << channel;
-    return (allowed_channel_mask_ & channel_bit) != 0 &&
-           channel_packet_counts_[channel] == 0;
+    const uint64_t bit = 1ULL << channel;
+    if (!(allowed_channel_mask_ & bit) || channel_packet_counts_[channel])
+        return false;
+    return !is_event_complete();
 }
 
-void Event::add_packet_group(const std::vector<Packet>& packet_group) {
+void Event::add_packet_group(const std::vector<Packet> &packet_group) {
     if (packet_group.empty()) {
         throw std::invalid_argument(
             "Cannot add an empty channel packet group.");
@@ -167,7 +173,7 @@ void Event::add_packet_group(const std::vector<Packet>& packet_group) {
             "Event cannot accept this channel packet group.");
     }
 
-    for (const auto& packet : packet_group) {
+    for (const auto &packet : packet_group) {
         if (packet.channel != channel || packet.trigger_time != trigger_time) {
             throw std::invalid_argument(
                 "A channel packet group must have one channel and one trigger "
@@ -175,9 +181,17 @@ void Event::add_packet_group(const std::vector<Packet>& packet_group) {
         }
     }
 
-    for (const auto& packet : packet_group) {
-        add_packet(packet);
-    }
+    append_validated_channel_group(packet_group.data(), packet_group.size());
+}
+
+void Event::append_validated_channel_group(const Packet *group, size_t count) {
+    if (header.num_packets > max_packets ||
+        count > max_packets - header.num_packets)
+        throw std::overflow_error("Maximum number of packets exceeded.");
+    std::copy_n(group, count, packets.get() + header.num_packets);
+    header.num_packets += static_cast<uint16_t>(count);
+    update_channel_count(group[0].channel, static_cast<uint16_t>(count));
+    warn_if_expected_overrun();
 }
 
 uint16_t Event::get_channel_packet_count(uint8_t channel) const {
@@ -188,34 +202,25 @@ uint16_t Event::get_channel_packet_count(uint8_t channel) const {
 }
 
 bool Event::has_complete_channel_groups() const {
-    const int active_channels = count_active_channels(header.channel_mask);
-    if (active_channels == 0 || header.num_windows == 0 ||
-        header.num_packets != active_channels * header.num_windows) {
+    if (!header.channel_mask || !header.num_windows ||
+        header.num_packets !=
+            __builtin_popcountll(header.channel_mask) * header.num_windows)
         return false;
-    }
-
-    for (size_t channel = 0; channel < channel_packet_counts_.size();
-         ++channel) {
-        if ((header.channel_mask & (1ULL << channel)) != 0 &&
-            channel_packet_counts_[channel] != header.num_windows) {
+    if (header.num_windows == counted_windows_)
+        return (complete_channel_mask_ & header.channel_mask) ==
+               header.channel_mask;
+    // Header is public: preserve correct queries for callers overriding
+    // windows.
+    for (size_t channel = 0; channel < channel_packet_counts_.size(); ++channel)
+        if ((header.channel_mask & (1ULL << channel)) &&
+            channel_packet_counts_[channel] != header.num_windows)
             return false;
-        }
-    }
     return true;
 }
 
 bool Event::uses_time_based_completion() const {
     return use_time_based_completion_ ||
            get_trigger_type() == TriggerType::Internal;
-}
-
-int Event::count_active_channels(uint64_t channel_mask) const {
-    int count = 0;
-    while (channel_mask != 0) {
-        count += static_cast<int>(channel_mask & 1U);
-        channel_mask >>= 1U;
-    }
-    return count;
 }
 
 bool Event::is_event_complete() const {
@@ -240,13 +245,13 @@ bool Event::is_event_complete() const {
     }
 
     switch (trigger_type) {
-        case TriggerType::Internal:
-            return false;
-        case TriggerType::External:
-        case TriggerType::Immediate:
-        case TriggerType::Unknown:
-        default:
-            return has_complete_channel_groups();
+    case TriggerType::Internal:
+        return false;
+    case TriggerType::External:
+    case TriggerType::Immediate:
+    case TriggerType::Unknown:
+    default:
+        return has_complete_channel_groups();
     }
 }
 
@@ -259,7 +264,7 @@ bool Event::has_timed_out() const {
 void Event::mark_complete() { explicitly_complete_ = true; }
 
 bool Event::is_event_complete(
-    int windows, const std::vector<int>& channels, std::string trigger_type_str,
+    int windows, const std::vector<int> &channels, std::string trigger_type_str,
     bool use_time_based_completion,
     std::chrono::steady_clock::duration max_time_between_events) const {
     if (use_time_based_completion) {
@@ -277,26 +282,25 @@ bool Event::is_event_complete(
     }
 
     switch (trigger_type) {
-        case TriggerType::Internal:
-            return (std::chrono::steady_clock::now() - creation_timestamp) >=
-                   max_time_between_events;
-        case TriggerType::External:
-        case TriggerType::Immediate:
-        case TriggerType::Unknown:
-        default:
-            if (windows <= 0 || channels.empty()) {
+    case TriggerType::Internal:
+        return (std::chrono::steady_clock::now() - creation_timestamp) >=
+               max_time_between_events;
+    case TriggerType::External:
+    case TriggerType::Immediate:
+    case TriggerType::Unknown:
+    default:
+        if (windows <= 0 || channels.empty()) {
+            return false;
+        }
+        for (int channel : channels) {
+            if (channel < 0 ||
+                channel >= static_cast<int>(channel_packet_counts_.size()) ||
+                channel_packet_counts_[static_cast<size_t>(channel)] !=
+                    windows) {
                 return false;
             }
-            for (int channel : channels) {
-                if (channel < 0 ||
-                    channel >=
-                        static_cast<int>(channel_packet_counts_.size()) ||
-                    channel_packet_counts_[static_cast<size_t>(channel)] !=
-                        windows) {
-                    return false;
-                }
-            }
-            return true;
+        }
+        return true;
     }
 }
 
@@ -304,4 +308,4 @@ std::chrono::steady_clock::time_point Event::get_creation_timestamp() const {
     return creation_timestamp;
 }
 
-}  // namespace nalu_event_collector
+} // namespace nalu_event_collector

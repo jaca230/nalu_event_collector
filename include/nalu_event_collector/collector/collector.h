@@ -7,6 +7,7 @@
 
 #include <atomic>
 #include <chrono>
+#include <exception>
 #include <memory>
 #include <mutex>
 #include <thread>
@@ -44,6 +45,13 @@ class Collector {
 
     /** @brief Execute one collection cycle synchronously. */
     void collect();
+
+    /** @brief Finish input after stopping reception; reject incomplete data in
+     * strict mode. */
+    void flush();
+
+    /** @brief Rethrow a receiver or background-worker failure to the caller. */
+    void check_health() const;
 
     /** @brief Print rolling-average timing and throughput statistics. */
     void printPerformanceStats();
@@ -84,6 +92,10 @@ class Collector {
     EventDisposition classify_event(const Event& event) const;
     void log_dropped_incomplete_event(const Event& event) const;
 
+    bool fail_on_data_loss_ = false;
+    bool finalized_ = false;
+    mutable std::mutex error_mutex_;
+    std::exception_ptr worker_error_;
     UdpReceiver receiver_;
     PacketParser parser_;
     EventBuilder event_builder_;

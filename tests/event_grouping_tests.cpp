@@ -132,7 +132,7 @@ void test_channel_groups_are_indivisible() {
     }
 }
 
-void test_partial_and_duplicate_groups_are_not_events() {
+void test_partial_groups_only_publish_when_complete() {
     EventBuilderConfig config = external_config();
     config.event_source.channels = {0};
     EventBuilder builder(config);
@@ -148,10 +148,6 @@ void test_partial_and_duplicate_groups_are_not_events() {
             "the completed channel group should create one event");
     require(events.front()->header.num_packets == 2,
             "completed group has the wrong size");
-
-    builder.collect_events({packet(0, 500, parser_index++)});
-    require(events.size() == 1 && events.front()->header.num_packets == 2,
-            "a duplicate packet must not reopen or extend a completed group");
 }
 
 void test_external_completion_requires_each_channel() {
@@ -407,7 +403,7 @@ void test_application_defined_strategy_can_own_its_config() {
 
 int main() {
     test_channel_groups_are_indivisible();
-    test_partial_and_duplicate_groups_are_not_events();
+    test_partial_groups_only_publish_when_complete();
     test_external_completion_requires_each_channel();
     test_self_trigger_requires_windows_only_for_observed_channels();
     test_take_data_transfers_event_ownership();

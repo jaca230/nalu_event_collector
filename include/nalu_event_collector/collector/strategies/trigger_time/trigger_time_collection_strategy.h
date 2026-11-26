@@ -26,15 +26,15 @@ namespace nalu_event_collector {
  * groups actually observed for that trigger.
  */
 class TriggerTimeCollectionStrategy final : public CollectionStrategy {
-   public:
+  public:
     TriggerTimeCollectionStrategy(
-        const EventBuilderConfig& config,
-        const TriggerTimeCollectionStrategyConfig& strategy_config = {});
+        const EventBuilderConfig &config,
+        const TriggerTimeCollectionStrategyConfig &strategy_config = {});
 
-    void collect(const std::vector<Packet>& packets) override;
+    void collect(const std::vector<Packet> &packets) override;
     void poll() override;
     void flush() override;
-    EventBuffer& event_buffer() override { return event_buffer_; }
+    EventBuffer &event_buffer() override { return event_buffer_; }
 
     /**
      * @brief Transfer the ordered prefix of ready events.
@@ -43,10 +43,10 @@ class TriggerTimeCollectionStrategy final : public CollectionStrategy {
      * a self-trigger event containing only complete channel groups may be
      * finalized without waiting for its normal association timeout.
      */
-    std::vector<std::unique_ptr<Event>> take_ready_events(
-        bool finalize_complete_groups = false);
+    std::vector<std::unique_ptr<Event>>
+    take_ready_events(bool finalize_complete_groups = false);
 
-   private:
+  private:
     struct ChannelGroupKey {
         uint8_t channel;
         uint32_t trigger_time;
@@ -58,28 +58,25 @@ class TriggerTimeCollectionStrategy final : public CollectionStrategy {
         std::chrono::steady_clock::time_point created_at;
     };
 
-    struct CompletedChannelGroup {
-        ChannelGroupKey key;
-        std::chrono::steady_clock::time_point completed_at;
-    };
-
     enum class EventDisposition { Ready, Drop, Wait };
 
     bool is_configured_channel(uint8_t channel) const;
-    bool is_recently_completed(const ChannelGroupKey& key) const;
-    void collect_packet(const Packet& packet);
+    void collect_packet(const Packet &packet);
     void prune_channel_groups();
-    EventDisposition classify_event(const Event& event,
+    EventDisposition classify_event(const Event &event,
                                     bool finalize_complete_groups) const;
 
+    bool fail_on_data_loss_ = false;
+    bool finalizing_ = false;
     std::vector<int> channels_;
+    uint64_t channel_mask_ = 0;
+    std::vector<std::vector<Packet>> reusable_packet_buffers_;
     int windows_;
     uint32_t event_completion_time_us_;
     uint32_t event_index_ = 0;
     std::vector<PendingChannelGroup> pending_channel_groups_;
-    std::vector<CompletedChannelGroup> completed_channel_groups_;
     TimeDifferenceCalculator time_diff_calculator_;
     EventBuffer event_buffer_;
 };
 
-}  // namespace nalu_event_collector
+} // namespace nalu_event_collector
